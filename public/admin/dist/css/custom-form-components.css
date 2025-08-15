@@ -1,0 +1,92 @@
+/* --- General Component Styling --- */
+.form-group .form-text {
+    font-size: .875em;
+    color: #6c757d;
+}
+
+/* --- Array Input Styling --- */
+.array-input-card .list-group-item {
+    padding: 0.75rem;
+    border: 1px solid rgba(0,0,0,.125);
+}
+.array-input-card .list-group-item:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+.array-input-card .list-group-item:last-child {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+.array-input-card .item-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.array-input-card .item-content .form-control {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+.array-input-card .btn-remove-item {
+    flex-shrink: 0;
+}
+.array-input-card .item-handle {
+    cursor: move;
+    margin-right: 10px;
+    color: #adb5bd;
+}
+
+/* --- Image Link & Image Array Styling --- */
+.image-preview-container {
+    position: relative;
+    margin-top: 15px;
+    max-width: 200px;
+    min-height: 50px;
+}
+.image-preview {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: .25rem;
+    background-color: #f8f9fa;
+    display: none; /* Hidden by default */
+}
+.image-preview.show {
+    display: block;
+}
+.btn-remove-preview {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.image-array-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+.image-array-item {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+.image-array-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
