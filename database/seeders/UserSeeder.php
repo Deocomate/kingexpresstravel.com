@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class UserSeeder extends Seeder
 {
@@ -14,13 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         DB::table('users')->truncate();
+
+        Schema::enableForeignKeyConstraints();
+
         User::insert([
             'name' => "root",
             'email' => "root@gmail.com",
             'password' => bcrypt('password'),
             'role' => "admin",
         ]);
-        return;
     }
 }

@@ -23,3 +23,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .codebase
+
+# Added by CodebaseTracker
+.codebase/

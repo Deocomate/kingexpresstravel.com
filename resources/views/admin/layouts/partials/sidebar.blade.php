@@ -7,7 +7,6 @@
     </a>
     <div class="sidebar">
         <nav class="mt-2">
-            {{-- Content of old menu.blade.php is now here --}}
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
@@ -15,15 +14,11 @@
                 <li class="nav-header">Admin</li>
                 <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Dashboard" icon="fas fa-tachometer-alt"/>
 
-                {{-- Example Menus (uncomment and modify as needed) --}}
-                {{--    <x-menus.menu-bar icon="fas fa-list" name="Quản lý Menu" route="#">--}}
-                {{--        <x-menus.menu-item name="Danh sách Menu" :route="route('admin.menus.index')"/>--}}
-                {{--    </x-menus.menu-bar>--}}
-
                 <!-- THÊM MỚI CÁC MENU TẠI ĐÂY -->
-                <li class="nav-header">Cài đặt & Khác</li>
+                <li class="nav-header">Quản lý Nội dung</li>
+                <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap" />
 
-                {{--    <x-menus.menu-bar :route="route('admin.contact.index')" name="Quản lý Liên hệ" icon="fas fa-address-card" /> --}}
+                <li class="nav-header">Cài đặt & Khác</li>
 
             </ul>
         </nav>

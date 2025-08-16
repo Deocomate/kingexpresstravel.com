@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\CategoryController;
 
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 
@@ -21,6 +22,7 @@ Route::post('/admin/authenticate', [AdminAuthController::class, "authenticate"])
 Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->group(function () {
     // Dashboard & Homepage Management
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
+    Route::resource('categories', CategoryController::class);
 });
 
 

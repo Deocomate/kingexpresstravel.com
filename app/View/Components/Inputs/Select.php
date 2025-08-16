@@ -10,11 +10,13 @@ class Select extends Component
 {
     public string $label;
     public string $name;
+    public bool $required;
 
-    public function __construct($label, $name)
+    public function __construct($label, $name, $required = false) // Sửa dòng này
     {
         $this->label = $label;
         $this->name = $name;
+        $this->required = $required;
     }
 
     /**
