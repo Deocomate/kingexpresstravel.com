@@ -1,6 +1,15 @@
 @extends('admin.layouts.main')
 @section('title', 'Danh sách Danh mục')
 
+@push('styles')
+    <style>
+
+        .toggle-children i {
+            transition: transform 0.2s ease-in-out;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="card">
         <div class="card-header">
@@ -14,101 +23,76 @@
                     </a>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <form action="{{ route('admin.categories.index') }}" method="GET" class="form-inline">
-                        <div class="form-group mr-2">
-                            <select name="type" class="form-control">
-                                <option value="">Tất cả loại</option>
-                                <option value="TOUR" @selected(request('type') == 'TOUR')>TOUR</option>
-                                <option value="NEWS" @selected(request('type') == 'NEWS')>NEWS</option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-2">
-                            <select name="is_active" class="form-control">
-                                <option value="">Tất cả trạng thái</option>
-                                <option value="1" @selected(request('is_active') == '1')>Hoạt động</option>
-                                <option value="0" @selected(request('is_active') == '0')>Không hoạt động</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Tìm theo tên..."
-                                   value="{{ request('search') }}">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                        <div class="form-group ml-2">
-                            <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Xóa lọc</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
 
             <div class="table-responsive">
-                <table id="data-table" class="table table-bordered table-striped table-hover">
+                <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th style="width: 50px;">ID</th>
                         <th>Tên</th>
-                        <th>Ảnh đại diện</th>
-                        <th>Danh mục cha</th>
-                        <th>Loại</th>
-                        <th>Ưu tiên</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style="width: 100px;">Ảnh</th>
+                        <th style="width: 80px;">Loại</th>
+                        <th style="width: 80px;">Ưu tiên</th>
+                        <th style="width: 120px;">Trạng thái</th>
+                        <th style="width: 150px;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse($categories as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>
-                                @if($item->thumbnail)
-                                    <img src="{{ url($item->thumbnail) }}" alt="{{ $item->name }}"
-                                         style="max-width: 100px; max-height: 100px;">
-                                @endif
-                            </td>
-                            <td>{{ $item->parent->name ?? 'N/A' }}</td>
-                            <td>
-                                <span class="badge {{ $item->type === 'TOUR' ? 'badge-info' : 'badge-warning' }}">
-                                    {{ $item->type }}
-                                </span>
-                            </td>
-                            <td>{{ $item->priority }}</td>
-                            <td>
-                                <span class="badge {{ $item->is_active ? 'badge-success' : 'badge-danger' }}">
-                                    {{ $item->is_active ? 'Hoạt động' : 'Không hoạt động' }}
-                                </span>
-                            </td>
-                            <td>
-                                <a class="btn btn-warning btn-sm"
-                                   href="{{ route('admin.categories.edit', ['category' => $item->id]) }}">
-                                    <i class="fas fa-edit"></i> Sửa
-                                </a>
-                                <form action="{{ route('admin.categories.destroy', ['category' => $item->id]) }}"
-                                      method="POST" style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Bạn có chắc muốn xóa Danh mục này?')">
-                                        <i class="fas fa-trash"></i> Xoá
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                    @forelse($categories as $category)
+                        @include('admin.modules.categories.partials.category-row', ['category' => $category, 'level' => 0])
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">Không tìm thấy dữ liệu phù hợp.</td>
+                            <td colspan="7" class="text-center">Chưa có danh mục nào.</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
+
             <div class="mt-3 d-flex justify-content-end">
-                {{ $categories->appends(request()->query())->links() }}
+                {{ $categories->links() }}
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('tr.category-child').hide();
+
+            $('.toggle-children').on('click', function (e) {
+                e.preventDefault();
+
+                const row = $(this).closest('tr');
+                const id = row.data('id');
+                const icon = $(this).find('i');
+                const children = $(`tr[data-parent-id="${id}"]`);
+
+                children.slideToggle('fast');
+
+                icon.toggleClass('fa-plus-square fa-minus-square');
+                icon.toggleClass('text-primary text-secondary');
+
+                if (icon.hasClass('fa-plus-square')) {
+                    function hideAllChildren(parentId) {
+                        const directChildren = $(`tr[data-parent-id="${parentId}"]`);
+                        directChildren.each(function() {
+                            const currentId = $(this).data('id');
+                            $(this).hide();
+
+                            const childIcon = $(this).find('.toggle-children i');
+                            if (childIcon.hasClass('fa-minus-square')) {
+                                childIcon.removeClass('fa-minus-square').addClass('fa-plus-square');
+                                childIcon.removeClass('text-secondary').addClass('text-primary');
+                            }
+
+                            hideAllChildren(currentId);
+                        });
+                    }
+                    hideAllChildren(id);
+                }
+            });
+        });
+    </script>
+@endpush

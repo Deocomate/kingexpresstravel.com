@@ -12,23 +12,12 @@ use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
-        $query = Category::query()->with('parent');
-
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->is_active);
-        }
-
-        $categories = $query->orderBy('created_at', 'desc')->paginate(10);
+        $categories = Category::with('recursiveChildren', 'parent')
+            ->whereNull('parent_id')
+            ->orderBy('priority')
+            ->paginate(5);
 
         return view('admin.modules.categories.index', compact('categories'));
     }
@@ -41,15 +30,7 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'thumbnail' => 'nullable|string',
-            'priority' => 'nullable|integer',
-            'is_active' => 'required|boolean',
-            'parent_id' => 'nullable|exists:categories,id',
-            'type' => ['required', Rule::in(['TOUR', 'NEWS'])],
-        ]);
-
+        $validatedData = $this->validateRequest($request);
         $validatedData['slug'] = Str::slug($validatedData['name']);
 
         $originalSlug = $validatedData['slug'];
@@ -71,15 +52,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'thumbnail' => 'nullable|string',
-            'priority' => 'nullable|integer',
-            'is_active' => 'required|boolean',
-            'parent_id' => 'nullable|exists:categories,id',
-            'type' => ['required', Rule::in(['TOUR', 'NEWS'])],
-        ]);
-
+        $validatedData = $this->validateRequest($request);
         $validatedData['slug'] = Str::slug($validatedData['name']);
 
         if ($validatedData['slug'] !== $category->slug) {
@@ -99,5 +72,29 @@ class CategoryController extends Controller
     {
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Xóa danh mục thành công.');
+    }
+
+    private function validateRequest(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string',
+            'thumbnail' => 'nullable|string',
+            'priority' => 'nullable|integer',
+            'is_active' => 'required|boolean',
+            'parent_id' => 'nullable|exists:categories,id',
+            'type' => [
+                'required',
+                Rule::in(['TOUR', 'NEWS']),
+                function ($attribute, $value, $fail) use ($request) {
+                    $parentId = $request->input('parent_id');
+                    if ($parentId) {
+                        $parent = Category::find($parentId);
+                        if ($parent && $parent->type !== $value) {
+                            $fail('Loại danh mục phải trùng với loại của danh mục cha.');
+                        }
+                    }
+                },
+            ],
+        ]);
     }
 }
