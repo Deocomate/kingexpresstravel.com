@@ -10,13 +10,14 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
-                <!-- ADMIN BASE -->
                 <li class="nav-header">Admin</li>
                 <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Dashboard" icon="fas fa-tachometer-alt"/>
 
-                <!-- THÊM MỚI CÁC MENU TẠI ĐÂY -->
                 <li class="nav-header">Quản lý Nội dung</li>
                 <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap" />
+                <x-menus.menu-bar :route="route('admin.about-us.index')" name="Quản lý Giới thiệu" icon="fas fa-info-circle" />
+                <x-menus.menu-bar :route="route('admin.customer-care.index')" name="Quản lý Liên hệ" icon="fas fa-headset" />
+
 
                 <li class="nav-header">Cài đặt & Khác</li>
 

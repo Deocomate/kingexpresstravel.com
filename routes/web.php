@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\AboutUsController;
+use App\Http\Controllers\Admin\CustomerCareController;
 
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 
@@ -22,7 +24,11 @@ Route::post('/admin/authenticate', [AdminAuthController::class, "authenticate"])
 Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->group(function () {
     // Dashboard & Homepage Management
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
+
+    // Modules
     Route::resource('categories', CategoryController::class);
+    Route::resource('about-us', AboutUsController::class)->except(['show']);
+    Route::resource('customer-care', CustomerCareController::class)->except(['create', 'store', 'edit', 'update']);
 });
 
 
