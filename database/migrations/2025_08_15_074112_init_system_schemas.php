@@ -95,8 +95,7 @@ return new class extends Migration {
             $table->integer('toddler_quantity')->default(0);
             $table->integer('infant_quantity')->default(0);
             $table->integer('total_price')->nullable();
-            $table->enum('status', ['PENDING', 'CONFIRMED', 'CANCELLED'])->default('PENDING');
-            $table->longText('note')->nullable();
+            $table->enum('status', ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'])->default('PENDING');            $table->longText('note')->nullable();
             $table->timestamps();
         });
 

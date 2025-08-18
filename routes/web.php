@@ -26,6 +26,8 @@ Route::post('/admin/authenticate', [AdminAuthController::class, "authenticate"])
 
 Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->group(function () {
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
+    Route::get('/dashboard/chart-data', [AdminBaseController::class, 'getChartData'])->name('dashboard.chartData');
+
 
     Route::resource('categories', CategoryController::class);
     Route::resource('news', NewsController::class);

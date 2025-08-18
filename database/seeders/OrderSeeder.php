@@ -44,7 +44,7 @@ class OrderSeeder extends Seeder
                 'toddler_quantity' => $faker->numberBetween(0, 1),
                 'infant_quantity' => $faker->numberBetween(0, 1),
                 'total_price' => ($adults * $tour->price_adult) + ($children * $tour->price_child),
-                'status' => $faker->randomElement(['PENDING', 'CONFIRMED', 'CANCELLED']),
+                'status' => $faker->randomElement(['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']),
                 'note' => $faker->optional(0.4)->sentence,
                 'created_at' => $faker->dateTimeBetween('-6 months', 'now'),
                 'updated_at' => now(),

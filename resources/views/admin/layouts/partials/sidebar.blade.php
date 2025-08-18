@@ -11,7 +11,7 @@
                 data-accordion="false">
 
                 <li class="nav-header">Admin</li>
-                <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Dashboard" icon="fas fa-tachometer-alt"/>
+                <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Tổng quan" icon="fas fa-tachometer-alt"/>
 
                 <li class="nav-header">Quản lý Nội dung</li>
                 <x-menus.menu-bar :route="route('admin.orders.index')" name="Quản lý Đơn hàng" icon="fas fa-shopping-cart"/>

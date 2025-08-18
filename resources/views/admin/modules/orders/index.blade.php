@@ -29,6 +29,7 @@
                                         <option value="">Tất cả</option>
                                         <option value="PENDING" @selected(request('status') == 'PENDING')>Chờ xử lý</option>
                                         <option value="CONFIRMED" @selected(request('status') == 'CONFIRMED')>Đã xác nhận</option>
+                                        <option value="COMPLETED" @selected(request('status') == 'COMPLETED')>Đã hoàn thành</option>
                                         <option value="CANCELLED" @selected(request('status') == 'CANCELLED')>Đã hủy</option>
                                     </select>
                                 </div>
@@ -72,14 +73,10 @@
                     </thead>
                     <tbody>
                     @php
-                        $statusClasses = [
-                            'PENDING' => 'badge-warning',
-                            'CONFIRMED' => 'badge-success',
-                            'CANCELLED' => 'badge-danger',
-                        ];
-                         $statusTexts = [
+                        $statusTexts = [
                             'PENDING' => 'Chờ xử lý',
                             'CONFIRMED' => 'Đã xác nhận',
+                            'COMPLETED' => 'Đã hoàn thành',
                             'CANCELLED' => 'Đã hủy',
                         ];
                     @endphp

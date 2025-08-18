@@ -38,7 +38,6 @@ class OrderController extends Controller
                     $endDate = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
                     $query->whereBetween('created_at', [$startDate, $endDate]);
                 } catch (Exception) {
-                    // Ignore invalid date format
                 }
             }
         });
@@ -57,7 +56,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', Rule::in(['PENDING', 'CONFIRMED', 'CANCELLED'])],
+            'status' => ['required', Rule::in(['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'])],
         ]);
 
         $order->update(['status' => $validated['status']]);

@@ -28,6 +28,9 @@
 
 <script src="{{ asset('admin/plugins/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
 
+{{-- ChartJS --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 {{-- Ckeditor & CKFinder --}}
 @include("ckfinder::setup")
 
