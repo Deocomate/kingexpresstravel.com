@@ -14,6 +14,7 @@
                 <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Dashboard" icon="fas fa-tachometer-alt"/>
 
                 <li class="nav-header">Quản lý Nội dung</li>
+                <x-menus.menu-bar :route="route('admin.orders.index')" name="Quản lý Đơn hàng" icon="fas fa-shopping-cart"/>
                 <x-menus.menu-bar :route="route('admin.tours.index')" name="Quản lý Tour" icon="fas fa-route"/>
                 <x-menus.menu-bar :route="route('admin.destinations.index')" name="Quản lý Điểm đến" icon="fas fa-map-marked-alt"/>
                 <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap"/>
@@ -23,6 +24,7 @@
 
 
                 <li class="nav-header">Cài đặt & Khác</li>
+                <x-menus.menu-bar :route="route('admin.users.index')" name="Quản lý Người dùng" icon="fas fa-users"/>
                 <x-menus.menu-bar :route="route('admin.contacts.edit')" name="Thông tin Liên hệ" icon="fas fa-address-book"/>
 
             </ul>

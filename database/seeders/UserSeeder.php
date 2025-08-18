@@ -15,12 +15,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-
         DB::table('users')->truncate();
-
         Schema::enableForeignKeyConstraints();
 
-        User::insert([
+        User::create([
             'name' => "root",
             'email' => "root@gmail.com",
             'password' => bcrypt('password'),

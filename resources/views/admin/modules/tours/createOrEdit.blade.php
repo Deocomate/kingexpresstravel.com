@@ -121,10 +121,10 @@
                 <div class="card card-warning">
                     <div class="card-header"><h3 class="card-title">Giá vé</h3></div>
                     <div class="card-body">
-                        <x-inputs.number label="Giá người lớn" name="price_adult" :value="old('price_adult', $tour->price_adult ?? 0)"/>
-                        <x-inputs.number label="Giá trẻ em" name="price_child" :value="old('price_child', $tour->price_child ?? 0)"/>
-                        <x-inputs.number label="Giá trẻ nhỏ" name="price_toddler" :value="old('price_toddler', $tour->price_toddler ?? 0)"/>
-                        <x-inputs.number label="Giá em bé" name="price_infant" :value="old('price_infant', $tour->price_infant ?? 0)"/>
+                        <x-inputs.number label="Giá người lớn (> 11 tuổi)" name="price_adult" :value="old('price_adult', $tour->price_adult ?? 0)"/>
+                        <x-inputs.number label="Giá trẻ em (5 - 11 tuổi)" name="price_child" :value="old('price_child', $tour->price_child ?? 0)"/>
+                        <x-inputs.number label="Giá trẻ nhỏ (2 - 5 tuổi)" name="price_toddler" :value="old('price_toddler', $tour->price_toddler ?? 0)"/>
+                        <x-inputs.number label="Giá em bé (< 2 tuổi)" name="price_infant" :value="old('price_infant', $tour->price_infant ?? 0)"/>
                     </div>
                 </div>
             </div>

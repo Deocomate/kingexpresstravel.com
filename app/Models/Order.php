@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -14,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $email
  * @property string|null $phone
  * @property int $tour_id
+ * @property Carbon|null $departure_date
  * @property int $adult_quantity
  * @property int $child_quantity
  * @property int $toddler_quantity
@@ -23,27 +26,44 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder<static>|Order newModelQuery()
- * @method static Builder<static>|Order newQuery()
- * @method static Builder<static>|Order query()
- * @method static Builder<static>|Order whereAdultQuantity($value)
- * @method static Builder<static>|Order whereChildQuantity($value)
- * @method static Builder<static>|Order whereCreatedAt($value)
- * @method static Builder<static>|Order whereEmail($value)
- * @method static Builder<static>|Order whereFullName($value)
- * @method static Builder<static>|Order whereId($value)
- * @method static Builder<static>|Order whereInfantQuantity($value)
- * @method static Builder<static>|Order whereNote($value)
- * @method static Builder<static>|Order wherePhone($value)
- * @method static Builder<static>|Order whereStatus($value)
- * @method static Builder<static>|Order whereToddlerQuantity($value)
- * @method static Builder<static>|Order whereTotalPrice($value)
- * @method static Builder<static>|Order whereTourId($value)
- * @method static Builder<static>|Order whereUpdatedAt($value)
- * @method static Builder<static>|Order whereUserId($value)
+ * @property-read User|null $user
+ * @property-read Tour|null $tour
+ * @method static Builder|Order newModelQuery()
+ * @method static Builder|Order newQuery()
+ * @method static Builder|Order query()
  * @mixin Eloquent
  */
 class Order extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'full_name',
+        'email',
+        'phone',
+        'tour_id',
+        'departure_date',
+        'adult_quantity',
+        'child_quantity',
+        'toddler_quantity',
+        'infant_quantity',
+        'total_price',
+        'status',
+        'note',
+    ];
+
+    protected $casts = [
+        'departure_date' => 'date',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function tour(): BelongsTo
+    {
+        return $this->belongsTo(Tour::class);
+    }
 }

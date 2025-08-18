@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             DestinationSeeder::class,
             NewsSeeder::class,
             TourSeeder::class,
+            OrderSeeder::class,
             AboutUsSeeder::class,
             CustomerCareSeeder::class,
             ContactSeeder::class,

@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\CustomerCareController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +36,10 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
 
     Route::get('contacts', [ContactController::class, 'edit'])->name('contacts.edit');
     Route::put('contacts', [ContactController::class, 'update'])->name('contacts.update');
+
+    Route::resource('users', UserController::class);
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::resource('orders', OrderController::class)->except(['create', 'store', 'edit', 'update']);
 });
 
 
