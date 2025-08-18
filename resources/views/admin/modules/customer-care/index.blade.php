@@ -7,40 +7,44 @@
             <h3 class="card-title">Danh sách Liên hệ từ Khách hàng</h3>
         </div>
         <div class="card-body">
-            <div class="filter-area mb-3">
-                <form action="{{ route('admin.customer-care.index') }}" method="GET">
-                    <div class="row align-items-end">
-                        <div class="col-md-7">
-                            <div class="form-group mb-md-0">
-                                <label for="search-input">Tìm kiếm</label>
-                                <input type="text" id="search-input" name="search" class="form-control"
-                                       placeholder="Tìm kiếm tên, email, sđt, chủ đề..."
-                                       value="{{ request('search') }}">
+            <div class="filter-area mb-4 card card-outline card-info">
+                <div class="card-header">
+                    <h3 class="card-title">Bộ lọc</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.customer-care.index') }}" method="GET">
+                        <div class="row align-items-end">
+                            <div class="col-md-7">
+                                <div class="form-group mb-md-0">
+                                    <label>Tìm kiếm</label>
+                                    <input type="text" name="search" class="form-control"
+                                           placeholder="Tìm kiếm tên, email, sđt, chủ đề..."
+                                           value="{{ request('search') }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group mb-md-0">
-                                <label for="date-range-picker">Khoảng ngày gửi</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="far fa-calendar-alt"></i>
-                                        </span>
+                            <div class="col-md-4">
+                                <div class="form-group mb-md-0">
+                                    <label>Khoảng ngày gửi</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input type="text" name="date_range" class="form-control date-range-picker"
+                                               value="{{ request('date_range') }}" autocomplete="off" readonly
+                                               style="cursor: pointer; background-color: #fff;">
                                     </div>
-                                    <input type="text" id="date-range-picker" name="date_range" class="form-control"
-                                           value="{{ request('date_range') }}" autocomplete="off" readonly
-                                           style="cursor: pointer; background-color: #fff;">
+                                </div>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-end">
+                                <div class="form-group w-100 mb-md-0">
+                                    <button class="btn btn-primary w-100" type="submit">Lọc</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1">
-                            <div class="form-group mb-md-0 d-flex">
-                                <button class="btn btn-primary flex-grow-1" type="submit">Lọc</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -95,56 +99,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        $(function () {
-            const dateRangePicker = $('#date-range-picker');
-
-            dateRangePicker.daterangepicker({
-                autoUpdateInput: false,
-                opens: 'left',
-                linkedCalendars: false,
-                showDropdowns: true,
-                minYear: 2024,
-                maxDate: moment(),
-                locale: {
-                    format: 'DD/MM/YYYY',
-                    cancelLabel: 'Xóa',
-                    applyLabel: 'Áp dụng',
-                    fromLabel: 'Từ',
-                    toLabel: 'Đến',
-                    customRangeLabel: 'Tùy chỉnh',
-                    daysOfWeek: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-                    monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-                    firstDay: 1
-                },
-                ranges: {
-                    'Hôm nay': [moment(), moment()],
-                    'Hôm qua': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    '7 ngày qua': [moment().subtract(6, 'days'), moment()],
-                    '30 ngày qua': [moment().subtract(29, 'days'), moment()],
-                    'Tháng này': [moment().startOf('month'), moment().endOf('month')],
-                    'Tháng trước': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            });
-
-            dateRangePicker.on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-            });
-
-            dateRangePicker.on('cancel.daterangepicker', function (ev, picker) {
-                $(this).val('');
-            });
-
-            const initialValue = dateRangePicker.val();
-            if (initialValue) {
-                const dates = initialValue.split(' - ');
-                if (dates.length === 2) {
-                    dateRangePicker.data('daterangepicker').setStartDate(dates[0]);
-                    dateRangePicker.data('daterangepicker').setEndDate(dates[1]);
-                }
-            }
-        });
-    </script>
-@endpush

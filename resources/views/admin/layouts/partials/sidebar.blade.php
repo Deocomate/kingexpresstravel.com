@@ -14,9 +14,10 @@
                 <x-menus.menu-bar :route="route('admin.dashboard.index')" name="Dashboard" icon="fas fa-tachometer-alt"/>
 
                 <li class="nav-header">Quản lý Nội dung</li>
-                <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap" />
-                <x-menus.menu-bar :route="route('admin.about-us.index')" name="Quản lý Giới thiệu" icon="fas fa-info-circle" />
-                <x-menus.menu-bar :route="route('admin.customer-care.index')" name="Quản lý Liên hệ" icon="fas fa-headset" />
+                <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap"/>
+                <x-menus.menu-bar :route="route('admin.news.index')" name="Quản lý Tin tức" icon="far fa-newspaper"/>
+                <x-menus.menu-bar :route="route('admin.about-us.index')" name="Quản lý Giới thiệu" icon="fas fa-info-circle"/>
+                <x-menus.menu-bar :route="route('admin.customer-care.index')" name="Quản lý Liên hệ" icon="fas fa-headset"/>
 
 
                 <li class="nav-header">Cài đặt & Khác</li>

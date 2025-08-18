@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerCare;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -31,8 +32,7 @@ class CustomerCareController extends Controller
                     $startDate = Carbon::createFromFormat('d/m/Y', $dates[0])->startOfDay();
                     $endDate = Carbon::createFromFormat('d/m/Y', $dates[1])->endOfDay();
                     $query->whereBetween('created_at', [$startDate, $endDate]);
-                } catch (\Exception $e) {
-                    // Bỏ qua nếu định dạng ngày không hợp lệ
+                } catch (Exception) {
                 }
             }
         });

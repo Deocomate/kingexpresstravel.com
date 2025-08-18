@@ -42,6 +42,9 @@
 <!-- AdminLTE App -->
 <script src="{{asset('/admin/dist/js/adminlte.min.js')}}"></script>
 
+<!-- Custom Scripts -->
+<script src="{{asset('/admin/dist/js/custom-scripts.js')}}"></script>
+
 {{-- Script to activate the current menu item --}}
 <script>
     $(function () {
