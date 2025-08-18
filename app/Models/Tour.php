@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -31,35 +34,54 @@ use Illuminate\Support\Carbon;
  * @property string|null $characteristic
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder<static>|Tour newModelQuery()
- * @method static Builder<static>|Tour newQuery()
- * @method static Builder<static>|Tour query()
- * @method static Builder<static>|Tour whereCharacteristic($value)
- * @method static Builder<static>|Tour whereCreatedAt($value)
- * @method static Builder<static>|Tour whereDeparturePoint($value)
- * @method static Builder<static>|Tour whereDuration($value)
- * @method static Builder<static>|Tour whereId($value)
- * @method static Builder<static>|Tour whereImages($value)
- * @method static Builder<static>|Tour whereName($value)
- * @method static Builder<static>|Tour whereNote($value)
- * @method static Builder<static>|Tour wherePriceAdult($value)
- * @method static Builder<static>|Tour wherePriceChild($value)
- * @method static Builder<static>|Tour wherePriceInfant($value)
- * @method static Builder<static>|Tour wherePriceToddler($value)
- * @method static Builder<static>|Tour wherePriority($value)
- * @method static Builder<static>|Tour whereRemainingSlots($value)
- * @method static Builder<static>|Tour whereServicesNote($value)
- * @method static Builder<static>|Tour whereShortDescription($value)
- * @method static Builder<static>|Tour whereSlug($value)
- * @method static Builder<static>|Tour whereThumbnail($value)
- * @method static Builder<static>|Tour whereTourCode($value)
- * @method static Builder<static>|Tour whereTourDescription($value)
- * @method static Builder<static>|Tour whereTourSchedule($value)
- * @method static Builder<static>|Tour whereTransportMode($value)
- * @method static Builder<static>|Tour whereUpdatedAt($value)
+ * @property-read Collection<int, Category> $categories
+ * @property-read Collection<int, Destination> $destinations
+ * @method static Builder|Tour newModelQuery()
+ * @method static Builder|Tour newQuery()
+ * @method static Builder|Tour query()
  * @mixin Eloquent
  */
 class Tour extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'tour_code',
+        'name',
+        'slug',
+        'duration',
+        'departure_point',
+        'remaining_slots',
+        'price_adult',
+        'price_child',
+        'price_toddler',
+        'price_infant',
+        'transport_mode',
+        'short_description',
+        'tour_description',
+        'priority',
+        'tour_schedule',
+        'thumbnail',
+        'images',
+        'services_note',
+        'note',
+        'characteristic',
+    ];
+
+    protected $casts = [
+        'images' => 'array',
+        'tour_schedule' => 'array',
+    ];
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'tour_categories');
+    }
+
+    public function destinations(): BelongsToMany
+    {
+        return $this->belongsToMany(Destination::class, 'tour_destinations')
+            ->withPivot('position')
+            ->orderBy('pivot_position');
+    }
 }
