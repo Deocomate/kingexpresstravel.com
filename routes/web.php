@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AboutUsController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController; // Thêm dòng này
 use App\Http\Controllers\Admin\CustomerCareController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
@@ -26,6 +27,10 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::resource('news', NewsController::class);
     Route::resource('about-us', AboutUsController::class)->except(['show']);
     Route::resource('customer-care', CustomerCareController::class)->except(['create', 'store', 'edit', 'update']);
+
+    // Thêm các route cho Contact
+    Route::get('contacts', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('contacts', [ContactController::class, 'update'])->name('contacts.update');
 });
 
 

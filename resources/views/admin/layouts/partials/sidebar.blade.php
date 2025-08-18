@@ -17,10 +17,11 @@
                 <x-menus.menu-bar :route="route('admin.categories.index')" name="Quản lý Danh mục" icon="fas fa-sitemap"/>
                 <x-menus.menu-bar :route="route('admin.news.index')" name="Quản lý Tin tức" icon="far fa-newspaper"/>
                 <x-menus.menu-bar :route="route('admin.about-us.index')" name="Quản lý Giới thiệu" icon="fas fa-info-circle"/>
-                <x-menus.menu-bar :route="route('admin.customer-care.index')" name="Quản lý Liên hệ" icon="fas fa-headset"/>
+                <x-menus.menu-bar :route="route('admin.customer-care.index')" name="Hòm thư Liên hệ" icon="fas fa-headset"/>
 
 
                 <li class="nav-header">Cài đặt & Khác</li>
+                <x-menus.menu-bar :route="route('admin.contacts.edit')" name="Thông tin Liên hệ" icon="fas fa-address-book"/>
 
             </ul>
         </nav>
