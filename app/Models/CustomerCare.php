@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -12,21 +15,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $subject
  * @property string|null $message
  * @property string|null $note
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereSubject($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerCare whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder<static>|CustomerCare newModelQuery()
+ * @method static Builder<static>|CustomerCare newQuery()
+ * @method static Builder<static>|CustomerCare query()
+ * @method static Builder<static>|CustomerCare whereCreatedAt($value)
+ * @method static Builder<static>|CustomerCare whereEmail($value)
+ * @method static Builder<static>|CustomerCare whereFullName($value)
+ * @method static Builder<static>|CustomerCare whereId($value)
+ * @method static Builder<static>|CustomerCare whereMessage($value)
+ * @method static Builder<static>|CustomerCare whereNote($value)
+ * @method static Builder<static>|CustomerCare wherePhone($value)
+ * @method static Builder<static>|CustomerCare whereSubject($value)
+ * @method static Builder<static>|CustomerCare whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class CustomerCare extends Model
 {

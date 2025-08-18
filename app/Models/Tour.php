@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -26,35 +29,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $services_note
  * @property string|null $note
  * @property string|null $characteristic
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereCharacteristic($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereDeparturePoint($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereDuration($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereImages($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour wherePriceAdult($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour wherePriceChild($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour wherePriceInfant($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour wherePriceToddler($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour wherePriority($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereRemainingSlots($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereServicesNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereShortDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereThumbnail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereTourCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereTourDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereTourSchedule($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereTransportMode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Tour whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder<static>|Tour newModelQuery()
+ * @method static Builder<static>|Tour newQuery()
+ * @method static Builder<static>|Tour query()
+ * @method static Builder<static>|Tour whereCharacteristic($value)
+ * @method static Builder<static>|Tour whereCreatedAt($value)
+ * @method static Builder<static>|Tour whereDeparturePoint($value)
+ * @method static Builder<static>|Tour whereDuration($value)
+ * @method static Builder<static>|Tour whereId($value)
+ * @method static Builder<static>|Tour whereImages($value)
+ * @method static Builder<static>|Tour whereName($value)
+ * @method static Builder<static>|Tour whereNote($value)
+ * @method static Builder<static>|Tour wherePriceAdult($value)
+ * @method static Builder<static>|Tour wherePriceChild($value)
+ * @method static Builder<static>|Tour wherePriceInfant($value)
+ * @method static Builder<static>|Tour wherePriceToddler($value)
+ * @method static Builder<static>|Tour wherePriority($value)
+ * @method static Builder<static>|Tour whereRemainingSlots($value)
+ * @method static Builder<static>|Tour whereServicesNote($value)
+ * @method static Builder<static>|Tour whereShortDescription($value)
+ * @method static Builder<static>|Tour whereSlug($value)
+ * @method static Builder<static>|Tour whereThumbnail($value)
+ * @method static Builder<static>|Tour whereTourCode($value)
+ * @method static Builder<static>|Tour whereTourDescription($value)
+ * @method static Builder<static>|Tour whereTourSchedule($value)
+ * @method static Builder<static>|Tour whereTransportMode($value)
+ * @method static Builder<static>|Tour whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Tour extends Model
 {

@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -18,27 +21,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $total_price
  * @property string $status
  * @property string|null $note
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereAdultQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereChildQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereInfantQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereToddlerQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTotalPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTourId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUserId($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder<static>|Order newModelQuery()
+ * @method static Builder<static>|Order newQuery()
+ * @method static Builder<static>|Order query()
+ * @method static Builder<static>|Order whereAdultQuantity($value)
+ * @method static Builder<static>|Order whereChildQuantity($value)
+ * @method static Builder<static>|Order whereCreatedAt($value)
+ * @method static Builder<static>|Order whereEmail($value)
+ * @method static Builder<static>|Order whereFullName($value)
+ * @method static Builder<static>|Order whereId($value)
+ * @method static Builder<static>|Order whereInfantQuantity($value)
+ * @method static Builder<static>|Order whereNote($value)
+ * @method static Builder<static>|Order wherePhone($value)
+ * @method static Builder<static>|Order whereStatus($value)
+ * @method static Builder<static>|Order whereToddlerQuantity($value)
+ * @method static Builder<static>|Order whereTotalPrice($value)
+ * @method static Builder<static>|Order whereTourId($value)
+ * @method static Builder<static>|Order whereUpdatedAt($value)
+ * @method static Builder<static>|Order whereUserId($value)
+ * @mixin Eloquent
  */
 class Order extends Model
 {
