@@ -11,13 +11,21 @@ use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\ClientBaseController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", function () {
-    return to_route("admin.dashboard.index");
-});
+// Client Routes
+Route::get('/', [ClientBaseController::class, 'index'])->name('client.home');
+Route::get('/du-lich', [ClientBaseController::class, 'index'])->name('client.tours');
+Route::get('/tin-tuc', [ClientBaseController::class, 'index'])->name('client.news');
+Route::get('/gioi-thieu', [ClientBaseController::class, 'index'])->name('client.about');
+Route::get('/lien-he', [ClientBaseController::class, 'index'])->name('client.contact');
 
+// Admin Routes
+Route::get('/admin', function () {
+    return to_route('admin.dashboard.index');
+});
 
 Route::get('/admin/login', [AdminAuthController::class, "login"])->name("admin.login");
 Route::get('/admin/logout', [AdminAuthController::class, "logout"])->name("admin.logout");
