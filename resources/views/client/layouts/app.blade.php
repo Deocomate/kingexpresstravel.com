@@ -12,14 +12,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap" rel="stylesheet">
 
-    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        .custom-toast.swal2-popup {
+            font-size: 0.875rem;
+            padding: 0.75rem 1.25rem;
+        }
+        .custom-toast .swal2-title {
+            font-size: 1em;
+        }
+        .custom-toast .swal2-icon {
+            width: 1.25em;
+            height: 1.25em;
+            margin: 0 0.5em 0 0;
+        }
+        .custom-toast .swal2-icon .swal2-icon-content {
+            font-size: 1em;
+        }
+    </style>
 </head>
 <body class="font-sans antialiased bg-gray-50">
 
-{{-- This wrapper contains all visible page content --}}
 <div id="app-wrapper" class="flex flex-col min-h-screen">
     @include('client.layouts.partials.header')
 
@@ -30,7 +46,6 @@
     @include('client.layouts.partials.footer')
 </div>
 
-{{-- Modals should be direct children of body, outside the main wrapper --}}
 <x-client.modal id="login-modal" title="Đăng nhập" subtitle="Đăng nhập tài khoản Du Lịch Việt và khám phá niềm vui của bạn ở bất cứ đâu">
     @include('client.auth.partials.login-form')
 </x-client.modal>
@@ -44,5 +59,33 @@
 </x-client.modal>
 
 @stack('scripts')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const openModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            const modalPanel = modal.querySelector('.modal-panel');
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            requestAnimationFrame(() => {
+                modalPanel.classList.remove('opacity-0', '-translate-y-10');
+            });
+        };
+
+        @if ($errors->any())
+        openModal('login-modal');
+        @endif
+
+        @if (session('success'))
+        window.showSuccessToast("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+        window.showErrorToast("{{ session('error') }}");
+        @endif
+    });
+</script>
+
 </body>
 </html>
