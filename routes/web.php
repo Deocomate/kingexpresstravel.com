@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientBaseController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,12 @@ Route::get('/du-lich', [ClientBaseController::class, 'index'])->name('client.tou
 Route::get('/tin-tuc', [ClientBaseController::class, 'index'])->name('client.news');
 Route::get('/gioi-thieu', [ClientBaseController::class, 'index'])->name('client.about');
 Route::get('/lien-he', [ClientBaseController::class, 'index'])->name('client.contact');
+
+// Client Authentication POST Routes
+Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('client.login.submit');
+Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->name('client.register.submit');
+Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');
+Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
 
 // Admin Routes
 Route::get('/admin', function () {
@@ -35,7 +42,6 @@ Route::post('/admin/authenticate', [AdminAuthController::class, "authenticate"])
 Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->group(function () {
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
     Route::get('/dashboard/chart-data', [AdminBaseController::class, 'getChartData'])->name('dashboard.chartData');
-
 
     Route::resource('categories', CategoryController::class);
     Route::resource('news', NewsController::class);
