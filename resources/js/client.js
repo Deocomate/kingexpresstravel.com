@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.add('overflow-hidden');
 
         requestAnimationFrame(() => {
-            modalPanel.classList.remove('opacity-0', '-translate-y-10');
+            modalPanel.classList.remove('opacity-0');
         });
     };
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!currentlyOpenModal) return;
 
         const modalPanel = currentlyOpenModal.querySelector('.modal-panel');
-        modalPanel.classList.add('opacity-0', '-translate-y-10');
+        modalPanel.classList.add('opacity-0');
 
         setTimeout(() => {
             if (currentlyOpenModal) {

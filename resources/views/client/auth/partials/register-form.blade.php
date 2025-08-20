@@ -2,12 +2,16 @@
     @csrf
     <div class="space-y-4">
         <div>
+            <label for="register-name" class="block text-sm font-medium text-gray-700">Họ và tên (*)</label>
+            <input type="text" name="name" id="register-name" required value="{{ old('name') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+        </div>
+        <div>
             <label for="register-email" class="block text-sm font-medium text-gray-700">Email (*)</label>
-            <input type="email" name="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+            <input type="email" name="email" id="register-email" required value="{{ old('email') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
         </div>
         <div>
             <label for="register-phone" class="block text-sm font-medium text-gray-700">Số điện thoại (*)</label>
-            <input type="tel" name="phone" id="register-phone" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+            <input type="tel" name="phone" id="register-phone" required value="{{ old('phone') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
         </div>
         <div>
             <label for="register-password" class="block text-sm font-medium text-gray-700">Mật khẩu (*)</label>
