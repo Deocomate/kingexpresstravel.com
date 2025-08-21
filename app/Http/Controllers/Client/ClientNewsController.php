@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ClientNewsController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|JsonResponse
     {
         $query = News::with(['category'])
             ->whereHas('category', fn($q) => $q->where('is_active', true));
@@ -28,11 +29,15 @@ class ClientNewsController extends Controller
 
         $newsItems = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
-        $categories = Category::where('type', 'NEWS')->where('is_active', true)->orderBy('priority')->get();
-
         if ($request->ajax()) {
-            return view('client.pages.news.partials.news_list', compact('newsItems'));
+            $html = view('client.pages.news.partials.news_list', compact('newsItems'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $newsItems->hasMorePages() ? $newsItems->nextPageUrl() : null,
+            ]);
         }
+
+        $categories = Category::where('type', 'NEWS')->where('is_active', true)->orderBy('priority')->get();
 
         return view('client.pages.news.index', compact('newsItems', 'categories', 'selectedCategorySlug', 'searchQuery'));
     }

@@ -92,25 +92,17 @@
                     fetch(url, {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
                         }
                     })
-                        .then(response => response.text())
-                        .then(html => {
-                            const newsListContainer = document.getElementById('news-list-container');
-                            newsListContainer.insertAdjacentHTML('beforeend', html);
-
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = html;
-                            const newItemsCount = tempDiv.children.length;
-
-                            let nextUrl = null;
-                            const newPaginationContainer = doc.querySelector('#pagination-container');
-                            if (newPaginationContainer) {
-                                const newLoadMoreButton = newPaginationContainer.querySelector('#load-more-button');
-                                if (newLoadMoreButton) {
-                                    nextUrl = newLoadMoreButton.getAttribute('href');
-                                }
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.html) {
+                                const newsListContainer = document.getElementById('news-list-container');
+                                newsListContainer.insertAdjacentHTML('beforeend', data.html);
                             }
+
+                            const nextUrl = data.next_page_url;
 
                             if (nextUrl) {
                                 loadMoreButton.setAttribute('href', nextUrl);
@@ -121,7 +113,7 @@
                             }
                         })
                         .catch(error => {
-                            console.error('Error loading more news:', error);
+                            console.error('Lỗi khi tải thêm tin tức:', error);
                             if(loadMoreButton) {
                                 loadMoreButton.innerText = 'Xem thêm';
                                 loadMoreButton.disabled = false;
