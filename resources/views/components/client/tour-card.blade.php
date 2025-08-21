@@ -3,7 +3,7 @@
 @if($tour)
     <div
         class="bg-white rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
-        <a href="#" title="{{ $tour->name ?? '' }}" class="block flex flex-col flex-grow">
+        <a href="{{ route('client.tour.show', $tour) }}" title="{{ $tour->name ?? '' }}" class="block flex flex-col flex-grow">
             <div class="relative">
                 <img class="w-full h-48 object-cover"
                      src="{{ $tour->thumbnail ?? '/userfiles/images/placeholder.jpg' }}"

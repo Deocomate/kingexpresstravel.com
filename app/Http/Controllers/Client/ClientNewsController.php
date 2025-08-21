@@ -41,4 +41,25 @@ class ClientNewsController extends Controller
 
         return view('client.pages.news.index', compact('newsItems', 'categories', 'selectedCategorySlug', 'searchQuery'));
     }
+
+    public function show(News $news): View
+    {
+        $news->load('category');
+        $news->increment('view');
+
+        $relatedNews = News::with('category')
+            ->where('id', '!=', $news->id)
+            ->where('category_id', $news->category_id)
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+
+        $latestNews = News::with('category')
+            ->where('id', '!=', $news->id)
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get();
+
+        return view('client.pages.news.show', compact('news', 'relatedNews', 'latestNews'));
+    }
 }

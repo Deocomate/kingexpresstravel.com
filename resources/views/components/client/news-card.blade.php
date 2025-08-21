@@ -2,7 +2,7 @@
 
 @if($news)
     <div class="bg-white rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
-        <a href="#" title="{{ $news->title ?? '' }}" class="block flex flex-col flex-grow">
+        <a href="{{ route('client.news.show', $news) }}" title="{{ $news->title ?? '' }}" class="block flex flex-col flex-grow">
             <div class="relative">
                 <img class="w-full h-48 object-cover"
                      src="{{ $news->thumbnail ?? '/userfiles/images/placeholder.jpg' }}"

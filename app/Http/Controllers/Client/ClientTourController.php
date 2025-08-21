@@ -61,4 +61,20 @@ class ClientTourController extends Controller
 
         return view('client.pages.tours.index', compact('tours', 'categories', 'destinations'));
     }
+
+    public function show(Tour $tour): View
+    {
+        $tour->load(['categories', 'destinations']);
+
+        $relatedTours = Tour::with('destinations')
+            ->where('id', '!=', $tour->id)
+            ->whereHas('categories', function ($query) use ($tour) {
+                $query->whereIn('id', $tour->categories->pluck('id'));
+            })
+            ->inRandomOrder()
+            ->limit(8)
+            ->get();
+
+        return view('client.pages.tours.show', compact('tour', 'relatedTours'));
+    }
 }

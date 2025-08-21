@@ -23,7 +23,9 @@ use Illuminate\Support\Facades\Route;
 // Client Routes
 Route::get('/', [ClientBaseController::class, 'index'])->name('client.home');
 Route::get('/du-lich', [ClientTourController::class, 'index'])->name('client.tours');
+Route::get('/du-lich/{tour:slug}', [ClientTourController::class, 'show'])->name('client.tour.show');
 Route::get('/tin-tuc', [ClientNewsController::class, 'index'])->name('client.news');
+Route::get('/tin-tuc/{news:slug}', [ClientNewsController::class, 'show'])->name('client.news.show');
 Route::get('/gioi-thieu', [ClientAboutController::class, 'index'])->name('client.about');
 Route::get('/lien-he', [ClientContactController::class, 'index'])->name('client.contact');
 Route::post('/lien-he', [ClientContactController::class, 'store'])->name('client.contact.submit');

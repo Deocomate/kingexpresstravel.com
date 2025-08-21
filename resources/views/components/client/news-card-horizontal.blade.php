@@ -2,7 +2,7 @@
 
 @if($news)
     <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden group transition-all duration-300 hover:shadow-lg hover:border-[var(--color-primary)]">
-        <a href="#" title="{{ $news->title ?? '' }}" class="flex flex-col md:flex-row">
+        <a href="{{ route('client.news.show', $news) }}" title="{{ $news->title ?? '' }}" class="flex flex-col md:flex-row">
             <div class="md:w-1/3 flex-shrink-0 relative">
                 @if($news->category)
                     <span class="absolute top-3 left-3 z-10 inline-block bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] text-xs font-bold px-3 py-1 rounded-full">{{ $news->category->name }}</span>
