@@ -12,7 +12,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8 order-2 lg:order-1">
+                <div class="lg:col-span-9 order-2 lg:order-1">
                     <div id="news-list-container" class="space-y-6">
                         @include('client.pages.news.partials.news_list', ['newsItems' => $newsItems])
                     </div>
@@ -27,15 +27,14 @@
                     </div>
                 </div>
 
-                <aside class="lg:col-span-4 order-1 lg:order-2">
-                    <div class="sticky top-24 space-y-6">
+                <aside class="lg:col-span-3 order-1 lg:order-2">
+                    <div class="sticky top-36 space-y-6">
                         <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Tìm kiếm</h3>
                             <form action="{{ route('client.news') }}" method="GET">
                                 <div class="relative">
                                     <input type="text" name="search" value="{{ $searchQuery ?? '' }}"
                                            placeholder="Tìm kiếm bài viết..."
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                           class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                     <button type="submit"
                                             class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-[var(--color-primary)]"
                                             aria-label="Tìm kiếm">
@@ -46,23 +45,21 @@
                                     <input type="hidden" name="category" value="{{ $selectedCategorySlug }}">
                                 @endif
                             </form>
-                        </div>
 
-                        <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">Danh mục</h3>
-                            <ul class="space-y-2">
+                            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-4 border-t pt-4">Danh mục</h3>
+                            <ul class="space-y-2 max-h-80 overflow-y-auto">
                                 <li>
                                     <a href="{{ route('client.news', ['search' => $searchQuery ?? '']) }}"
-                                       class="block px-4 py-2 rounded-md transition-colors text-gray-700 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-dark)] {{ !isset($selectedCategorySlug) ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] font-bold' : '' }}">
-                                        Tất cả
+                                       class="flex justify-between items-center px-4 py-2 rounded-md transition-colors text-gray-700 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-dark)] {{ !isset($selectedCategorySlug) ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] font-bold' : '' }}">
+                                        <span>Tất cả</span>
                                     </a>
                                 </li>
                                 @if(isset($categories) && !$categories->isEmpty())
                                     @foreach($categories as $category)
                                         <li>
                                             <a href="{{ route('client.news', ['category' => $category->slug, 'search' => $searchQuery ?? '']) }}"
-                                               class="block px-4 py-2 rounded-md transition-colors text-gray-700 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-dark)] {{ (isset($selectedCategorySlug) && $selectedCategorySlug == $category->slug) ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] font-bold' : '' }}">
-                                                {{ $category->name ?? '' }}
+                                               class="flex justify-between items-center px-4 py-2 rounded-md transition-colors text-gray-700 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-dark)] {{ (isset($selectedCategorySlug) && $selectedCategorySlug == $category->slug) ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] font-bold' : '' }}">
+                                                <span>{{ $category->name ?? '' }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -83,10 +80,12 @@
             if (!paginationContainer) return;
 
             paginationContainer.addEventListener('click', function (e) {
-                if (e.target && e.target.id === 'load-more-button') {
+                const loadMoreButton = e.target.closest('#load-more-button');
+                if (loadMoreButton && !loadMoreButton.disabled) {
                     e.preventDefault();
-                    const loadMoreButton = e.target;
                     const url = loadMoreButton.getAttribute('href');
+                    if (!url) return;
+
                     loadMoreButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
                     loadMoreButton.disabled = true;
 
@@ -97,23 +96,36 @@
                     })
                         .then(response => response.text())
                         .then(html => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            const newItems = doc.querySelector('#news-list-container').innerHTML;
-                            const newPagination = doc.querySelector('#pagination-container').innerHTML;
+                            const newsListContainer = document.getElementById('news-list-container');
+                            newsListContainer.insertAdjacentHTML('beforeend', html);
 
-                            document.getElementById('news-list-container').insertAdjacentHTML('beforeend', newItems);
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            const newItemsCount = tempDiv.children.length;
 
-                            if (newPagination.trim()) {
-                                paginationContainer.innerHTML = newPagination;
+                            let nextUrl = null;
+                            const newPaginationContainer = doc.querySelector('#pagination-container');
+                            if (newPaginationContainer) {
+                                const newLoadMoreButton = newPaginationContainer.querySelector('#load-more-button');
+                                if (newLoadMoreButton) {
+                                    nextUrl = newLoadMoreButton.getAttribute('href');
+                                }
+                            }
+
+                            if (nextUrl) {
+                                loadMoreButton.setAttribute('href', nextUrl);
+                                loadMoreButton.innerHTML = 'Xem thêm';
+                                loadMoreButton.disabled = false;
                             } else {
                                 paginationContainer.remove();
                             }
                         })
                         .catch(error => {
                             console.error('Error loading more news:', error);
-                            loadMoreButton.innerText = 'Xem thêm';
-                            loadMoreButton.disabled = false;
+                            if(loadMoreButton) {
+                                loadMoreButton.innerText = 'Xem thêm';
+                                loadMoreButton.disabled = false;
+                            }
                         });
                 }
             });
