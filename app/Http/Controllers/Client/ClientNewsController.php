@@ -15,17 +15,25 @@ class ClientNewsController extends Controller
         $query = News::with(['category'])
             ->whereHas('category', fn($q) => $q->where('is_active', true));
 
-        $request->whenFilled('search', function ($search) use ($query) {
-            $query->where('title', 'like', '%' . $search . '%');
-        });
+        $selectedCategorySlug = $request->input('category');
+        $searchQuery = $request->input('search');
 
-        $request->whenFilled('category_id', function ($categoryId) use ($query) {
-            $query->where('category_id', $categoryId);
-        });
+        if ($searchQuery) {
+            $query->where('title', 'like', '%' . $searchQuery . '%');
+        }
 
-        $newsItems = $query->orderByDesc('created_at')->paginate(12)->withQueryString();
-        $categories = Category::where('type', 'NEWS')->where('is_active', true)->get();
+        if ($selectedCategorySlug) {
+            $query->whereHas('category', fn($q) => $q->where('slug', $selectedCategorySlug));
+        }
 
-        return view('client.pages.news.index', compact('newsItems', 'categories'));
+        $newsItems = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
+
+        $categories = Category::where('type', 'NEWS')->where('is_active', true)->orderBy('priority')->get();
+
+        if ($request->ajax()) {
+            return view('client.pages.news.partials.news_list', compact('newsItems'));
+        }
+
+        return view('client.pages.news.index', compact('newsItems', 'categories', 'selectedCategorySlug', 'searchQuery'));
     }
 }
