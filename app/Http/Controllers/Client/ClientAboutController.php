@@ -10,7 +10,7 @@ class ClientAboutController extends Controller
 {
     public function index(): View
     {
-        $aboutPage = AboutUs::query()->orderBy('id')->first();
+        $aboutPage = AboutUs::first();
 
         return view('client.pages.about.index', compact('aboutPage'));
     }

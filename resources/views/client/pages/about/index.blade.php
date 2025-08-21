@@ -7,8 +7,8 @@
     <div class="py-6 md:py-12 bg-white">
         <div class="container mx-auto px-4">
             <div class="prose max-w-4xl mx-auto">
-                @if($aboutPage)
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 uppercase text-center mb-8">{{ $aboutPage->title }}</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 uppercase mb-6">Giới thiệu về chúng tôi</h1>
+                @if($aboutPage && $aboutPage->content)
                     <div>
                         {!! $aboutPage->content !!}
                     </div>
@@ -23,3 +23,4 @@
         </div>
     </div>
 @endsection
+

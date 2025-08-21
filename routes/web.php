@@ -53,8 +53,11 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::resource('news', AdminNewsController::class);
     Route::resource('tours', AdminTourController::class);
     Route::resource('destinations', DestinationController::class);
-    Route::resource('about-us', AboutUsController::class)->except(['show']);
     Route::resource('customer-care', CustomerCareController::class)->except(['create', 'store', 'edit', 'update']);
+
+    // About Us Routes
+    Route::get('about-us', [AboutUsController::class, 'edit'])->name('about-us.edit');
+    Route::put('about-us', [AboutUsController::class, 'update'])->name('about-us.update');
 
     Route::get('contacts', [AdminContactController::class, 'edit'])->name('contacts.edit');
     Route::put('contacts', [AdminContactController::class, 'update'])->name('contacts.update');

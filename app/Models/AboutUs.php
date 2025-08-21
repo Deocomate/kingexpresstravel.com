@@ -9,10 +9,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property string|null $title
- * @property string $slug
  * @property string|null $content
- * @property int $view
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder<static>|AboutUs newModelQuery()
@@ -21,13 +18,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|AboutUs whereContent($value)
  * @method static Builder<static>|AboutUs whereCreatedAt($value)
  * @method static Builder<static>|AboutUs whereId($value)
- * @method static Builder<static>|AboutUs whereSlug($value)
- * @method static Builder<static>|AboutUs whereTitle($value)
  * @method static Builder<static>|AboutUs whereUpdatedAt($value)
- * @method static Builder<static>|AboutUs whereView($value)
  * @mixin Eloquent
  */
 class AboutUs extends Model
 {
-    //
+    protected $table = 'about_us';
+
+    protected $fillable = [
+        'content',
+    ];
 }

@@ -136,10 +136,7 @@ return new class extends Migration {
 
         Schema::create('about_us', function (Blueprint $table) {
             $table->id();
-            $table->text('title')->nullable();
-            $table->string('slug')->unique();
             $table->longText('content')->nullable();
-            $table->integer('view')->default(0);
             $table->timestamps();
         });
 
