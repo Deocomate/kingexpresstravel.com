@@ -10,12 +10,13 @@
                 @if(!empty($banners))
                     @foreach($banners as $bannerUrl)
                         <div class="swiper-slide">
-                            <img src="{{ $bannerUrl }}" alt="King Express Travel Banner" class="w-full h-[60vh] object-cover">
+                            {{-- Sửa ở dòng dưới: thêm h-[40vh] cho màn hình nhỏ và md:h-[60vh] cho màn hình lớn hơn --}}
+                            <img src="{{ $bannerUrl }}" alt="King Express Travel Banner" class="w-full h-[40vh] md:h-[60vh] object-cover">
                         </div>
                     @endforeach
                 @else
                     <div class="swiper-slide">
-                        <img src="/userfiles/images/placeholder.jpg" alt="King Express Travel Banner" class="w-full h-[60vh] object-cover">
+                        <img src="/userfiles/images/placeholder.jpg" alt="King Express Travel Banner" class="w-full h-[40vh] md:h-[60vh] object-cover">
                     </div>
                 @endif
             </div>

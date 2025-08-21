@@ -4,24 +4,30 @@ use App\Http\Controllers\Admin\AboutUsController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CustomerCareController;
-use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\TourController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\ClientAboutController;
 use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientBaseController;
+use App\Http\Controllers\Client\ClientContactController;
+use App\Http\Controllers\Client\ClientNewsController;
+use App\Http\Controllers\Client\ClientTourController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Client Routes
 Route::get('/', [ClientBaseController::class, 'index'])->name('client.home');
-Route::get('/du-lich', [ClientBaseController::class, 'index'])->name('client.tours');
-Route::get('/tin-tuc', [ClientBaseController::class, 'index'])->name('client.news');
-Route::get('/gioi-thieu', [ClientBaseController::class, 'index'])->name('client.about');
-Route::get('/lien-he', [ClientBaseController::class, 'index'])->name('client.contact');
+Route::get('/du-lich', [ClientTourController::class, 'index'])->name('client.tours');
+Route::get('/tin-tuc', [ClientNewsController::class, 'index'])->name('client.news');
+Route::get('/gioi-thieu', [ClientAboutController::class, 'index'])->name('client.about');
+Route::get('/lien-he', [ClientContactController::class, 'index'])->name('client.contact');
+Route::post('/lien-he', [ClientContactController::class, 'store'])->name('client.contact.submit');
+
 
 // Client Authentication POST Routes
 Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('client.login.submit');
@@ -44,14 +50,14 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::get('/dashboard/chart-data', [AdminBaseController::class, 'getChartData'])->name('dashboard.chartData');
 
     Route::resource('categories', CategoryController::class);
-    Route::resource('news', NewsController::class);
-    Route::resource('tours', TourController::class);
+    Route::resource('news', AdminNewsController::class);
+    Route::resource('tours', AdminTourController::class);
     Route::resource('destinations', DestinationController::class);
     Route::resource('about-us', AboutUsController::class)->except(['show']);
     Route::resource('customer-care', CustomerCareController::class)->except(['create', 'store', 'edit', 'update']);
 
-    Route::get('contacts', [ContactController::class, 'edit'])->name('contacts.edit');
-    Route::put('contacts', [ContactController::class, 'update'])->name('contacts.update');
+    Route::get('contacts', [AdminContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('contacts', [AdminContactController::class, 'update'])->name('contacts.update');
 
     Route::resource('users', UserController::class);
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');

@@ -33,5 +33,12 @@ use Illuminate\Support\Carbon;
  */
 class CustomerCare extends Model
 {
-    //
+    protected $fillable = [
+        'full_name',
+        'email',
+        'phone',
+        'subject',
+        'message',
+        'note',
+    ];
 }
