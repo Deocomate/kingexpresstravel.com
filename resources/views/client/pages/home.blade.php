@@ -41,7 +41,7 @@
                                 <div class="swiper tour-slider">
                                     <div class="swiper-wrapper">
                                         @foreach($category->tours as $tour)
-                                            <div class="swiper-slide">
+                                            <div class="swiper-slide h-auto">
                                                 <x-client.tour-card :tour="$tour"/>
                                             </div>
                                         @endforeach
@@ -69,7 +69,7 @@
                                 <div class="swiper news-slider">
                                     <div class="swiper-wrapper">
                                         @foreach($category->news as $newsItem)
-                                            <div class="swiper-slide">
+                                            <div class="swiper-slide h-auto">
                                                 <x-client.news-card :news="$newsItem"/>
                                             </div>
                                         @endforeach
@@ -155,24 +155,24 @@
                 const prevBtn = container.querySelector('.swiper-button-prev');
 
                 new Swiper(slider, {
-                    slidesPerView: 1.2,
-                    spaceBetween: 16,
+                    slidesPerView: 1.15,
+                    spaceBetween: 12,
                     navigation: {
                         nextEl: nextBtn,
                         prevEl: prevBtn,
                     },
                     breakpoints: {
                         640: {
-                            slidesPerView: 2.5,
+                            slidesPerView: 2.2,
                             spaceBetween: 16,
                         },
                         768: {
-                            slidesPerView: 3.5,
-                            spaceBetween: 20,
+                            slidesPerView: 3.2,
+                            spaceBetween: 16,
                         },
                         1024: {
                             slidesPerView: 4,
-                            spaceBetween: 24,
+                            spaceBetween: 16,
                         },
                     },
                 });

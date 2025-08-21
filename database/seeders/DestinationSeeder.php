@@ -9,9 +9,6 @@ use Illuminate\Support\Str;
 
 class DestinationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
@@ -19,8 +16,8 @@ class DestinationSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
         $destinations = [
-            'Hà Nội', 'Hạ Long', 'Sapa', 'Hà Giang', 'Ninh Bình', 'Huế', 'Đà Nẵng',
-            'Hội An', 'Quy Nhơn', 'Nha Trang', 'Đà Lạt', 'Mũi Né', 'Vũng Tàu',
+            'Hà Nội', 'Vịnh Hạ Long', 'Sa Pa', 'Hà Giang', 'Ninh Bình', 'Huế', 'Đà Nẵng',
+            'Hội An', 'Quy Nhơn', 'Nha Trang', 'Đà Lạt', 'Phan Thiết', 'Vũng Tàu',
             'TP. Hồ Chí Minh', 'Cần Thơ', 'Phú Quốc', 'Côn Đảo', 'Mộc Châu', 'Pù Luông', 'Cát Bà'
         ];
 
@@ -29,7 +26,7 @@ class DestinationSeeder extends Seeder
             $data[] = [
                 'name' => $name,
                 'slug' => Str::slug($name),
-                'description' => 'Mô tả chi tiết cho điểm đến ' . $name . '.',
+                'description' => 'Khám phá vẻ đẹp tuyệt vời của ' . $name . ' với những danh lam thắng cảnh độc đáo và nền văn hóa đặc sắc.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

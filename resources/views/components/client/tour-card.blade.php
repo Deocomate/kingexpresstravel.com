@@ -2,8 +2,8 @@
 
 @if($tour)
     <div
-        class="bg-white rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-        <a href="#" title="{{ $tour->name ?? '' }}" class="block">
+        class="bg-white rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col">
+        <a href="#" title="{{ $tour->name ?? '' }}" class="block flex flex-col flex-grow">
             <div class="relative">
                 <img class="w-full h-48 object-cover"
                      src="{{ $tour->thumbnail ?? '/userfiles/images/placeholder.jpg' }}"
@@ -14,8 +14,8 @@
                     <span>{{ $tour->destinations->first()->name ?? 'Nhiều nơi' }}</span>
                 </div>
             </div>
-            <div class="p-4 flex flex-col h-[210px]">
-                <h3 class="font-bold text-gray-800 text-base leading-tight h-12 overflow-hidden group-hover:text-[var(--color-primary)] transition-colors">
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="font-bold text-gray-800 text-base leading-tight h-12 overflow-hidden group-hover:text-[var(--color-primary)] transition-colors [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]">
                     {{ $tour->name ?? 'Tên tour đang được cập nhật' }}
                 </h3>
                 <div class="mt-3 text-sm text-gray-600 space-y-2 flex-grow">
