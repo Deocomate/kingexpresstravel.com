@@ -12,7 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -31,6 +32,44 @@
         }
         .custom-toast .swal2-icon .swal2-icon-content {
             font-size: 1em;
+        }
+        .slider-container .swiper-button-next,
+        .slider-container .swiper-button-prev {
+            color: var(--color-primary);
+            background-color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            transition: opacity 0.3s;
+        }
+        .slider-container .swiper-button-next:after,
+        .slider-container .swiper-button-prev:after {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .slider-container .swiper-button-prev {
+            left: -22px;
+        }
+        .slider-container .swiper-button-next {
+            right: -22px;
+        }
+        .swiper-button-disabled {
+            opacity: 0;
+            cursor: auto;
+            pointer-events: none;
+        }
+        .main-carousel .swiper-button-prev {
+            left: 20px;
+        }
+        .main-carousel .swiper-button-next {
+            right: 20px;
+        }
+        @media (max-width: 768px) {
+            .slider-container .swiper-button-prev,
+            .slider-container .swiper-button-next {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -58,6 +97,7 @@
     @include('client.auth.partials.forgot-password-form')
 </x-client.modal>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @stack('scripts')
 
 <script>

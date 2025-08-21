@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -24,6 +25,8 @@ use Illuminate\Support\Carbon;
  * @property-read Category|null $parent
  * @property-read Collection<int, Category> $children
  * @property-read Collection<int, Category> $recursiveChildren
+ * @property-read Collection<int, Tour> $tours
+ * @property-read Collection<int, News> $news
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
  * @method static Builder|Category query()
@@ -55,9 +58,18 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id')->orderBy('priority');
     }
 
-    /** @noinspection PhpUnused */
     public function recursiveChildren(): HasMany
     {
         return $this->children()->with('recursiveChildren');
+    }
+
+    public function tours(): BelongsToMany
+    {
+        return $this->belongsToMany(Tour::class, 'tour_categories');
+    }
+
+    public function news(): HasMany
+    {
+        return $this->hasMany(News::class);
     }
 }
