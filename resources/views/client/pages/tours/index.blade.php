@@ -12,32 +12,31 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {{-- Cột Filter bên trái --}}
                 <aside class="lg:col-span-3">
                     <div class="sticky top-36 space-y-6">
                         <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
                             <h3 class="text-lg font-bold text-gray-800 mb-4">Bộ lọc tìm kiếm</h3>
-                            <form action="{{ route('client.tours') }}" method="GET">
+                            <form action="{{ route('client.tours') }}" method="GET" id="filter-form">
                                 <div class="space-y-4">
                                     <div>
                                         <label for="search" class="block text-sm font-semibold text-gray-800">Tên tour</label>
                                         <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Nhập tên tour..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                     </div>
                                     <div>
-                                        <label for="category_id" class="block text-sm font-semibold text-gray-800">Loại hình</label>
-                                        <select name="category_id" id="category_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                        <label for="category" class="block text-sm font-semibold text-gray-800">Loại hình</label>
+                                        <select name="category" id="category" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="">Tất cả</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
+                                                <option value="{{ $category->slug }}" @selected($selectedCategorySlug == $category->slug)>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div>
-                                        <label for="destination_id" class="block text-sm font-semibold text-gray-800">Điểm đến</label>
-                                        <select name="destination_id" id="destination_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                        <label for="destination" class="block text-sm font-semibold text-gray-800">Điểm đến</label>
+                                        <select name="destination" id="destination" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="">Tất cả</option>
                                             @foreach($destinations as $destination)
-                                                <option value="{{ $destination->id }}" @selected(request('destination_id') == $destination->id)>{{ $destination->name }}</option>
+                                                <option value="{{ $destination->slug }}" @selected($selectedDestinationSlug == $destination->slug)>{{ $destination->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -70,7 +69,6 @@
                     </div>
                 </aside>
 
-                {{-- Cột danh sách Tour bên phải --}}
                 <div class="lg:col-span-9">
                     <div class="mb-4">
                         <h2 class="text-2xl font-bold text-gray-800">Các tour du lịch</h2>
@@ -94,100 +92,106 @@
 @endsection
 
 @push('scripts')
-    {{-- jQuery is required for ion.rangeSlider --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    {{-- ion.rangeSlider CSS & JS --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
 
     <style>
-        .irs--flat .irs-bar {
-            background-color: var(--color-primary);
-        }
-        .irs--flat .irs-handle>i:first-child {
-            background-color: var(--color-primary-dark);
-        }
-        .irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single {
-            background-color: var(--color-primary-dark);
-        }
-        .irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before {
-            border-top-color: var(--color-primary-dark);
-        }
+        .irs--flat .irs-bar { background-color: var(--color-primary); }
+        .irs--flat .irs-handle>i:first-child { background-color: var(--color-primary-dark); }
+        .irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single { background-color: var(--color-primary-dark); }
+        .irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before { border-top-color: var(--color-primary-dark); }
     </style>
 
     <script>
-        // Price Range Slider
         $(function () {
-            $("#price_range_slider").ionRangeSlider({
+            const priceSlider = $("#price_range_slider");
+            const priceFromInput = $('#price_from');
+            const priceToInput = $('#price_to');
+            const minPrice = 1000000;
+            const maxPrice = 15000000;
+
+            priceSlider.ionRangeSlider({
                 type: "double",
                 grid: true,
-                min: 1000000,
-                max: 15000000,
-                from: {{ request('price_from', 1000000) }},
-                to: {{ request('price_to', 15000000) }},
+                min: minPrice,
+                max: maxPrice,
+                from: priceFromInput.val() || minPrice,
+                to: priceToInput.val() || maxPrice,
                 prefix: "đ ",
                 step: 500000,
                 prettify_separator: ".",
                 onFinish: function (data) {
-                    $('#price_from').val(data.from);
-                    $('#price_to').val(data.to);
+                    priceFromInput.val(data.from);
+                    priceToInput.val(data.to);
                 },
             });
         });
 
-        // Load More Button
         document.addEventListener('DOMContentLoaded', function () {
-            const paginationContainer = document.getElementById('pagination-container');
-            if (!paginationContainer) return;
-
-            paginationContainer.addEventListener('click', function (e) {
-                const loadMoreButton = e.target.closest('#load-more-button');
-                if (loadMoreButton && !loadMoreButton.disabled) {
+            const filterForm = document.getElementById('filter-form');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function (e) {
                     e.preventDefault();
-                    const url = loadMoreButton.getAttribute('href');
-                    if (!url) return;
+                    const formData = new FormData(filterForm);
+                    const params = new URLSearchParams();
+                    const minPrice = 1000000;
+                    const maxPrice = 15000000;
 
-                    loadMoreButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
-                    loadMoreButton.disabled = true;
-
-                    fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
+                    for (const [key, value] of formData.entries()) {
+                        if (value && value.trim() !== '' && value !== 'default') {
+                            if (key === 'price_from' && value == minPrice) continue;
+                            if (key === 'price_to' && value == maxPrice) continue;
+                            params.append(key, value);
                         }
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.html) {
-                                const tourListContainer = document.getElementById('tour-list-container');
-                                const grid = tourListContainer.querySelector('.grid');
-                                if (grid) {
-                                    const tempDiv = document.createElement('div');
-                                    tempDiv.innerHTML = data.html;
-                                    const newItems = tempDiv.querySelector('.grid').innerHTML;
-                                    grid.insertAdjacentHTML('beforeend', newItems);
+                    }
+                    params.delete('price_range');
+                    const queryString = params.toString();
+                    window.location.href = filterForm.action + (queryString ? '?' + queryString : '');
+                });
+            }
+
+            const paginationContainer = document.getElementById('pagination-container');
+            if (paginationContainer) {
+                paginationContainer.addEventListener('click', function (e) {
+                    const loadMoreButton = e.target.closest('#load-more-button');
+                    if (loadMoreButton && !loadMoreButton.disabled) {
+                        e.preventDefault();
+                        const url = loadMoreButton.getAttribute('href');
+                        if (!url) return;
+
+                        loadMoreButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+                        loadMoreButton.disabled = true;
+
+                        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' } })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.html) {
+                                    const grid = document.querySelector('#tour-list-container .grid');
+                                    if (grid) {
+                                        const tempDiv = document.createElement('div');
+                                        tempDiv.innerHTML = data.html;
+                                        grid.insertAdjacentHTML('beforeend', tempDiv.querySelector('.grid').innerHTML);
+                                    }
                                 }
-                            }
-
-                            const nextUrl = data.next_page_url;
-
-                            if (nextUrl) {
-                                loadMoreButton.setAttribute('href', nextUrl);
-                                loadMoreButton.innerHTML = 'Xem thêm';
-                                loadMoreButton.disabled = false;
-                            } else {
-                                paginationContainer.remove();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Lỗi khi tải thêm tour:', error);
-                            if(loadMoreButton) {
-                                loadMoreButton.innerText = 'Xem thêm';
-                                loadMoreButton.disabled = false;
-                            }
-                        });
-                }
-            });
+                                if (data.next_page_url) {
+                                    loadMoreButton.setAttribute('href', data.next_page_url);
+                                    loadMoreButton.innerHTML = 'Xem thêm';
+                                    loadMoreButton.disabled = false;
+                                } else {
+                                    paginationContainer.remove();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi tải thêm tour:', error);
+                                if(loadMoreButton) {
+                                    loadMoreButton.innerText = 'Xem thêm';
+                                    loadMoreButton.disabled = false;
+                                }
+                            });
+                    }
+                });
+            }
         });
     </script>
 @endpush

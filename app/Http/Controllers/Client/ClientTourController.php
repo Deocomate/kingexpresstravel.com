@@ -17,24 +17,31 @@ class ClientTourController extends Controller
         $query = Tour::with(['destinations'])
             ->whereHas('categories', fn($q) => $q->where('is_active', true));
 
+        $selectedCategorySlug = $request->input('category');
+        $selectedDestinationSlug = $request->input('destination');
+
         $request->whenFilled('search', function ($search) use ($query) {
             $query->where('name', 'like', '%' . $search . '%');
         });
 
-        $request->whenFilled('category_id', function ($categoryId) use ($query) {
-            $query->whereHas('categories', fn($q) => $q->where('categories.id', $categoryId));
-        });
+        if ($selectedCategorySlug) {
+            $query->whereHas('categories', fn($q) => $q->where('categories.slug', $selectedCategorySlug));
+        }
 
-        $request->whenFilled('destination_id', function ($destinationId) use ($query) {
-            $query->whereHas('destinations', fn($q) => $q->where('destinations.id', $destinationId));
-        });
+        if ($selectedDestinationSlug) {
+            $query->whereHas('destinations', fn($q) => $q->where('destinations.slug', $selectedDestinationSlug));
+        }
 
         $request->whenFilled('price_from', function ($priceFrom) use ($query) {
-            $query->where('price_adult', '>=', $priceFrom);
+            if ($priceFrom > 0) {
+                $query->where('price_adult', '>=', $priceFrom);
+            }
         });
 
         $request->whenFilled('price_to', function ($priceTo) use ($query) {
-            $query->where('price_adult', '<=', $priceTo);
+            if ($priceTo > 0) {
+                $query->where('price_adult', '<=', $priceTo);
+            }
         });
 
         $request->whenFilled('sort', function ($sort) use ($query) {
@@ -59,7 +66,7 @@ class ClientTourController extends Controller
         $categories = Category::where('type', 'TOUR')->where('is_active', true)->get();
         $destinations = Destination::all();
 
-        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations'));
+        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestinationSlug'));
     }
 
     public function show(Tour $tour): View
