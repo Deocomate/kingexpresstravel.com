@@ -32,34 +32,35 @@
             border: 1px solid #e5e7eb;
             padding: 0.75rem 1rem;
             text-align: center;
+            vertical-align: middle;
         }
         .tour-price-table th {
             background-color: #f9fafb;
             font-weight: bold;
         }
-        .tour-price-table td:first-child {
+        .tour-price-table td:first-child, .tour-price-table th:first-child {
             text-align: left;
         }
-        .schedule-content .prose-styles ul {
+        .prose-styles ul {
             list-style-type: disc;
             padding-left: 20px;
             margin-top: 1em;
             margin-bottom: 1em;
         }
-        .schedule-content .prose-styles ol {
+        .prose-styles ol {
             list-style-type: decimal;
             padding-left: 20px;
             margin-top: 1em;
             margin-bottom: 1em;
         }
-        .schedule-content .prose-styles p {
+        .prose-styles p {
             margin-top: 0.5em;
             margin-bottom: 0.5em;
         }
-        .schedule-content .prose-styles h1,
-        .schedule-content .prose-styles h2,
-        .schedule-content .prose-styles h3,
-        .schedule-content .prose-styles h4 {
+        .prose-styles h1,
+        .prose-styles h2,
+        .prose-styles h3,
+        .prose-styles h4 {
             font-weight: bold;
             margin-top: 1.2em;
             margin-bottom: 0.6em;
@@ -121,8 +122,11 @@
 
                         @if($tour->tour_description)
                             <section id="mo-ta-tour">
-                                <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">MÔ TẢ TOUR</h2>
-                                <div class="prose max-w-none text-gray-700">
+                                <div class="flex items-center mb-4">
+                                    <i class="fa-solid fa-file-lines text-2xl text-[var(--color-primary)] mr-3"></i>
+                                    <h2 class="text-xl font-bold text-gray-800">Mô tả tour</h2>
+                                </div>
+                                <div class="prose max-w-none text-gray-700 prose-styles">
                                     {!! $tour->tour_description !!}
                                 </div>
                             </section>
@@ -130,8 +134,11 @@
 
                         @if($tour->characteristic)
                             <section id="diem-nhan">
-                                <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">ĐIỂM NHẤN HÀNH TRÌNH</h2>
-                                <div class="prose max-w-none text-gray-700">
+                                <div class="flex items-center mb-4">
+                                    <i class="fa-solid fa-star text-2xl text-[var(--color-primary)] mr-3"></i>
+                                    <h2 class="text-xl font-bold text-gray-800">Điểm nhấn hành trình</h2>
+                                </div>
+                                <div class="prose max-w-none text-gray-700 prose-styles">
                                     {!! $tour->characteristic !!}
                                 </div>
                             </section>
@@ -147,17 +154,15 @@
                             </div>
 
                             @if(!empty($tour->tour_schedule) && is_array($tour->tour_schedule))
-                                <div class="relative border-l-2 border-dashed border-gray-300 ml-4">
+                                <div class="relative border-l-2 border-dashed border-gray-300 ml-3 py-2">
                                     <div class="space-y-4">
                                         @foreach($tour->tour_schedule as $schedule)
-                                            <div class="schedule-item relative">
-                                                <div class="absolute -left-[25px] top-2 w-10 h-10 flex items-center justify-center z-10">
-                                                    <div class="schedule-circle w-6 h-6 rounded-full bg-white border-2 border-[var(--color-primary)] flex items-center justify-center transition-all duration-300 border-4">
-                                                        <div class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></div>
-                                                    </div>
+                                            <div class="schedule-item relative pl-8">
+                                                <div class="absolute -left-[13px] top-4 w-6 h-6 rounded-full bg-white border-4 border-[var(--color-primary)] flex items-center justify-center z-10">
+                                                    <div class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></div>
                                                 </div>
-                                                <div class="ml-8">
-                                                    <button type="button" class="schedule-toggle flex justify-between items-center w-full text-left p-2 hover:cursor-pointer rounded-lg bg-[var(--color-primary)] text-white focus:outline-none transition-colors duration-300 hover:bg-[var(--color-primary-dark)]">
+                                                <div>
+                                                    <button type="button" class="schedule-toggle flex justify-between items-center w-full text-left p-3 hover:cursor-pointer rounded-lg bg-[var(--color-primary)] text-white focus:outline-none transition-colors duration-300 hover:bg-[var(--color-primary-dark)]">
                                                         <h3 class="text-base font-bold">{{ $schedule['title'] ?? 'Chi tiết' }}</h3>
                                                         <span class="schedule-icon transform transition-transform duration-300 rotate-180">
                                                             <i class="fa-solid fa-chevron-down text-sm"></i>
@@ -179,12 +184,15 @@
                         </section>
 
                         <section id="bang-gia">
-                            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">BẢNG GIÁ TOUR CHI TIẾT</h2>
+                            <div class="flex items-center mb-4">
+                                <i class="fa-solid fa-tags text-2xl text-[var(--color-primary)] mr-3"></i>
+                                <h2 class="text-xl font-bold text-gray-800">Bảng giá tour chi tiết</h2>
+                            </div>
                             <div class="overflow-x-auto">
-                                <table class="w-full min-w-full tour-price-table">
+                                <table class="w-full tour-price-table">
                                     <thead>
                                     <tr>
-                                        <th>Loại giá/Độ tuổi</th>
+                                        <th class="text-left">Loại giá/Độ tuổi</th>
                                         <th>Người lớn (Trên 11 tuổi)</th>
                                         <th>Trẻ em (5 - 11 tuổi)</th>
                                         <th>Trẻ nhỏ (2 - 5 tuổi)</th>
@@ -206,9 +214,24 @@
 
                         @if($tour->services_note)
                             <section id="dich-vu">
-                                <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">DỊCH VỤ & GHI CHÚ</h2>
-                                <div class="prose max-w-none text-gray-700">
+                                <div class="flex items-center mb-4">
+                                    <i class="fa-solid fa-concierge-bell text-2xl text-[var(--color-primary)] mr-3"></i>
+                                    <h2 class="text-xl font-bold text-gray-800">Dịch vụ</h2>
+                                </div>
+                                <div class="prose max-w-none text-gray-700 prose-styles">
                                     {!! $tour->services_note !!}
+                                </div>
+                            </section>
+                        @endif
+
+                        @if($tour->note)
+                            <section id="ghi-chu">
+                                <div class="flex items-center mb-4">
+                                    <i class="fa-solid fa-clipboard-list text-2xl text-[var(--color-primary)] mr-3"></i>
+                                    <h2 class="text-xl font-bold text-gray-800">Ghi chú</h2>
+                                </div>
+                                <div class="prose max-w-none text-gray-700 prose-styles">
+                                    {!! $tour->note !!}
                                 </div>
                             </section>
                         @endif
@@ -243,6 +266,7 @@
                                 @if(!empty($tour->tour_schedule))<a href="#lich-trinh" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Lịch trình chi tiết</a>@endif
                                 <a href="#bang-gia" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Bảng giá chi tiết</a>
                                 @if($tour->services_note)<a href="#dich-vu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Dịch vụ</a>@endif
+                                @if($tour->note)<a href="#ghi-chu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Ghi chú</a>@endif
                             </nav>
                         </div>
                     </div>
@@ -313,6 +337,7 @@
                     breakpoints: {
                         640: { slidesPerView: 2.2, spaceBetween: 16 },
                         768: { slidesPerView: 3, spaceBetween: 16 },
+                        1024: { slidesPerView: 4, spaceBetween: 16 },
                     },
                 });
             }
@@ -354,33 +379,27 @@
 
             const scheduleItems = document.querySelectorAll('.schedule-item');
 
-            scheduleItems.forEach(item => {
+            scheduleItems.forEach((item, index) => {
                 const content = item.querySelector('.schedule-content');
-                if (content) {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                }
-            });
-
-            scheduleItems.forEach(item => {
                 const toggle = item.querySelector('.schedule-toggle');
+                const icon = item.querySelector('.schedule-icon');
+
+                if (index === 0) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = '0px';
+                    if (icon) icon.classList.remove('rotate-180');
+                }
+
                 if (toggle) {
                     toggle.addEventListener('click', () => {
-                        const content = item.querySelector('.schedule-content');
-                        const icon = item.querySelector('.schedule-icon');
-                        const circle = item.querySelector('.schedule-circle');
-
-                        if (!content) return;
-
                         const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
-
                         if (isOpen) {
                             content.style.maxHeight = '0px';
                             if (icon) icon.classList.remove('rotate-180');
-                            if (circle) circle.classList.remove('border-4');
                         } else {
                             content.style.maxHeight = content.scrollHeight + 'px';
                             if (icon) icon.classList.add('rotate-180');
-                            if (circle) circle.classList.add('border-4');
                         }
                     });
                 }
