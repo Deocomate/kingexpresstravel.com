@@ -79,11 +79,11 @@
             <table class="w-full tour-price-table text-sm md:text-base">
                 <thead>
                 <tr>
-                    <th>Loại giá/Độ tuổi</th>
-                    <th>Người lớn (Trên 11 tuổi)</th>
-                    <th>Trẻ em (5 - 11 tuổi)</th>
-                    <th>Trẻ nhỏ (2 - 5 tuổi)</th>
-                    <th>Sơ sinh (< 2 tuổi)</th>
+                    <th class="text-left">Loại giá/Độ tuổi</th>
+                    <th class="text-left">Người lớn (Trên 11 tuổi)</th>
+                    <th class="text-left">Trẻ em (5 - 11 tuổi)</th>
+                    <th class="text-left">Trẻ nhỏ (2 - 5 tuổi)</th>
+                    <th class="text-left">Sơ sinh (< 2 tuổi)</th>
                 </tr>
                 </thead>
                 <tbody>
