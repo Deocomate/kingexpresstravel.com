@@ -29,6 +29,8 @@ class ClientTourController extends Controller
             $selectedCategory = Category::where('slug', $selectedCategorySlug)->with('children')->first();
             if ($selectedCategory) {
                 $categoryIds = $selectedCategory->getAllDescendantIds();
+                $categoryIds[] = $selectedCategory->id;
+
                 $query->whereHas('categories', function ($q) use ($categoryIds) {
                     $q->whereIn('categories.id', $categoryIds);
                 });

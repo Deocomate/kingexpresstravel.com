@@ -10,13 +10,12 @@
                 @if(!empty($banners))
                     @foreach($banners as $bannerUrl)
                         <div class="swiper-slide">
-                            {{-- Sửa ở dòng dưới: thêm h-[40vh] cho màn hình nhỏ và md:h-[60vh] cho màn hình lớn hơn --}}
                             <img src="{{ $bannerUrl }}" alt="King Express Travel Banner" class="w-full h-[40vh] md:h-[60vh] object-cover">
                         </div>
                     @endforeach
                 @else
                     <div class="swiper-slide">
-                        <img src="/userfiles/images/placeholder.jpg" alt="King Express Travel Banner" class="w-full h-[40vh] md:h-[60vh] object-cover">
+                        <img src="https://placehold.co/1920x600/e2e8f0/e2e8f0?text=King+Express" alt="King Express Travel Banner" class="w-full h-[40vh] md:h-[60vh] object-cover">
                     </div>
                 @endif
             </div>
@@ -34,7 +33,7 @@
                         <section>
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl md:text-3xl font-extrabold text-gray-800 uppercase">{{ $category->name }}</h2>
-                                <a href="#" class="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors">
+                                <a href="{{ route('client.tours', ['category' => $category->slug]) }}" class="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors">
                                     Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i>
                                 </a>
                             </div>
@@ -62,7 +61,7 @@
                         <section>
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-2xl md:text-3xl font-extrabold text-gray-800 uppercase">{{ $category->name }}</h2>
-                                <a href="#" class="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors">
+                                <a href="{{ route('client.news', ['category' => $category->slug]) }}" class="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors">
                                     Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i>
                                 </a>
                             </div>

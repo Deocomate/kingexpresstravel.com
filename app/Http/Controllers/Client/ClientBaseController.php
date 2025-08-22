@@ -17,16 +17,18 @@ class ClientBaseController extends Controller
         ];
 
         $tourCategories = Category::where('type', 'TOUR')
+            ->whereNull('parent_id')
             ->where('is_active', true)
             ->whereHas('tours')
             ->with(['tours' => function ($query) {
                 $query->orderBy('priority')->limit(10);
             }, 'tours.destinations'])
             ->orderBy('priority')
-            ->limit(4)
+            ->limit(3)
             ->get();
 
         $newsCategories = Category::where('type', 'NEWS')
+            ->whereNull('parent_id')
             ->where('is_active', true)
             ->whereHas('news')
             ->with(['news' => function ($query) {
