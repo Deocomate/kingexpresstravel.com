@@ -62,7 +62,15 @@
                     @auth
                         <button type="button" id="account-button"
                                 class="flex items-center gap-x-2 text-sm font-semibold hover:text-[var(--color-primary-subtle-hover)] transition-colors cursor-pointer">
-                            <i class="fa-regular fa-user-circle"></i>
+                            @if(Auth::user()->avatar)
+                                <img class="w-8 h-8 rounded-full object-cover" src="{{ Auth::user()->avatar }}"
+                                     alt="{{ Auth::user()->name }}">
+                            @else
+                                <div
+                                    class="w-8 h-8 rounded-full bg-[var(--color-primary-dark)] flex items-center justify-center text-white text-xs font-bold">
+                                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 2)) }}
+                                </div>
+                            @endif
                             <span>{{ Auth::user()->name }}</span>
                         </button>
                         <div id="account-dropdown"

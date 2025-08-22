@@ -26,7 +26,7 @@ class ClientProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:1000'],
-            'avatar' => ['nullable', 'string', 'max:2000'],
+            'avatar_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:1024'],
             'password' => ['nullable', 'confirmed', Password::min(8)],
         ]);
 
@@ -34,8 +34,14 @@ class ClientProfileController extends Controller
             'name' => $validated['name'],
             'phone' => $validated['phone'],
             'address' => $validated['address'],
-            'avatar' => $validated['avatar'],
         ];
+
+        if ($request->hasFile('avatar_file')) {
+            $file = $request->file('avatar_file');
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('userfiles/images/avatar'), $filename);
+            $userData['avatar'] = '/userfiles/images/avatar/' . $filename;
+        }
 
         if ($request->boolean('change_password') && !empty($validated['password'])) {
             $userData['password'] = Hash::make($validated['password']);

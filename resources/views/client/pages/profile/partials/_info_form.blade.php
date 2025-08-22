@@ -3,7 +3,7 @@
 <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-200">
     <h1 class="text-2xl font-bold text-gray-800">Tài khoản</h1>
 
-    <form action="{{ route('client.profile.update') }}" method="POST" class="mt-6">
+    <form action="{{ route('client.profile.update') }}" method="POST" class="mt-6" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -26,10 +26,10 @@
                     <img id="avatar-preview" class="w-24 h-24 rounded-full object-cover {{ !$user->avatar ? 'hidden' : '' }}" src="{{ $user->avatar ?? '' }}" alt="Avatar">
                 </div>
                 <div>
-                    <button type="button" id="avatar-browse-button" class="px-4 py-2 text-sm font-semibold bg-gray-100 text-gray-700 rounded-md border border-gray-300 hover:bg-gray-200">
-                        Thay đổi ảnh
-                    </button>
-                    <input type="hidden" name="avatar" id="avatar" value="{{ old('avatar', $user->avatar ?? '') }}">
+                    <label for="avatar_file" class="cursor-pointer px-4 py-2 text-sm font-semibold bg-gray-100 text-gray-700 rounded-md border border-gray-300 hover:bg-gray-200">
+                        <span>Thay đổi ảnh</span>
+                        <input type="file" name="avatar_file" id="avatar_file" class="hidden" accept="image/*">
+                    </label>
                     <p class="text-xs text-gray-500 mt-2">JPG, GIF or PNG. 1MB max.</p>
                 </div>
             </div>

@@ -19,7 +19,6 @@
 @endsection
 
 @push('scripts')
-    @include('ckfinder::setup')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const changePasswordCheckbox = document.getElementById('change_password');
@@ -31,35 +30,26 @@
                 });
             }
 
-            const avatarBrowseButton = document.getElementById('avatar-browse-button');
-            const avatarInput = document.getElementById('avatar');
+            const avatarFileInput = document.getElementById('avatar_file');
             const avatarPreview = document.getElementById('avatar-preview');
             const avatarPlaceholder = document.getElementById('avatar-placeholder');
 
-            if (avatarBrowseButton) {
-                avatarBrowseButton.addEventListener('click', function () {
-                    CKFinder.popup({
-                        chooseFiles: true,
-                        resourceType: 'Images',
-                        width: 800,
-                        height: 600,
-                        onInit: function (finder) {
-                            finder.on('files:choose', function (evt) {
-                                const file = evt.data.files.first();
-                                const path = new URL(file.getUrl()).pathname;
-                                if (avatarInput) {
-                                    avatarInput.value = path;
-                                }
-                                if (avatarPreview) {
-                                    avatarPreview.src = path;
-                                    avatarPreview.classList.remove('hidden');
-                                }
-                                if(avatarPlaceholder) {
-                                    avatarPlaceholder.classList.add('hidden');
-                                }
-                            });
+            if (avatarFileInput) {
+                avatarFileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            if (avatarPreview) {
+                                avatarPreview.src = e.target.result;
+                                avatarPreview.classList.remove('hidden');
+                            }
+                            if (avatarPlaceholder) {
+                                avatarPlaceholder.classList.add('hidden');
+                            }
                         }
-                    });
+                        reader.readAsDataURL(file);
+                    }
                 });
             }
         });
