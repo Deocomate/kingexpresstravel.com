@@ -10,8 +10,8 @@
     @if($tour->tour_description)
         <section id="mo-ta-tour">
             <div class="flex items-center mb-4">
-                <i class="fa-solid fa-file-lines text-2xl text-[var(--color-primary)] mr-3"></i>
-                <h2 class="text-xl font-bold text-gray-800">Mô tả tour</h2>
+                <i class="fa-solid fa-file-lines text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
+                <h2 class="text-lg md:text-xl font-bold text-gray-800">Mô tả tour</h2>
             </div>
             <div class="prose max-w-none text-gray-700 prose-styles">
                 {!! $tour->tour_description !!}
@@ -22,8 +22,8 @@
     @if($tour->characteristic)
         <section id="diem-nhan">
             <div class="flex items-center mb-4">
-                <i class="fa-solid fa-star text-2xl text-[var(--color-primary)] mr-3"></i>
-                <h2 class="text-xl font-bold text-gray-800">Điểm nhấn hành trình</h2>
+                <i class="fa-solid fa-star text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
+                <h2 class="text-lg md:text-xl font-bold text-gray-800">Điểm nhấn hành trình</h2>
             </div>
             <div class="prose max-w-none text-gray-700 prose-styles">
                 {!! $tour->characteristic !!}
@@ -33,9 +33,9 @@
 
     <section id="lich-trinh">
         <div class="flex items-center mb-6">
-            <i class="fa-solid fa-book-open text-2xl text-[var(--color-primary)] mr-3"></i>
+            <i class="fa-solid fa-book-open text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
             <div>
-                <h2 class="text-xl font-bold text-gray-800">Lịch trình</h2>
+                <h2 class="text-lg md:text-xl font-bold text-gray-800">Lịch trình</h2>
                 <p class="text-xs text-gray-500">Cập nhật {{ optional($tour->updated_at)->format('d/m/Y') }}</p>
             </div>
         </div>
@@ -72,18 +72,18 @@
 
     <section id="bang-gia">
         <div class="flex items-center mb-4">
-            <i class="fa-solid fa-tags text-2xl text-[var(--color-primary)] mr-3"></i>
-            <h2 class="text-xl font-bold text-gray-800">Bảng giá tour chi tiết</h2>
+            <i class="fa-solid fa-tags text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
+            <h2 class="text-lg md:text-xl font-bold text-gray-800">Bảng giá tour chi tiết</h2>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full tour-price-table">
+            <table class="w-full tour-price-table text-sm md:text-base">
                 <thead>
                 <tr>
-                    <th class="text-left">Loại giá/Độ tuổi</th>
-                    <th class="text-left">Người lớn (Trên 11 tuổi)</th>
-                    <th class="text-left">Trẻ em (5 - 11 tuổi)</th>
-                    <th class="text-left">Trẻ nhỏ (2 - 5 tuổi)</th>
-                    <th class="text-left">Sơ sinh (< 2 tuổi)</th>
+                    <th>Loại giá/Độ tuổi</th>
+                    <th>Người lớn (Trên 11 tuổi)</th>
+                    <th>Trẻ em (5 - 11 tuổi)</th>
+                    <th>Trẻ nhỏ (2 - 5 tuổi)</th>
+                    <th>Sơ sinh (< 2 tuổi)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -102,8 +102,8 @@
     @if($tour->services_note)
         <section id="dich-vu">
             <div class="flex items-center mb-4">
-                <i class="fa-solid fa-concierge-bell text-2xl text-[var(--color-primary)] mr-3"></i>
-                <h2 class="text-xl font-bold text-gray-800">Dịch vụ</h2>
+                <i class="fa-solid fa-concierge-bell text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
+                <h2 class="text-lg md:text-xl font-bold text-gray-800">Dịch vụ</h2>
             </div>
             <div class="prose max-w-none text-gray-700 prose-styles">
                 {!! $tour->services_note !!}
@@ -114,8 +114,8 @@
     @if($tour->note)
         <section id="ghi-chu">
             <div class="flex items-center mb-4">
-                <i class="fa-solid fa-clipboard-list text-2xl text-[var(--color-primary)] mr-3"></i>
-                <h2 class="text-xl font-bold text-gray-800">Ghi chú</h2>
+                <i class="fa-solid fa-clipboard-list text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
+                <h2 class="text-lg md:text-xl font-bold text-gray-800">Ghi chú</h2>
             </div>
             <div class="prose max-w-none text-gray-700 prose-styles">
                 {!! $tour->note !!}

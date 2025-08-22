@@ -6,8 +6,13 @@
 @push('styles')
     <style>
         .gallery-top {
-            height: 500px;
+            height: 300px;
             width: 100%;
+        }
+        @media (min-width: 768px) {
+            .gallery-top {
+                height: 500px;
+            }
         }
         .gallery-thumbs {
             height: 100px;
@@ -31,7 +36,7 @@
         .tour-price-table th, .tour-price-table td {
             border: 1px solid #e5e7eb;
             padding: 0.75rem 1rem;
-            text-align: center;
+            text-align: left;
             vertical-align: middle;
         }
         .tour-price-table th {
@@ -163,41 +168,6 @@
                         }
                     });
                 }
-            });
-
-            const navItems = document.querySelectorAll('.tour-nav-item');
-            const sections = document.querySelectorAll('section[id]');
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 0;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navItems.forEach(item => {
-                            item.classList.remove('text-[var(--color-primary)]');
-                            if (item.getAttribute('href').substring(1) === entry.target.id) {
-                                item.classList.add('text-[var(--color-primary)]');
-                            }
-                        });
-                    }
-                });
-            }, { rootMargin: `-${headerHeight + 25}px 0px -50% 0px`, threshold: 0 });
-
-            sections.forEach(section => observer.observe(section));
-
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 24);
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
             });
         });
     </script>
