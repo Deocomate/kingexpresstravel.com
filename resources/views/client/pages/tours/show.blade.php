@@ -38,9 +38,6 @@
             background-color: #f9fafb;
             font-weight: bold;
         }
-        .tour-price-table td:first-child, .tour-price-table th:first-child {
-            text-align: left;
-        }
         .prose-styles ul {
             list-style-type: disc;
             padding-left: 20px;
@@ -80,217 +77,16 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-8">
-                    @php
-                        $allImages = collect([$tour->thumbnail])->concat($tour->images ?? [])->filter()->unique()->values();
-                    @endphp
-
-                    @if($allImages->isNotEmpty())
-                        <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper gallery-top rounded-lg shadow-md">
-                            <div class="swiper-wrapper">
-                                @foreach($allImages as $image)
-                                    <div class="swiper-slide">
-                                        <img src="{{ $image }}" alt="Ảnh tour {{ $tour->name }}" class="w-full h-full object-cover"/>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                        <div thumbsSlider="" class="swiper gallery-thumbs mt-2">
-                            <div class="swiper-wrapper">
-                                @foreach($allImages as $image)
-                                    <div class="swiper-slide rounded-md overflow-hidden">
-                                        <img src="{{ $image }}" alt="Thumbnail tour {{ $tour->name }}" class="w-full h-full object-cover"/>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <div class="rounded-lg overflow-hidden shadow-md">
-                            <img src="https://placehold.co/800x500/e2e8f0/e2e8f0?text=King+Express" alt="Ảnh bìa {{ $tour->name ?? '' }}" class="w-full h-auto object-cover">
-                        </div>
-                    @endif
-
-                    <div class="mt-8 space-y-12">
-                        @if($tour->short_description)
-                            <section id="mo-ta-ngan">
-                                <div class="prose max-w-none text-gray-700 font-semibold italic text-base">
-                                    {!! $tour->short_description !!}
-                                </div>
-                            </section>
-                        @endif
-
-                        @if($tour->tour_description)
-                            <section id="mo-ta-tour">
-                                <div class="flex items-center mb-4">
-                                    <i class="fa-solid fa-file-lines text-2xl text-[var(--color-primary)] mr-3"></i>
-                                    <h2 class="text-xl font-bold text-gray-800">Mô tả tour</h2>
-                                </div>
-                                <div class="prose max-w-none text-gray-700 prose-styles">
-                                    {!! $tour->tour_description !!}
-                                </div>
-                            </section>
-                        @endif
-
-                        @if($tour->characteristic)
-                            <section id="diem-nhan">
-                                <div class="flex items-center mb-4">
-                                    <i class="fa-solid fa-star text-2xl text-[var(--color-primary)] mr-3"></i>
-                                    <h2 class="text-xl font-bold text-gray-800">Điểm nhấn hành trình</h2>
-                                </div>
-                                <div class="prose max-w-none text-gray-700 prose-styles">
-                                    {!! $tour->characteristic !!}
-                                </div>
-                            </section>
-                        @endif
-
-                        <section id="lich-trinh">
-                            <div class="flex items-center mb-6">
-                                <i class="fa-solid fa-book-open text-2xl text-[var(--color-primary)] mr-3"></i>
-                                <div>
-                                    <h2 class="text-xl font-bold text-gray-800">Lịch trình</h2>
-                                    <p class="text-xs text-gray-500">Cập nhật {{ optional($tour->updated_at)->format('d/m/Y') }}</p>
-                                </div>
-                            </div>
-
-                            @if(!empty($tour->tour_schedule) && is_array($tour->tour_schedule))
-                                <div class="relative border-l-2 border-dashed border-gray-300 ml-3 py-2">
-                                    <div class="space-y-4">
-                                        @foreach($tour->tour_schedule as $schedule)
-                                            <div class="schedule-item relative pl-8">
-                                                <div class="absolute -left-[13px] top-4 w-6 h-6 rounded-full bg-white border-4 border-[var(--color-primary)] flex items-center justify-center z-10">
-                                                    <div class="w-2 h-2 rounded-full bg-[var(--color-primary)]"></div>
-                                                </div>
-                                                <div>
-                                                    <button type="button" class="schedule-toggle flex justify-between items-center w-full text-left p-3 hover:cursor-pointer rounded-lg bg-[var(--color-primary)] text-white focus:outline-none transition-colors duration-300 hover:bg-[var(--color-primary-dark)]">
-                                                        <h3 class="text-base font-bold">{{ $schedule['title'] ?? 'Chi tiết' }}</h3>
-                                                        <span class="schedule-icon transform transition-transform duration-300 rotate-180">
-                                                            <i class="fa-solid fa-chevron-down text-sm"></i>
-                                                        </span>
-                                                    </button>
-                                                    <div class="schedule-content overflow-hidden transition-all duration-300 ease-in-out">
-                                                        <div class="prose-styles pt-4 bg-gray-50 p-4 mt-[-8px] rounded-b-lg border border-t-0 border-gray-200">
-                                                            {!! $schedule['content'] ?? '<p>Nội dung đang được cập nhật.</p>' !!}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @else
-                                <p class="text-gray-600">Lịch trình chi tiết đang được cập nhật. Vui lòng liên hệ để biết thêm thông tin.</p>
-                            @endif
-                        </section>
-
-                        <section id="bang-gia">
-                            <div class="flex items-center mb-4">
-                                <i class="fa-solid fa-tags text-2xl text-[var(--color-primary)] mr-3"></i>
-                                <h2 class="text-xl font-bold text-gray-800">Bảng giá tour chi tiết</h2>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full tour-price-table">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-left">Loại giá/Độ tuổi</th>
-                                        <th>Người lớn (Trên 11 tuổi)</th>
-                                        <th>Trẻ em (5 - 11 tuổi)</th>
-                                        <th>Trẻ nhỏ (2 - 5 tuổi)</th>
-                                        <th>Sơ sinh (< 2 tuổi)</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td class="font-semibold">Giá</td>
-                                        <td class="font-semibold text-red-600">{{ $tour->price_adult ? number_format($tour->price_adult) . ' đ' : 'Liên hệ' }}</td>
-                                        <td class="font-semibold text-red-600">{{ $tour->price_child ? number_format($tour->price_child) . ' đ' : 'Liên hệ' }}</td>
-                                        <td class="font-semibold text-red-600">{{ $tour->price_toddler ? number_format($tour->price_toddler) . ' đ' : 'Liên hệ' }}</td>
-                                        <td class="font-semibold text-red-600">{{ $tour->price_infant ? number_format($tour->price_infant) . ' đ' : 'Liên hệ' }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-
-                        @if($tour->services_note)
-                            <section id="dich-vu">
-                                <div class="flex items-center mb-4">
-                                    <i class="fa-solid fa-concierge-bell text-2xl text-[var(--color-primary)] mr-3"></i>
-                                    <h2 class="text-xl font-bold text-gray-800">Dịch vụ</h2>
-                                </div>
-                                <div class="prose max-w-none text-gray-700 prose-styles">
-                                    {!! $tour->services_note !!}
-                                </div>
-                            </section>
-                        @endif
-
-                        @if($tour->note)
-                            <section id="ghi-chu">
-                                <div class="flex items-center mb-4">
-                                    <i class="fa-solid fa-clipboard-list text-2xl text-[var(--color-primary)] mr-3"></i>
-                                    <h2 class="text-xl font-bold text-gray-800">Ghi chú</h2>
-                                </div>
-                                <div class="prose max-w-none text-gray-700 prose-styles">
-                                    {!! $tour->note !!}
-                                </div>
-                            </section>
-                        @endif
-                    </div>
+                    @include('client.pages.tours.partials._gallery', ['tour' => $tour])
+                    @include('client.pages.tours.partials._main_content', ['tour' => $tour])
                 </div>
 
                 <aside class="lg:col-span-4">
-                    <div class="sticky top-36 space-y-6">
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
-                            <div class="space-y-3 text-sm text-gray-700">
-                                <p><i class="fa-regular fa-clock w-5 text-gray-500"></i> Thời gian: <strong>{{ $tour->duration ?? 'N/A' }}</strong></p>
-                                <p><i class="fa-regular fa-calendar-check w-5 text-gray-500"></i> Khởi hành: <strong>Hàng ngày</strong></p>
-                                <p><i class="fa-solid fa-car w-5 text-gray-500"></i> Vận chuyển: <strong>{{ $tour->transport_mode ?? 'N/A' }}</strong></p>
-                                <p><i class="fa-solid fa-map-pin w-5 text-gray-500"></i> Xuất phát: <strong>{{ $tour->departure_point ?? 'N/A' }}</strong></p>
-                            </div>
-                            <div class="mt-5 text-center">
-                                <p class="text-sm text-gray-600">Giá chỉ từ</p>
-                                <p class="text-3xl font-extrabold text-red-600">{{ number_format($tour->price_adult ?? 0) }} đ</p>
-                                <p class="text-xs text-gray-500">/ khách</p>
-                            </div>
-                            <div class="mt-5">
-                                <button class="w-full bg-[var(--color-primary)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors uppercase">
-                                    Đặt ngay
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
-                            <nav id="tour-nav" class="flex flex-col space-y-2">
-                                @if($tour->tour_description)<a href="#mo-ta-tour" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Mô tả Tour</a>@endif
-                                @if($tour->characteristic)<a href="#diem-nhan" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Điểm nhấn hành trình</a>@endif
-                                @if(!empty($tour->tour_schedule))<a href="#lich-trinh" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Lịch trình chi tiết</a>@endif
-                                <a href="#bang-gia" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Bảng giá chi tiết</a>
-                                @if($tour->services_note)<a href="#dich-vu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Dịch vụ</a>@endif
-                                @if($tour->note)<a href="#ghi-chu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Ghi chú</a>@endif
-                            </nav>
-                        </div>
-                    </div>
+                    @include('client.pages.tours.partials._sidebar', ['tour' => $tour])
                 </aside>
             </div>
 
-            @if(isset($relatedTours) && $relatedTours->isNotEmpty())
-                <section class="mt-12 md:mt-16">
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-800 uppercase mb-6">Tour tương tự</h2>
-                    <div class="relative slider-container">
-                        <div class="swiper tour-slider">
-                            <div class="swiper-wrapper">
-                                @foreach($relatedTours as $relatedTour)
-                                    <div class="swiper-slide h-auto">
-                                        <x-client.tour-card :tour="$relatedTour"/>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </section>
-            @endif
+            @include('client.pages.tours.partials._related_tours', ['relatedTours' => $relatedTours])
         </div>
     </div>
 @endsection
@@ -325,14 +121,14 @@
                 },
             });
 
-            const relatedTourSlider = document.querySelector('.slider-container .swiper.tour-slider');
+            const relatedTourSlider = document.querySelector('.related-tours-slider-container .swiper.tour-slider');
             if(relatedTourSlider) {
                 new Swiper(relatedTourSlider, {
                     slidesPerView: 1.15,
                     spaceBetween: 12,
                     navigation: {
-                        nextEl: '.slider-container .swiper-button-next',
-                        prevEl: '.slider-container .swiper-button-prev',
+                        nextEl: '.related-tours-slider-container .swiper-button-next',
+                        prevEl: '.related-tours-slider-container .swiper-button-prev',
                     },
                     breakpoints: {
                         640: { slidesPerView: 2.2, spaceBetween: 16 },
@@ -341,6 +137,33 @@
                     },
                 });
             }
+
+            const scheduleItems = document.querySelectorAll('.schedule-item');
+            scheduleItems.forEach(item => {
+                const content = item.querySelector('.schedule-content');
+                const toggle = item.querySelector('.schedule-toggle');
+                const icon = item.querySelector('.schedule-icon');
+
+                if (content) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+                if (icon) {
+                    icon.classList.add('rotate-180');
+                }
+
+                if (toggle) {
+                    toggle.addEventListener('click', () => {
+                        const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+                        if (isOpen) {
+                            content.style.maxHeight = '0px';
+                            if (icon) icon.classList.remove('rotate-180');
+                        } else {
+                            content.style.maxHeight = content.scrollHeight + 'px';
+                            if (icon) icon.classList.add('rotate-180');
+                        }
+                    });
+                }
+            });
 
             const navItems = document.querySelectorAll('.tour-nav-item');
             const sections = document.querySelectorAll('section[id]');
@@ -375,34 +198,6 @@
                         });
                     }
                 });
-            });
-
-            const scheduleItems = document.querySelectorAll('.schedule-item');
-
-            scheduleItems.forEach((item, index) => {
-                const content = item.querySelector('.schedule-content');
-                const toggle = item.querySelector('.schedule-toggle');
-                const icon = item.querySelector('.schedule-icon');
-
-                if (index === 0) {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                } else {
-                    content.style.maxHeight = '0px';
-                    if (icon) icon.classList.remove('rotate-180');
-                }
-
-                if (toggle) {
-                    toggle.addEventListener('click', () => {
-                        const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
-                        if (isOpen) {
-                            content.style.maxHeight = '0px';
-                            if (icon) icon.classList.remove('rotate-180');
-                        } else {
-                            content.style.maxHeight = content.scrollHeight + 'px';
-                            if (icon) icon.classList.add('rotate-180');
-                        }
-                    });
-                }
             });
         });
     </script>
