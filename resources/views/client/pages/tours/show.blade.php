@@ -3,44 +3,107 @@
 @section('title', $tour->name ?? 'Chi tiết Tour')
 @section('description', $tour->short_description ?? 'Khám phá chi tiết tour du lịch hấp dẫn với lịch trình đầy đủ, dịch vụ bao gồm và những điểm nhấn không thể bỏ lỡ.')
 
+@push('styles')
+    <style>
+        .gallery-top {
+            height: 500px;
+            width: 100%;
+        }
+        .gallery-thumbs {
+            height: 100px;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+        .gallery-thumbs .swiper-slide {
+            width: 25%;
+            height: 100%;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .gallery-thumbs .swiper-slide:hover {
+            opacity: 0.8;
+        }
+        .gallery-thumbs .swiper-slide-thumb-active {
+            opacity: 1;
+            border: 2px solid var(--color-primary);
+        }
+        .tour-price-table th, .tour-price-table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            text-align: center;
+        }
+        .tour-price-table th {
+            background-color: #f9fafb;
+            font-weight: bold;
+        }
+        .tour-price-table td:first-child {
+            text-align: left;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="bg-white">
         <div class="container mx-auto px-4 py-6 md:py-10">
+            <div class="mb-4">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">{{ $tour->name ?? 'Tên tour đang cập nhật' }}</h1>
+                <div class="flex items-center gap-x-4 text-sm text-gray-500 mt-2">
+                    <span>Mã tour: <strong>{{ $tour->tour_code ?? 'N/A' }}</strong></span>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-8">
-                    <div class="space-y-4">
-                        <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">{{ $tour->name ?? 'Tên tour đang cập nhật' }}</h1>
-                        <div class="flex items-center gap-x-4 text-sm text-gray-500">
-                            <span>Mã tour: <strong>{{ $tour->tour_code ?? 'N/A' }}</strong></span>
-                            <span class="h-4 border-l border-gray-300"></span>
-                            <span>Đánh giá:
-                                <span class="text-yellow-500">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-regular fa-star-half-stroke"></i>
-                                </span>
-                                <strong>4.5/5</strong>
-                            </span>
+                    @php
+                        $allImages = collect([$tour->thumbnail])->concat($tour->images)->filter()->unique()->values();
+                    @endphp
+
+                    @if($allImages->isNotEmpty())
+                        <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper gallery-top rounded-lg shadow-md">
+                            <div class="swiper-wrapper">
+                                @foreach($allImages as $image)
+                                    <div class="swiper-slide">
+                                        <img src="{{ $image }}" alt="Ảnh tour {{ $tour->name }}" class="w-full h-full object-cover"/>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
                         </div>
-                    </div>
+                        <div thumbsSlider="" class="swiper gallery-thumbs mt-2">
+                            <div class="swiper-wrapper">
+                                @foreach($allImages as $image)
+                                    <div class="swiper-slide rounded-md overflow-hidden">
+                                        <img src="{{ $image }}" alt="Thumbnail tour {{ $tour->name }}" class="w-full h-full object-cover"/>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <div class="rounded-lg overflow-hidden shadow-md">
+                            <img src="https://placehold.co/800x500/e2e8f0/e2e8f0?text=King+Express" alt="Ảnh bìa {{ $tour->name ?? '' }}" class="w-full h-auto object-cover">
+                        </div>
+                    @endif
 
-                    <div class="mt-6 rounded-lg overflow-hidden">
-                        <img src="{{ $tour->thumbnail ?? 'https://placehold.co/800x500/e2e8f0/e2e8f0?text=King+Express' }}"
-                             alt="Ảnh bìa {{ $tour->name ?? '' }}" class="w-full h-auto object-cover">
-                    </div>
+                    <div class="mt-8 space-y-12">
+                        @if($tour->short_description)
+                            <section id="mo-ta-ngan">
+                                <div class="prose max-w-none text-gray-700 font-semibold italic text-base">
+                                    {!! $tour->short_description !!}
+                                </div>
+                            </section>
+                        @endif
 
-                    <div class="sticky top-20 z-10 bg-white py-3 border-b border-gray-200 mt-6 hidden md:block">
-                        <nav id="tour-nav" class="flex items-center gap-x-6">
-                            <a href="#diem-nhan" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Điểm nhấn</a>
-                            <a href="#lich-trinh" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Lịch trình</a>
-                            <a href="#dich-vu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Dịch vụ</a>
-                            <a href="#hinh-anh" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Hình ảnh</a>
-                        </nav>
-                    </div>
+                        @if($tour->tour_description)
+                            <section id="mo-ta-tour">
+                                <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">MÔ TẢ TOUR</h2>
+                                <div class="prose max-w-none text-gray-700">
+                                    {!! $tour->tour_description !!}
+                                </div>
+                            </section>
+                        @endif
 
-                    <div class="mt-8 space-y-10">
                         <section id="diem-nhan">
                             <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">ĐIỂM NHẤN HÀNH TRÌNH</h2>
                             <div class="prose max-w-none text-gray-700">
@@ -70,36 +133,45 @@
                             @endif
                         </section>
 
+                        <section id="bang-gia">
+                            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">BẢNG GIÁ TOUR CHI TIẾT</h2>
+                            <div class="overflow-x-auto">
+                                <table class="w-full min-w-full tour-price-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Loại giá/Độ tuổi</th>
+                                        <th>Người lớn (Trên 11 tuổi)</th>
+                                        <th>Trẻ em (5 - 11 tuổi)</th>
+                                        <th>Trẻ nhỏ (2 - 5 tuổi)</th>
+                                        <th>Sơ sinh (< 2 tuổi)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="font-semibold">Giá</td>
+                                        <td class="font-semibold text-red-600">{{ $tour->price_adult ? number_format($tour->price_adult) . ' đ' : 'Liên hệ' }}</td>
+                                        <td class="font-semibold text-red-600">{{ $tour->price_child ? number_format($tour->price_child) . ' đ' : 'Liên hệ' }}</td>
+                                        <td class="font-semibold text-red-600">{{ $tour->price_toddler ? number_format($tour->price_toddler) . ' đ' : 'Liên hệ' }}</td>
+                                        <td class="font-semibold text-red-600">{{ $tour->price_infant ? number_format($tour->price_infant) . ' đ' : 'Liên hệ' }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
                         <section id="dich-vu">
                             <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">DỊCH VỤ & GHI CHÚ</h2>
                             <div class="prose max-w-none text-gray-700">
                                 {!! $tour->services_note ?? '<p>Thông tin đang được cập nhật.</p>' !!}
                             </div>
                         </section>
-
-                        <section id="hinh-anh">
-                            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-[var(--color-primary)] pl-3 mb-4">HÌNH ẢNH TOUR</h2>
-                            @if(!empty($tour->images) && is_array($tour->images))
-                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    @foreach($tour->images as $image)
-                                        <a href="{{ $image }}" data-fancybox="gallery">
-                                            <img src="{{ $image }}" alt="Hình ảnh tour" class="rounded-lg object-cover w-full h-40 hover:opacity-80 transition-opacity">
-                                        </a>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="text-gray-600">Album ảnh đang được cập nhật.</p>
-                            @endif
-                        </section>
                     </div>
                 </div>
 
                 <aside class="lg:col-span-4">
-                    <div class="sticky top-24 space-y-6">
-                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                            <h2 class="text-xl font-bold text-gray-800">{{ $tour->name ?? 'Tên tour' }}</h2>
-                            <div class="mt-4 space-y-3 text-sm text-gray-700">
-                                <p><i class="fa-solid fa-tag w-5 text-gray-500"></i> Mã tour: <strong>{{ $tour->tour_code ?? 'N/A' }}</strong></p>
+                    <div class="sticky top-36 space-y-6">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
+                            <div class="space-y-3 text-sm text-gray-700">
                                 <p><i class="fa-regular fa-clock w-5 text-gray-500"></i> Thời gian: <strong>{{ $tour->duration ?? 'N/A' }}</strong></p>
                                 <p><i class="fa-regular fa-calendar-check w-5 text-gray-500"></i> Khởi hành: <strong>Hàng ngày</strong></p>
                                 <p><i class="fa-solid fa-car w-5 text-gray-500"></i> Vận chuyển: <strong>{{ $tour->transport_mode ?? 'N/A' }}</strong></p>
@@ -117,19 +189,14 @@
                             </div>
                         </div>
 
-                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                            <h3 class="font-bold text-gray-800">Bạn cần hỗ trợ?</h3>
-                            <p class="text-sm text-gray-600 mt-2">Chúng tôi sẵn sàng hỗ trợ 24/7</p>
-                            <div class="mt-4 space-y-2">
-                                <a href="tel:19001177" class="flex items-center gap-x-3 text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
-                                    <i class="fa-solid fa-phone-volume text-xl"></i>
-                                    <span class="font-bold text-lg">1900 1177</span>
-                                </a>
-                                <a href="mailto:info@kingexpresstravel.com.vn" class="flex items-center gap-x-3 text-gray-700 hover:text-[var(--color-primary)]">
-                                    <i class="fa-solid fa-envelope text-xl"></i>
-                                    <span class="font-semibold">Gửi yêu cầu</span>
-                                </a>
-                            </div>
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
+                            <nav id="tour-nav" class="flex flex-col space-y-2">
+                                @if($tour->tour_description)<a href="#mo-ta-tour" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Mô tả Tour</a>@endif
+                                @if($tour->characteristic)<a href="#diem-nhan" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Điểm nhấn hành trình</a>@endif
+                                @if(!empty($tour->tour_schedule))<a href="#lich-trinh" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Lịch trình chi tiết</a>@endif
+                                <a href="#bang-gia" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Bảng giá chi tiết</a>
+                                @if($tour->services_note)<a href="#dich-vu" class="tour-nav-item text-gray-600 font-semibold hover:text-[var(--color-primary)] transition-colors">Dịch vụ</a>@endif
+                            </nav>
                         </div>
                     </div>
                 </aside>
@@ -165,9 +232,31 @@
         document.addEventListener('DOMContentLoaded', function () {
             Fancybox.bind("[data-fancybox]", {});
 
-            const slider = document.querySelector('.slider-container .swiper');
-            if(slider) {
-                new Swiper(slider, {
+            const galleryThumbs = new Swiper('.gallery-thumbs', {
+                spaceBetween: 10,
+                slidesPerView: 5,
+                freeMode: true,
+                watchSlidesProgress: true,
+                breakpoints: {
+                    320: { slidesPerView: 3.5, spaceBetween: 8 },
+                    640: { slidesPerView: 5, spaceBetween: 10 },
+                }
+            });
+
+            const galleryTop = new Swiper('.gallery-top', {
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                thumbs: {
+                    swiper: galleryThumbs,
+                },
+            });
+
+            const relatedTourSlider = document.querySelector('.slider-container .swiper.tour-slider');
+            if(relatedTourSlider) {
+                new Swiper(relatedTourSlider, {
                     slidesPerView: 1.15,
                     spaceBetween: 12,
                     navigation: {
@@ -176,16 +265,15 @@
                     },
                     breakpoints: {
                         640: { slidesPerView: 2.2, spaceBetween: 16 },
-                        768: { slidesPerView: 3.2, spaceBetween: 16 },
-                        1024: { slidesPerView: 4, spaceBetween: 16 },
+                        768: { slidesPerView: 3, spaceBetween: 16 },
                     },
                 });
             }
 
             const navItems = document.querySelectorAll('.tour-nav-item');
             const sections = document.querySelectorAll('section[id]');
-            const nav = document.getElementById('tour-nav');
-            const navHeight = nav ? nav.offsetHeight : 0;
+            const header = document.querySelector('header');
+            const headerHeight = header ? header.offsetHeight : 0;
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -198,7 +286,7 @@
                         });
                     }
                 });
-            }, { rootMargin: `-${navHeight + 20}px 0px 0px 0px`, threshold: 0.1 });
+            }, { rootMargin: `-${headerHeight + 25}px 0px -50% 0px`, threshold: 0 });
 
             sections.forEach(section => observer.observe(section));
 
@@ -208,7 +296,7 @@
                     const targetId = this.getAttribute('href');
                     const targetElement = document.querySelector(targetId);
                     if (targetElement) {
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - (navHeight + 20);
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 24);
                         window.scrollTo({
                             top: targetPosition,
                             behavior: 'smooth'
