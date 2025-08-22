@@ -4,7 +4,7 @@
             <p><i class="fa-regular fa-clock w-5 text-gray-500"></i> Thời gian:
                 <strong>{{ $tour->duration ?? 'N/A' }}</strong></p>
             <p><i class="fa-regular fa-calendar-check w-5 text-gray-500"></i> Khởi hành: <strong>Hàng ngày</strong></p>
-            <p><i class="fa-solid fa-car w-5 text-gray-500"></i> Vận chuyển:
+            <p><i class="fa-solid fa-car w-5 text-gray-500"></i> Phương tiện:
                 <strong>{{ $tour->transport_mode ?? 'N/A' }}</strong></p>
             <p><i class="fa-solid fa-map-pin w-5 text-gray-500"></i> Xuất phát:
                 <strong>{{ $tour->departure_point ?? 'N/A' }}</strong></p>

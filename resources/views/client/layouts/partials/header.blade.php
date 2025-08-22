@@ -11,11 +11,11 @@
             </div>
 
             <div class="hidden md:flex items-center justify-center flex-grow">
-                <form action="#" method="GET" class="w-full max-w-lg">
+                <form action="{{ route('client.tours') }}" method="GET" class="w-full max-w-lg">
                     <div class="relative">
                         <input
                             type="search"
-                            name="keyword"
+                            name="search"
                             placeholder="Bạn muốn đi du lịch ở đâu?"
                             class="w-full bg-[var(--color-primary-light)] text-gray-800 placeholder-gray-500 rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-accent)]"
                         >
@@ -29,7 +29,7 @@
             </div>
 
             <div class="flex items-center gap-x-6">
-                <a href="#"
+                <a href="{{ route('client.contact') }}"
                    class="hidden sm:flex items-center gap-x-2 text-sm font-semibold hover:text-[var(--color-primary-subtle-hover)] transition-colors cursor-pointer">
                     <i class="fa-solid fa-file-pen"></i>
                     <span>Phiếu góp ý</span>
@@ -91,9 +91,6 @@
     {{-- Main Navigation Bar --}}
     <div class="bg-white shadow-md relative">
         <div class="container mx-auto px-4 flex justify-between items-center h-20">
-            {{--            <a href="{{ route('client.home') }}" title="Trang chủ {{ config('app.name', 'KingExpressTravel') }}">--}}
-            {{--                <img src="https://via.placeholder.com/180x50.png?text={{ urlencode(config('app.name', 'KingExpressTravel')) }}" alt="{{ config('app.name', 'KingExpressTravel') }} Logo" class="h-12">--}}
-            {{--            </a>--}}
             <a href="{{ route('client.home') }}" title="Trang chủ {{ config('app.name', 'KingExpressTravel') }}"
                class="py-2">
                 <span

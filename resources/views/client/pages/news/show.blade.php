@@ -7,7 +7,7 @@
     <div class="py-6 md:py-12 bg-white">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8">
+                <article class="lg:col-span-8">
                     <div class="space-y-3">
                         @if($news->category)
                             <a href="{{ route('client.news', ['category' => $news->category->slug]) }}" class="text-sm font-bold text-[var(--color-primary)] uppercase hover:underline">{{ $news->category->name }}</a>
@@ -27,17 +27,17 @@
                     @if(isset($relatedNews) && $relatedNews->isNotEmpty())
                         <section class="mt-12">
                             <h2 class="text-2xl font-bold text-gray-800 mb-4">Bài viết liên quan</h2>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 @foreach($relatedNews as $item)
                                     <x-client.news-card :news="$item"/>
                                 @endforeach
                             </div>
                         </section>
                     @endif
-                </div>
+                </article>
 
                 <aside class="lg:col-span-4">
-                    <div class="sticky top-24 space-y-6">
+                    <div class="sticky top-36 space-y-6">
                         <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
                             <h3 class="text-lg font-bold text-gray-800 mb-4">Bài viết mới nhất</h3>
                             <ul class="space-y-4">

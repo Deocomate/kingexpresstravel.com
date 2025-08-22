@@ -51,7 +51,7 @@ class ClientNewsController extends Controller
             ->where('id', '!=', $news->id)
             ->where('category_id', $news->category_id)
             ->inRandomOrder()
-            ->limit(5)
+            ->limit(6)
             ->get();
 
         $latestNews = News::with('category')
