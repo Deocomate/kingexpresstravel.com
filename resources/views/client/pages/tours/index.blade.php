@@ -1,6 +1,6 @@
 @extends('client.layouts.app')
 
-@section('title', 'Danh sách Tour du lịch')
+@section('title', $selectedCategory->name ?? 'Danh sách Tour du lịch')
 @section('description', 'Khám phá các tour du lịch hấp dẫn trong và ngoài nước được tổ chức bởi King Express Travel. Đa dạng lựa chọn, giá cả cạnh tranh.')
 
 @section('content')
@@ -71,7 +71,7 @@
 
                 <div class="lg:col-span-9">
                     <div class="mb-4">
-                        <h2 class="text-2xl font-bold text-gray-800">Các tour du lịch</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">{{ $selectedCategory->name ?? 'Các tour du lịch' }}</h2>
                     </div>
                     <div id="tour-list-container">
                         @include('client.pages.tours.partials.tour_list', ['tours' => $tours])

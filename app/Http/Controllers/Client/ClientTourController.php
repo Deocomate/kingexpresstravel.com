@@ -19,13 +19,20 @@ class ClientTourController extends Controller
 
         $selectedCategorySlug = $request->input('category');
         $selectedDestinationSlug = $request->input('destination');
+        $selectedCategory = null;
 
         $request->whenFilled('search', function ($search) use ($query) {
             $query->where('name', 'like', '%' . $search . '%');
         });
 
         if ($selectedCategorySlug) {
-            $query->whereHas('categories', fn($q) => $q->where('categories.slug', $selectedCategorySlug));
+            $selectedCategory = Category::where('slug', $selectedCategorySlug)->with('children')->first();
+            if ($selectedCategory) {
+                $categoryIds = $selectedCategory->getAllDescendantIds();
+                $query->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('categories.id', $categoryIds);
+                });
+            }
         }
 
         if ($selectedDestinationSlug) {
@@ -66,7 +73,7 @@ class ClientTourController extends Controller
         $categories = Category::where('type', 'TOUR')->where('is_active', true)->get();
         $destinations = Destination::all();
 
-        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestinationSlug'));
+        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestinationSlug', 'selectedCategory'));
     }
 
     public function show(Tour $tour): View
