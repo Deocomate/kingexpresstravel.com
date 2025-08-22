@@ -67,7 +67,7 @@
                         </button>
                         <div id="account-dropdown"
                              class="hidden absolute top-full right-0 mt-3 w-48 bg-white rounded-md shadow-lg py-2 z-20">
-                            <a href="#"
+                            <a href="{{ route('client.profile') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-[var(--color-primary-light)]">Trang
                                 cá nhân</a>
                             <a href="#"

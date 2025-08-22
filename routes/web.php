@@ -16,6 +16,7 @@ use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientBaseController;
 use App\Http\Controllers\Client\ClientContactController;
 use App\Http\Controllers\Client\ClientNewsController;
+use App\Http\Controllers\Client\ClientProfileController;
 use App\Http\Controllers\Client\ClientTourController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,13 @@ Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('clien
 Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->name('client.register.submit');
 Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');
 Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
+
+// Client Authenticated Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/tai-khoan', [ClientProfileController::class, 'index'])->name('client.profile');
+    Route::put('/tai-khoan', [ClientProfileController::class, 'update'])->name('client.profile.update');
+});
+
 
 // Admin Routes
 Route::get('/admin', function () {
