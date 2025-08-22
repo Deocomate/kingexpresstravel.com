@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->text('name')->nullable();
-            $table->string('thumbnail')->nullable();
+            $table->string('name', 2000)->nullable();
+            $table->string('thumbnail', 2000)->nullable();
             $table->string('slug')->unique();
             $table->integer('priority')->nullable();
             $table->boolean('is_active')->default(true);
@@ -26,13 +26,13 @@ return new class extends Migration {
 
         Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->text('title')->nullable();
+            $table->longText('title')->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('slug')->unique();
-            $table->string('thumbnail')->nullable();
+            $table->string('thumbnail', 2000)->nullable();
             $table->integer('priority')->nullable();
             $table->integer('view')->default(0);
-            $table->text('short_description')->nullable();
+            $table->longText('short_description')->nullable();
             $table->longText('contents')->nullable();
             $table->timestamps();
         });
@@ -40,25 +40,25 @@ return new class extends Migration {
         Schema::create('tours', function (Blueprint $table) {
             $table->id();
             $table->string('tour_code')->unique()->nullable();
-            $table->text('name')->nullable();
-            $table->string('duration')->nullable();
-            $table->text('departure_point')->nullable();
+            $table->longText('name')->nullable();
+            $table->string('duration', 2000)->nullable();
+            $table->longText('departure_point')->nullable();
             $table->integer('remaining_slots')->nullable();
             $table->integer('price_adult')->nullable();
             $table->integer('price_child')->nullable();
             $table->integer('price_toddler')->nullable();
             $table->integer('price_infant')->nullable();
-            $table->text('transport_mode')->nullable();
+            $table->longText('transport_mode')->nullable();
             $table->longText('short_description')->nullable();
             $table->longText('tour_description')->nullable();
             $table->integer('priority')->nullable();
             $table->longText('tour_schedule')->nullable();
-            $table->string('thumbnail')->nullable();
+            $table->string('thumbnail', 2000)->nullable();
             $table->longText('images')->nullable();
             $table->string('slug')->unique();
             $table->longText('services_note')->nullable();
             $table->longText('note')->nullable();
-            $table->text('characteristic')->nullable();
+            $table->longText('characteristic')->nullable();
             $table->timestamps();
         });
 
@@ -70,7 +70,7 @@ return new class extends Migration {
 
         Schema::create('destinations', function (Blueprint $table) {
             $table->id();
-            $table->text('name')->nullable();
+            $table->longText('name')->nullable();
             $table->longText('description')->nullable();
             $table->string('slug')->unique();
             $table->timestamps();
@@ -95,42 +95,43 @@ return new class extends Migration {
             $table->integer('toddler_quantity')->default(0);
             $table->integer('infant_quantity')->default(0);
             $table->integer('total_price')->nullable();
-            $table->enum('status', ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'])->default('PENDING');            $table->longText('note')->nullable();
+            $table->enum('status', ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'])->default('PENDING');
+            $table->longText('note')->nullable();
             $table->timestamps();
         });
 
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->enum('method', ['VNPAY', 'CASH'])->nullable();
-            $table->string('transaction_id')->unique()->nullable();
+            $table->string('method', 2000)->nullable();
+            $table->string('transaction_id', 2000)->unique()->nullable();
             $table->integer('amount')->nullable();
             $table->enum('status', ['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED'])->default('PENDING');
             $table->dateTime('paid_at')->nullable();
-            $table->string('note')->nullable();
+            $table->string('note', 2000)->nullable();
             $table->timestamps();
         });
 
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->text('company_name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('zalo')->nullable();
-            $table->string('working_hours')->nullable();
+            $table->longText('company_name')->nullable();
+            $table->string('email', 2000)->nullable();
+            $table->string('phone', 2000)->nullable();
+            $table->string('facebook', 2000)->nullable();
+            $table->string('zalo', 2000)->nullable();
+            $table->string('working_hours', 2000)->nullable();
             $table->timestamps();
         });
 
         Schema::create('contact_branches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade');
-            $table->text('branch_name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
+            $table->longText('branch_name')->nullable();
+            $table->string('address', 2000)->nullable();
+            $table->string('phone', 2000)->nullable();
+            $table->string('email', 2000)->nullable();
             $table->boolean('is_main')->default(false);
-            $table->string('working_hours')->nullable();
+            $table->string('working_hours', 2000)->nullable();
             $table->timestamps();
         });
 
@@ -142,10 +143,10 @@ return new class extends Migration {
 
         Schema::create('customer_cares', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->text('subject')->nullable();
+            $table->string('full_name', 2000)->nullable();
+            $table->string('email', 2000)->nullable();
+            $table->string('phone', 2000)->nullable();
+            $table->longText('subject')->nullable();
             $table->longText('message')->nullable();
             $table->longText('note')->nullable();
             $table->timestamps();

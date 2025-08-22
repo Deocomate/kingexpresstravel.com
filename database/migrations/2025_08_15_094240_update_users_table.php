@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('address')->nullable()->after('role');
-            $table->string('phone')->nullable()->after('address');
-            $table->string('avatar')->nullable()->after('phone');
+            $table->string('address', 2000)->nullable()->after('role');
+            $table->string('phone', 2000)->nullable()->after('address');
+            $table->string('avatar', 2000)->nullable()->after('phone');
             $table->enum('account_type', ['LOCAL', 'GOOGLE'])->default('LOCAL')->after('avatar');
         });
     }

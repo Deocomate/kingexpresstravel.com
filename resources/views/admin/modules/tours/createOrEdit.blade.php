@@ -25,6 +25,7 @@
         @endif
 
         <div class="row">
+            {{-- Cột trái --}}
             <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
@@ -40,21 +41,18 @@
                         <x-inputs.text label="Tên tour" name="name" :value="old('name', $tour->name ?? '')" required/>
                         <x-inputs.text-area label="Mô tả ngắn" name="short_description" :value="old('short_description', $tour->short_description ?? '')"/>
                         <x-inputs.editor label="Mô tả chi tiết tour" name="tour_description" :value="old('tour_description', $tour->tour_description ?? '')"/>
-                        <x-inputs.editor-array label="Lịch trình tour" name="tour_schedule" :value="old('tour_schedule', $tour->tour_schedule ?? [])"/>
-                        <x-inputs.text-area label="Ghi chú dịch vụ" name="services_note" :value="old('services_note', $tour->services_note ?? '')"/>
-                        <x-inputs.text-area label="Ghi chú thêm" name="note" :value="old('note', $tour->note ?? '')"/>
-                        <x-inputs.text label="Đặc điểm nổi bật" name="characteristic" :value="old('characteristic', $tour->characteristic ?? '')"/>
-                    </div>
-                </div>
 
-                <div class="card card-info">
-                    <div class="card-header"><h3 class="card-title">Album ảnh</h3></div>
-                    <div class="card-body">
-                        <x-inputs.image-link-array label="Album ảnh" name="images" :value="old('images', $tour->images ?? [])"/>
+                        {{-- Lịch trình tour --}}
+                        <x-inputs.tour-schedule-array label="Lịch trình tour" name="tour_schedule" :value="old('tour_schedule', $tour->tour_schedule ?? [])"/>
+
+                        <x-inputs.editor label="Ghi chú dịch vụ" name="services_note" :value="old('services_note', $tour->services_note ?? '')"/>
+                        <x-inputs.editor label="Ghi chú thêm" name="note" :value="old('note', $tour->note ?? '')"/>
+                        <x-inputs.editor label="Đặc điểm nổi bật" name="characteristic" :value="old('characteristic', $tour->characteristic ?? '')"/>
                     </div>
                 </div>
             </div>
 
+            {{-- Cột phải --}}
             <div class="col-md-4">
                 <div class="card card-secondary">
                     <div class="card-header">
@@ -127,6 +125,14 @@
                         <x-inputs.number label="Giá em bé (< 2 tuổi)" name="price_infant" :value="old('price_infant', $tour->price_infant ?? 0)"/>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {{-- THAY ĐỔI: Album ảnh được đưa ra ngoài để chiếm toàn bộ chiều rộng --}}
+        <div class="card card-info">
+            <div class="card-header"><h3 class="card-title">Album ảnh</h3></div>
+            <div class="card-body">
+                <x-inputs.image-link-array label="" name="images" :value="old('images', $tour->images ?? [])"/>
             </div>
         </div>
 
