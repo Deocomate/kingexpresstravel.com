@@ -97,6 +97,7 @@
     </div>
 
     {{-- Main Navigation Bar --}}
+    {{-- THAY ĐỔI: Thêm class `relative` vào đây để làm mốc căn giữa cho mega menu --}}
     <div class="bg-white shadow-md relative">
         <div class="container mx-auto px-4 flex justify-between items-center h-20">
             <a href="{{ route('client.home') }}" title="Trang chủ {{ config('app.name', 'KingExpressTravel') }}"
@@ -108,14 +109,92 @@
             </a>
 
             {{-- Desktop Menu --}}
-            <nav class="hidden lg:flex items-center">
+            {{-- THAY ĐỔI: Chuyển `nav` sang `static` để không ảnh hưởng vị trí --}}
+            <nav class="hidden lg:flex items-center static">
                 <ul class="flex items-center gap-x-6">
                     <li><a href="{{ route('client.home') }}"
                            class="block text-base leading-6 font-bold uppercase py-[15px] hover:text-[var(--color-primary)] transition-colors cursor-pointer {{ request()->routeIs('client.home') ? 'text-[var(--color-primary)]' : 'text-[#555]' }}">Trang
                             chủ</a></li>
-                    <li><a href="{{ route('client.tours') }}"
-                           class="block text-base leading-6 font-bold uppercase py-[15px] hover:text-[var(--color-primary)] transition-colors cursor-pointer {{ request()->routeIs('client.tours') ? 'text-[var(--color-primary)]' : 'text-[#555]' }}">Du
-                            lịch</a></li>
+                    <li class="group relative">
+                        <a href="{{ route('client.tours') }}"
+                           class="relative inline-block text-base leading-6 font-bold uppercase py-[15px] px-2
+              hover:text-[var(--color-primary)] transition-colors cursor-pointer
+              {{ request()->routeIs('client.tours*') ? 'text-[var(--color-primary)]' : 'text-[#555]' }}
+              before:content-[''] before:absolute before:left-0 before:top-full
+              before:w-full before:h-2 before:bg-transparent before:pointer-events-auto before:z-10">
+                            Du lịch
+                        </a>
+
+                        @if(isset($tourCategoriesForMenu) && $tourCategoriesForMenu->isNotEmpty())
+                            <div
+                                class="absolute top-full left-[-222%] -translate-x-1/2 w-screen max-w-7xl
+                   hidden group-hover:block transition-all duration-300 z-30 pointer-events-none">
+                                <div class="mt-2 pointer-events-auto">
+                                    <div class="bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-200">
+                                        <div class="flex" id="mega-menu-container">
+                                            {{-- Cột Danh mục cha (Cấp 1) --}}
+                                            <div class="w-1/4 lg:w-1/5 bg-gray-50 border-r border-gray-200">
+                                                <ul class="py-2">
+                                                    @foreach($tourCategoriesForMenu as $parentCategory)
+                                                        <li>
+                                                            <a href="{{ route('client.tours', ['category' => $parentCategory->slug]) }}"
+                                                               data-category-target="children-{{ $parentCategory->id }}"
+                                                               class="mega-menu-parent-item flex justify-between items-center px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-dark)] transition-colors">
+                                                                <span>{{ $parentCategory->name }}</span>
+                                                                @if($parentCategory->children->isNotEmpty())
+                                                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                                                @endif
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+
+                                            {{-- Khu vực hiển thị danh mục con (Cấp 2 và 3) --}}
+                                            <div class="w-3/4 lg:w-4/5 p-6">
+                                                @foreach($tourCategoriesForMenu as $parentCategory)
+                                                    <div id="children-{{ $parentCategory->id }}"
+                                                         class="mega-menu-children-panel hidden">
+                                                        <div
+                                                            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-6">
+                                                            @if($parentCategory->children->isNotEmpty())
+                                                                @foreach($parentCategory->children as $childCategory)
+                                                                    <div class="space-y-2">
+                                                                        <a href="{{ route('client.tours', ['category' => $childCategory->slug]) }}"
+                                                                           class="text-sm font-bold text-gray-800 hover:text-[var(--color-primary)] transition-colors block pb-2 border-b border-gray-200">
+                                                                            {{ $childCategory->name }}
+                                                                        </a>
+                                                                        @if($childCategory->children->isNotEmpty())
+                                                                            <ul class="space-y-2">
+                                                                                @foreach($childCategory->children as $grandChildCategory)
+                                                                                    <li>
+                                                                                        <a href="{{ route('client.tours', ['category' => $grandChildCategory->slug]) }}"
+                                                                                           class="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors block">
+                                                                                            {{ $grandChildCategory->name }}
+                                                                                        </a>
+                                                                                    </li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        @endif
+                                                                    </div>
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                <div id="mega-menu-placeholder"
+                                                     class="text-gray-400 h-full flex items-center justify-center">
+                                                    <p>Chọn một danh mục bên trái để khám phá các tour du lịch hấp
+                                                        dẫn.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </li>
+
                     <li><a href="{{ route('client.news') }}"
                            class="block text-base leading-6 font-bold uppercase py-[15px] hover:text-[var(--color-primary)] transition-colors cursor-pointer {{ request()->routeIs('client.news') ? 'text-[var(--color-primary)]' : 'text-[#555]' }}">Tin
                             tức và Sự kiện</a></li>

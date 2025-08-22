@@ -113,4 +113,56 @@ document.addEventListener('DOMContentLoaded', function () {
             accountDropdown.classList.add('hidden');
         }
     });
+
+    // Mega Menu Logic
+    const megaMenuContainer = document.getElementById('mega-menu-container');
+    if (megaMenuContainer) {
+        const parentItems = megaMenuContainer.querySelectorAll('.mega-menu-parent-item');
+        const childrenPanels = megaMenuContainer.querySelectorAll('.mega-menu-children-panel');
+        const placeholder = document.getElementById('mega-menu-placeholder');
+
+        const showPanel = (panelId) => {
+            childrenPanels.forEach(p => p.classList.add('hidden'));
+            if (placeholder) placeholder.classList.add('hidden');
+
+            const targetPanel = document.getElementById(panelId);
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+                targetPanel.classList.add('grid');
+            } else if (placeholder) {
+                placeholder.classList.remove('hidden');
+            }
+        };
+
+        parentItems.forEach((item, index) => {
+            item.addEventListener('mouseenter', () => {
+                parentItems.forEach(i => i.classList.remove('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]'));
+                item.classList.add('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+
+                const targetId = item.getAttribute('data-category-target');
+                showPanel(targetId);
+            });
+
+            // Show the first panel by default if it exists
+            if (index === 0) {
+                item.classList.add('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+                const firstTargetId = item.getAttribute('data-category-target');
+                showPanel(firstTargetId);
+            }
+        });
+
+        const parentMenu = megaMenuContainer.closest('.group');
+        if (parentMenu) {
+            parentMenu.addEventListener('mouseleave', () => {
+                parentItems.forEach((item, index) => {
+                    item.classList.remove('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+                    if (index === 0) {
+                        item.classList.add('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+                        const firstTargetId = item.getAttribute('data-category-target');
+                        showPanel(firstTargetId);
+                    }
+                });
+            });
+        }
+    }
 });
