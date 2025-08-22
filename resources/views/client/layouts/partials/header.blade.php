@@ -17,7 +17,7 @@
                             type="search"
                             name="search"
                             placeholder="Bạn muốn đi du lịch ở đâu?"
-                            class="w-full bg-[var(--color-primary-light)] text-gray-800 placeholder-gray-500 rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-accent)]"
+                            class="w-full bg-white text-gray-800 placeholder-gray-500 rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-accent)]"
                         >
                         <button type="submit"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] cursor-pointer"
