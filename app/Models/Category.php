@@ -2,50 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 
-/**
- * @property int $id
- * @property string $name
- * @property string|null $thumbnail
- * @property string $slug
- * @property int $priority
- * @property bool $is_active
- * @property int|null $parent_id
- * @property string $type
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Category|null $parent
- * @property-read Collection<int, Category> $children
- * @property-read Collection<int, Category> $recursiveChildren
- * @property-read Collection<int, Tour> $tours
- * @property-read Collection<int, News> $news
- * @method static Builder|Category newModelQuery()
- * @method static Builder|Category newQuery()
- * @method static Builder|Category query()
- * @method static Builder|Category where($column, $operator = null, $value = null, $boolean = 'and')
- * @method static Category|null find($id, $columns = ['*'])
- * @method static Category create(array $attributes = [])
- */
 class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'thumbnail',
         'slug',
+        'thumbnail',
         'priority',
         'is_active',
         'parent_id',
         'type',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function parent(): BelongsTo
@@ -73,12 +51,31 @@ class Category extends Model
         return $this->hasMany(News::class);
     }
 
+    public static function buildTree(array &$elements, $parentId = null): array
+    {
+        $branch = [];
+        foreach ($elements as $element) {
+            if ($element['parent_id'] == $parentId) {
+                $children = self::buildTree($elements, $element['id']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+        return $branch;
+    }
+
     public function getAllDescendantIds(): array
     {
-        $ids = [$this->id];
-        foreach ($this->children as $child) {
-            $ids = array_merge($ids, $child->getAllDescendantIds());
+        $descendantIds = [];
+        $children = $this->children()->with('children')->get();
+
+        foreach ($children as $child) {
+            $descendantIds[] = $child->id;
+            $descendantIds = array_merge($descendantIds, $child->getAllDescendantIds());
         }
-        return $ids;
+
+        return $descendantIds;
     }
 }

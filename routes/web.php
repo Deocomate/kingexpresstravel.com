@@ -59,6 +59,7 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
     Route::get('/dashboard/chart-data', [AdminBaseController::class, 'getChartData'])->name('dashboard.chartData');
 
+    Route::post('categories/update-order', [CategoryController::class, 'updateOrder'])->name('categories.updateOrder');
     Route::resource('categories', CategoryController::class);
     Route::resource('news', AdminNewsController::class);
     Route::resource('tours', AdminTourController::class);
