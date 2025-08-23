@@ -17,3 +17,13 @@
     --color-primary-subtle-hover: #fef3c7; /* amber-100 */
     --color-text-on-primary: #ffffff; /* white */
 }
+
+@layer utilities {
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+}

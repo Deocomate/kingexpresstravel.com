@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,13 +53,21 @@ class ClientProfileController extends Controller
         return back()->with('success', 'Cập nhật thông tin thành công!');
     }
 
-    public function bookingHistory(): View
+    public function bookingHistory(Request $request): View|JsonResponse
     {
         $user = Auth::user();
         $orders = $user->orders()
             ->with(['tour', 'payment'])
             ->latest()
             ->paginate(5);
+
+        if ($request->ajax()) {
+            $html = view('client.pages.profile.partials._booking_history_items', compact('orders'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $orders->hasMorePages() ? $orders->nextPageUrl() : null,
+            ]);
+        }
 
         return view('client.pages.profile.history', compact('user', 'orders'));
     }
