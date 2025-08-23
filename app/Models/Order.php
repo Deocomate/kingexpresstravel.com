@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -15,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $full_name
  * @property string|null $email
  * @property string|null $phone
+ * @property string|null $address
  * @property int $tour_id
  * @property Carbon|null $departure_date
  * @property int $adult_quantity
@@ -28,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read User|null $user
  * @property-read Tour|null $tour
+ * @property-read Payment|null $payment
  * @method static Builder|Order newModelQuery()
  * @method static Builder|Order newQuery()
  * @method static Builder|Order query()
@@ -42,6 +45,7 @@ class Order extends Model
         'full_name',
         'email',
         'phone',
+        'address',
         'tour_id',
         'departure_date',
         'adult_quantity',
@@ -65,5 +69,10 @@ class Order extends Model
     public function tour(): BelongsTo
     {
         return $this->belongsTo(Tour::class);
+    }
+
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
     }
 }

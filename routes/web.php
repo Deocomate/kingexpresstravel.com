@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Client\ClientAboutController;
 use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientBaseController;
+use App\Http\Controllers\Client\ClientCheckoutController;
 use App\Http\Controllers\Client\ClientContactController;
 use App\Http\Controllers\Client\ClientNewsController;
 use App\Http\Controllers\Client\ClientProfileController;
@@ -38,10 +39,15 @@ Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->n
 Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');
 Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
 
+// Checkout Routes (for both guests and authenticated users)
+Route::get('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'index'])->name('client.checkout');
+Route::post('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'store'])->name('client.checkout.store');
+
 // Client Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/tai-khoan', [ClientProfileController::class, 'index'])->name('client.profile');
     Route::put('/tai-khoan', [ClientProfileController::class, 'update'])->name('client.profile.update');
+    Route::get('/tai-khoan/lich-su-dat-tour', [ClientProfileController::class, 'bookingHistory'])->name('client.profile.history');
 });
 
 

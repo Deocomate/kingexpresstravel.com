@@ -78,7 +78,7 @@
                             <a href="{{ route('client.profile') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-[var(--color-primary-light)]">Trang
                                 cá nhân</a>
-                            <a href="#"
+                            <a href="{{ route('client.profile.history') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-[var(--color-primary-light)]">Lịch
                                 sử đặt tour</a>
                             <div class="border-t border-gray-100 my-1"></div>
@@ -97,7 +97,6 @@
     </div>
 
     {{-- Main Navigation Bar --}}
-    {{-- THAY ĐỔI: Thêm class `relative` vào đây để làm mốc căn giữa cho mega menu --}}
     <div class="bg-white shadow-md relative">
         <div class="container mx-auto px-4 flex justify-between items-center h-20">
             <a href="{{ route('client.home') }}" title="Trang chủ {{ config('app.name', 'KingExpressTravel') }}"
@@ -109,7 +108,6 @@
             </a>
 
             {{-- Desktop Menu --}}
-            {{-- THAY ĐỔI: Chuyển `nav` sang `static` để không ảnh hưởng vị trí --}}
             <nav class="hidden lg:flex items-center static">
                 <ul class="flex items-center gap-x-6">
                     <li><a href="{{ route('client.home') }}"

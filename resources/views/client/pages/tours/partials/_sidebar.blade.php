@@ -26,10 +26,10 @@
             <p class="text-xs text-gray-500">/ khách</p>
         </div>
         <div class="mt-5">
-            <button
-                class="w-full bg-[var(--color-primary)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors uppercase">
+            <a href="{{ route('client.checkout', $tour) }}"
+               class="block text-center w-full bg-[var(--color-primary)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors uppercase">
                 Đặt ngay
-            </button>
+            </a>
         </div>
     </div>
 </div>

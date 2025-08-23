@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $transaction_id
  * @property int|null $amount
  * @property string $status
- * @property string|null $paid_at
+ * @property Carbon|null $paid_at
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -35,5 +35,17 @@ use Illuminate\Support\Carbon;
  */
 class Payment extends Model
 {
-    //
+    protected $fillable = [
+        'order_id',
+        'method',
+        'transaction_id',
+        'amount',
+        'status',
+        'paid_at',
+        'note',
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime',
+    ];
 }

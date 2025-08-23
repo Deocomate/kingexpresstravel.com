@@ -51,4 +51,15 @@ class ClientProfileController extends Controller
 
         return back()->with('success', 'Cập nhật thông tin thành công!');
     }
+
+    public function bookingHistory(): View
+    {
+        $user = Auth::user();
+        $orders = $user->orders()
+            ->with(['tour', 'payment'])
+            ->latest()
+            ->paginate(5);
+
+        return view('client.pages.profile.history', compact('user', 'orders'));
+    }
 }

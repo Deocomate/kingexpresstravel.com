@@ -89,6 +89,7 @@ return new class extends Migration {
             $table->string('full_name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->string('address', 1000)->nullable();
             $table->foreignId('tour_id')->constrained('tours')->onDelete('cascade');
             $table->integer('adult_quantity')->default(1);
             $table->integer('child_quantity')->default(0);

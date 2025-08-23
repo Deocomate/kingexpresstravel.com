@@ -17,11 +17,11 @@
         </div>
     </div>
     <nav class="mt-6 space-y-2">
-        <a href="{{ route('client.profile') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold bg-[var(--color-primary-light)] text-[var(--color-primary-dark)]">
+        <a href="{{ route('client.profile') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold transition-colors {{ request()->routeIs('client.profile') ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)]' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800' }}">
             <i class="fa-solid fa-user-pen w-5 text-center"></i>
             <span>Hồ sơ cá nhân</span>
         </a>
-        <a href="#" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
+        <a href="{{ route('client.profile.history') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold transition-colors {{ request()->routeIs('client.profile.history') ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)]' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800' }}">
             <i class="fa-solid fa-receipt w-5 text-center"></i>
             <span>Đơn hàng của tôi</span>
         </a>
