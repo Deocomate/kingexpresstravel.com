@@ -10,6 +10,11 @@
 
             <form action="{{ route('client.checkout.store', $tour) }}" method="POST" id="checkout-form">
                 @csrf
+
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="website_url" tabindex="-1" value="">
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div class="lg:col-span-7 space-y-8">
                         <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-200">
@@ -206,6 +211,12 @@
             });
 
             calculateTotal();
+
+            // Anti-bot hidden field (bẫy thời gian)
+            const loadTimeInput = document.querySelector('input[name="form_load_time"]');
+            if (loadTimeInput) {
+                loadTimeInput.value = new Date().getTime();
+            }
         });
     </script>
 @endpush

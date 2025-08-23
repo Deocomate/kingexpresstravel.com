@@ -41,7 +41,10 @@ Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.lo
 
 // Checkout Routes (for both guests and authenticated users)
 Route::get('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'index'])->name('client.checkout');
-Route::post('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'store'])->name('client.checkout.store');
+Route::post('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'store'])
+    ->middleware('throttle:2,1')
+    ->name('client.checkout.store');
+
 
 // Client Authenticated Routes
 Route::middleware('auth')->group(function () {

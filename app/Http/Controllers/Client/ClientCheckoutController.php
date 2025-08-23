@@ -27,6 +27,14 @@ class ClientCheckoutController extends Controller
 
     public function store(Request $request, Tour $tour): RedirectResponse
     {
+
+        $loadTime = $request->input('form_load_time');
+        $submitTime = now()->timestamp * 1000;
+
+        if ($loadTime && ($submitTime - $loadTime) < 5000) {
+            return back()->with('error', 'Yêu cầu của bạn được xử lý quá nhanh. Vui lòng thử lại.');
+        }
+
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -39,6 +47,7 @@ class ClientCheckoutController extends Controller
             'infant_quantity' => 'required|integer|min:0',
             'note' => 'nullable|string',
             'payment_method' => ['required', Rule::in(['office', 'vnpay'])],
+            'website_url' => 'nullable|max:0',
         ]);
 
         if (($validated['adult_quantity'] + $validated['child_quantity']) > ($tour->remaining_slots ?? 999)) {
