@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Tour;
@@ -10,6 +11,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -47,6 +50,8 @@ class ClientCheckoutController extends Controller
             + ($validated['toddler_quantity'] * ($tour->price_toddler ?? 0))
             + ($validated['infant_quantity'] * ($tour->price_infant ?? 0));
 
+        $order = null;
+
         DB::beginTransaction();
         try {
             $order = Order::create([
@@ -66,33 +71,44 @@ class ClientCheckoutController extends Controller
                 'status' => 'PENDING',
             ]);
 
-            if ($validated['payment_method'] === 'office') {
-                Payment::create([
-                    'order_id' => $order->id,
-                    'method' => 'Thanh toán tại văn phòng',
-                    'amount' => $totalPrice,
-                    'status' => 'PENDING',
-                ]);
-                DB::commit();
-                return redirect()->route('client.home')->with('success', 'Đặt tour thành công! Vui lòng đến văn phòng để hoàn tất thanh toán.');
+            $paymentMethodText = 'Thanh toán tại văn phòng';
+            if ($validated['payment_method'] === 'vnpay') {
+                $paymentMethodText = 'VNPAY';
             }
 
-            if ($validated['payment_method'] === 'vnpay') {
-                Payment::create([
-                    'order_id' => $order->id,
-                    'method' => 'VNPAY',
-                    'amount' => $totalPrice,
-                    'status' => 'PENDING',
-                ]);
-                DB::commit();
-                return redirect()->route('client.home')->with('success', 'Đặt tour thành công! Chức năng thanh toán VNPAY đang được phát triển.');
-            }
+            Payment::create([
+                'order_id' => $order->id,
+                'method' => $paymentMethodText,
+                'amount' => $totalPrice,
+                'status' => 'PENDING',
+            ]);
+
+            DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Order creation failed: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Đã có lỗi xảy ra trong quá trình đặt tour. Vui lòng thử lại.');
         }
 
-        return redirect()->route('client.home');
+        if ($order) {
+            try {
+                Mail::to($order->email)->send(new OrderConfirmationMail($order));
+
+                $adminEmail = env('ADMIN_EMAIL_RECIPIENT');
+                if ($adminEmail) {
+                    Mail::to($adminEmail)->send(new OrderConfirmationMail($order));
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Sending order confirmation email failed: ' . $e->getMessage());
+            }
+        }
+
+        if ($validated['payment_method'] === 'vnpay') {
+            return redirect()->route('client.home')->with('success', 'Đặt tour thành công! Chức năng thanh toán VNPAY đang được phát triển.');
+        }
+
+        return redirect()->route('client.home')->with('success', 'Đặt tour thành công! Vui lòng kiểm tra email và đến văn phòng để hoàn tất thanh toán.');
     }
 }
