@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $total_price
  * @property string $status
  * @property string|null $note
+ * @property string|null $cancellation_reason
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User|null $user
@@ -55,6 +56,7 @@ class Order extends Model
         'total_price',
         'status',
         'note',
+        'cancellation_reason',
     ];
 
     protected $casts = [

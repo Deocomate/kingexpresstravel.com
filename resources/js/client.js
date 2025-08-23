@@ -36,6 +36,16 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             event.stopPropagation();
             const modalId = trigger.getAttribute('data-modal-target');
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            if (trigger.dataset.actionUrl) {
+                const form = modal.querySelector('form');
+                if (form) {
+                    form.setAttribute('action', trigger.dataset.actionUrl);
+                }
+            }
+
             openModal(modalId);
         });
     });
@@ -114,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Mega Menu Logic
     const megaMenuContainer = document.getElementById('mega-menu-container');
     if (megaMenuContainer) {
         const parentItems = megaMenuContainer.querySelectorAll('.mega-menu-parent-item');
@@ -143,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 showPanel(targetId);
             });
 
-            // Show the first panel by default if it exists
             if (index === 0) {
                 item.classList.add('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
                 const firstTargetId = item.getAttribute('data-category-target');

@@ -22,7 +22,6 @@ use App\Http\Controllers\Client\ClientTourController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
-// Client Routes
 Route::get('/', [ClientBaseController::class, 'index'])->name('client.home');
 Route::get('/du-lich', [ClientTourController::class, 'index'])->name('client.tours');
 Route::get('/du-lich/{tour:slug}', [ClientTourController::class, 'show'])->name('client.tour.show');
@@ -32,29 +31,23 @@ Route::get('/gioi-thieu', [ClientAboutController::class, 'index'])->name('client
 Route::get('/lien-he', [ClientContactController::class, 'index'])->name('client.contact');
 Route::post('/lien-he', [ClientContactController::class, 'store'])->name('client.contact.submit');
 
-
-// Client Authentication POST Routes
 Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('client.login.submit');
 Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->name('client.register.submit');
 Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');
 Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
 
-// Checkout Routes (for both guests and authenticated users)
 Route::get('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'index'])->name('client.checkout');
 Route::post('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'store'])
     ->middleware('throttle:2,1')
     ->name('client.checkout.store');
 
-
-// Client Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/tai-khoan', [ClientProfileController::class, 'index'])->name('client.profile');
     Route::put('/tai-khoan', [ClientProfileController::class, 'update'])->name('client.profile.update');
     Route::get('/tai-khoan/lich-su-dat-tour', [ClientProfileController::class, 'bookingHistory'])->name('client.profile.history');
+    Route::delete('/tai-khoan/don-hang/{order}/huy', [ClientProfileController::class, 'cancelOrder'])->name('client.order.cancel');
 });
 
-
-// Admin Routes
 Route::get('/admin', function () {
     return to_route('admin.dashboard.index');
 });
@@ -75,7 +68,6 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::resource('destinations', DestinationController::class);
     Route::resource('customer-care', CustomerCareController::class)->except(['create', 'store', 'edit', 'update']);
 
-    // About Us Routes
     Route::get('about-us', [AboutUsController::class, 'edit'])->name('about-us.edit');
     Route::put('about-us', [AboutUsController::class, 'update'])->name('about-us.update');
 
@@ -86,7 +78,6 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::resource('orders', OrderController::class)->except(['create', 'store', 'edit', 'update']);
 });
-
 
 Route::any('/ckfinder/connector', '\CKSource\CKFinderBridge\Controller\CKFinderController@requestAction')
     ->name('ckfinder_connector');

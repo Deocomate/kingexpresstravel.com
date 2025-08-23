@@ -66,6 +66,16 @@
                 </div>
             </div>
         </div>
+        <div class="border-t border-gray-200 bg-white px-4 py-3 flex justify-end items-center">
+            @if($order->status === 'PENDING' && optional($order->payment)->status !== 'SUCCESS')
+                <button type="button"
+                        data-modal-target="cancel-order-modal"
+                        data-action-url="{{ route('client.order.cancel', $order) }}"
+                        class="cancel-order-button inline-block bg-red-100 text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 transition-colors text-sm">
+                    Hủy tour
+                </button>
+            @endif
+        </div>
     </div>
 @empty
     @if(!request()->ajax())

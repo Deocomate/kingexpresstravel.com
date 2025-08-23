@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,5 +71,40 @@ class ClientProfileController extends Controller
         }
 
         return view('client.pages.profile.history', compact('user', 'orders'));
+    }
+
+    public function cancelOrder(Request $request, Order $order): RedirectResponse
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status !== 'PENDING' || optional($order->payment)->status === 'SUCCESS') {
+            return back()->with('error', 'Đơn hàng này không thể hủy.');
+        }
+
+        $validated = $request->validate([
+            'reason_option' => 'required|string',
+            'reason_other' => 'nullable|required_if:reason_option,other|string|max:1000',
+        ], [
+            'reason_option.required' => 'Vui lòng chọn một lý do hủy.',
+            'reason_other.required_if' => 'Vui lòng nhập lý do cụ thể của bạn.'
+        ]);
+
+        $cancellationReason = $validated['reason_option'];
+        if ($cancellationReason === 'other') {
+            $cancellationReason = $validated['reason_other'];
+        }
+
+        $order->update([
+            'status' => 'CANCELLED',
+            'cancellation_reason' => $cancellationReason,
+        ]);
+
+        if ($order->payment) {
+            $order->payment->update(['status' => 'CANCELLED']);
+        }
+
+        return back()->with('success', 'Đã hủy đơn hàng thành công.');
     }
 }

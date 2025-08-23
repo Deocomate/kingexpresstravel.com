@@ -39,14 +39,30 @@
                     <p><strong>Ngày đặt:</strong> {{ $order->created_at->format('d/m/Y') }}</p>
                     <p><strong>Trạng thái:</strong>
                         @php
-                            $statusClasses = ['PENDING' => 'badge-warning', 'CONFIRMED' => 'badge-success', 'CANCELLED' => 'badge-danger'];
-                            $statusTexts = ['PENDING' => 'Chờ xử lý', 'CONFIRMED' => 'Đã xác nhận', 'CANCELLED' => 'Đã hủy'];
+                            $statusClasses = [
+                                'PENDING' => 'badge-warning',
+                                'CONFIRMED' => 'badge-info',
+                                'COMPLETED' => 'badge-success',
+                                'CANCELLED' => 'badge-danger'
+                            ];
+                            $statusTexts = [
+                                'PENDING' => 'Chờ xử lý',
+                                'CONFIRMED' => 'Đã xác nhận',
+                                'COMPLETED' => 'Đã hoàn thành',
+                                'CANCELLED' => 'Đã hủy'
+                            ];
                         @endphp
                         <span class="badge {{ $statusClasses[$order->status] ?? 'badge-secondary' }}">
                             {{ $statusTexts[$order->status] ?? $order->status }}
                         </span>
                     </p>
-                    <p><strong>Tổng tiền:</strong> <strong class="text-danger h5">{{ number_format($order->total_price) }} đ</strong></p>
+                    @if($order->status === 'CANCELLED' && $order->cancellation_reason)
+                        <div class="mt-3">
+                            <strong>Lý do hủy:</strong>
+                            <div class="p-2 mt-1 bg-light border rounded" style="white-space: pre-wrap;">{{ $order->cancellation_reason }}</div>
+                        </div>
+                    @endif
+                    <p class="mt-3"><strong>Tổng tiền:</strong> <strong class="text-danger h5">{{ number_format($order->total_price) }} đ</strong></p>
                 </div>
             </div>
         </div>
