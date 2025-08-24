@@ -29,21 +29,30 @@
 
 @forelse($orders as $order)
     <div class="border border-gray-200 rounded-lg overflow-hidden animate-fade-in">
-        <div class="bg-gray-50 px-4 py-3 flex flex-wrap gap-2 justify-between items-center text-sm">
+        <div class="bg-gray-50 px-4 py-3 flex flex-wrap gap-x-4 gap-y-2 justify-between items-center text-sm">
             <div>
                 <span class="font-bold text-gray-800">Mã đơn hàng: #{{ $order->id }}</span>
                 <span class="text-gray-500 ml-4">Ngày đặt: {{ optional($order->created_at)->format('d/m/Y') }}</span>
             </div>
-            <div class="flex items-center gap-x-2">
-                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $orderStatusClasses[$order->status] ?? 'bg-gray-100 text-gray-800' }}">
-                    {{ $orderStatusTexts[$order->status] ?? $order->status }}
-                </span>
-                @if($order->payment)
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $paymentStatusClasses[optional($order->payment)->status] ?? 'bg-gray-100 text-gray-800' }}">
-                        {{ $paymentStatusTexts[optional($order->payment)->status] ?? optional($order->payment)->status }}
-                    </span>
-                @endif
-            </div>
+
+            @if($order->status !== 'CANCELLED')
+                <div class="flex items-center gap-x-3">
+                    <div class="flex items-center">
+                        <span class="text-gray-600 mr-2">Đơn hàng:</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $orderStatusClasses[$order->status] ?? 'bg-gray-100 text-gray-800' }}">
+                            {{ $orderStatusTexts[$order->status] ?? $order->status }}
+                        </span>
+                    </div>
+                    @if($order->payment)
+                        <div class="flex items-center">
+                            <span class="text-gray-600 mr-2">Thanh toán:</span>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $paymentStatusClasses[optional($order->payment)->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                {{ $paymentStatusTexts[optional($order->payment)->status] ?? optional($order->payment)->status }}
+                            </span>
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
         <div class="p-4">
             <div class="flex flex-col md:flex-row gap-4">
@@ -74,6 +83,18 @@
                         class="cancel-order-button inline-block bg-red-100 text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 transition-colors text-sm">
                     Hủy tour
                 </button>
+            @elseif($order->status === 'CANCELLED')
+                <span class="inline-block bg-red-100 text-red-700 font-bold py-2 px-4 rounded-lg text-sm">
+                    Đã hủy
+                </span>
+            @elseif($order->status === 'COMPLETED')
+                <span class="inline-block bg-green-100 text-green-700 font-bold py-2 px-4 rounded-lg text-sm">
+                    Đã hoàn thành
+                </span>
+            @else
+                <span class="inline-block px-4 py-2 rounded-lg text-sm font-bold {{ $orderStatusClasses[$order->status] ?? 'bg-gray-100 text-gray-800' }}">
+                    {{ $orderStatusTexts[$order->status] ?? $order->status }}
+                </span>
             @endif
         </div>
     </div>
