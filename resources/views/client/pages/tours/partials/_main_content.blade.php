@@ -36,7 +36,7 @@
             <i class="fa-solid fa-book-open text-xl md:text-2xl text-[var(--color-primary)] mr-3"></i>
             <div>
                 <h2 class="text-lg md:text-xl font-bold text-gray-800">Lịch trình</h2>
-                <p class="text-xs text-gray-500">Cập nhật {{ optional($tour->updated_at)->format('d/m/Y') }}</p>
+                <p class="text-xs text-gray-500">Cập nhật {{ optional($tour->updated_at)->addHours(7)->format('d/m/Y') }}</p>
             </div>
         </div>
 
@@ -80,7 +80,7 @@
                 <thead>
                 <tr>
                     <th class="text-left">Loại giá/Độ tuổi</th>
-                    <th class="text-left">Người lớn (Trên 11 tuổi)</th>
+                    <th class="text-left">Người lớn (> 11 tuổi)</th>
                     <th class="text-left">Trẻ em (5 - 11 tuổi)</th>
                     <th class="text-left">Trẻ nhỏ (2 - 5 tuổi)</th>
                     <th class="text-left">Sơ sinh (< 2 tuổi)</th>

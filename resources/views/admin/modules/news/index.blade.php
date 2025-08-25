@@ -91,7 +91,7 @@
                             <td>{{ $item->title }}</td>
                             <td>{{ $item->category->name ?? 'N/A' }}</td>
                             <td>{{ $item->view }}</td>
-                            <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ optional($item->created_at)->addHours(7)->format('d/m/Y H:i:s') }}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-warning btn-sm"
                                    href="{{ route('admin.news.edit', $item) }}">

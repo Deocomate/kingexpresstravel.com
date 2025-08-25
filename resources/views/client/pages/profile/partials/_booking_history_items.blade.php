@@ -32,7 +32,7 @@
         <div class="bg-gray-50 px-4 py-3 flex flex-wrap gap-x-4 gap-y-2 justify-between items-center text-sm">
             <div>
                 <span class="font-bold text-gray-800">Mã đơn hàng: #{{ $order->id }}</span>
-                <span class="text-gray-500 ml-4">Ngày đặt: {{ optional($order->created_at)->format('d/m/Y') }}</span>
+                <span class="text-gray-500 ml-4">Ngày đặt: {{ optional($order->created_at)->addHours(7)->format('d/m/Y') }}</span>
             </div>
 
             @if($order->status !== 'CANCELLED')
@@ -65,7 +65,7 @@
                         <p><i class="fa-regular fa-calendar-days w-5 text-gray-500"></i>Ngày đi: <strong>{{ optional($order->departure_date)->format('d/m/Y') ?? 'N/A' }}</strong></p>
                         <p><i class="fa-solid fa-users w-5 text-gray-500"></i>Hành khách: <strong>{{ $order->adult_quantity }}</strong> người lớn, <strong>{{ $order->child_quantity }}</strong> trẻ em</p>
                         @if(optional($order->payment)->status === 'SUCCESS' && optional($order->payment)->paid_at)
-                            <p class="text-green-700"><i class="fa-solid fa-clock w-5 text-gray-500"></i>Thanh toán lúc: <strong>{{ optional(optional($order->payment)->paid_at)->format('d/m/Y H:i') }}</strong></p>
+                            <p class="text-green-700"><i class="fa-solid fa-clock w-5 text-gray-500"></i>Thanh toán lúc: <strong>{{ optional(optional($order->payment)->paid_at)->addHours(7)->format('d/m/Y H:i') }}</strong></p>
                         @endif
                     </div>
                 </div>

@@ -87,7 +87,7 @@
                             <td>{{ $order->tour->name ?? '[Tour đã xóa]' }}</td>
                             <td>{{ $order->departure_date ? $order->departure_date->format('d/m/Y') : 'N/A' }}</td>
                             <td>{{ number_format($order->total_price) }} đ</td>
-                            <td>{{ $order->created_at->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ optional($order->created_at)->addHours(7)->format('d/m/Y H:i:s') }}</td>
                             <td>
                                 <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST">
                                     @csrf

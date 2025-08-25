@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-6">
                     <p><strong>Điện thoại:</strong> <a href="tel:{{ $customerCare->phone }}">{{ $customerCare->phone }}</a></p>
-                    <p><strong>Ngày gửi:</strong> {{ $customerCare->created_at->format('d/m/Y H:i:s') }}</p>
+                    <p><strong>Ngày gửi:</strong> {{ optional($customerCare->created_at)->addHours(7)->format('d/m/Y H:i:s') }}</p>
                 </div>
             </div>
             <hr>

@@ -67,7 +67,7 @@
                             <td>{{ $contact->email }}</td>
                             <td>{{ $contact->phone }}</td>
                             <td>{{ \Illuminate\Support\Str::limit($contact->subject, 50) }}</td>
-                            <td>{{ $contact->created_at->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ optional($contact->created_at)->addHours(7)->format('d/m/Y H:i:s') }}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-info btn-sm"
                                    href="{{ route('admin.customer-care.show', $contact) }}">

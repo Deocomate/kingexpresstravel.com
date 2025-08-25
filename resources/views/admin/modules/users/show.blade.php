@@ -28,7 +28,7 @@
                     <b>Loại tài khoản</b> <a class="float-right">{{ $user->account_type }}</a>
                 </li>
                 <li class="list-group-item">
-                    <b>Ngày tham gia</b> <a class="float-right">{{ $user->created_at->format('d/m/Y') }}</a>
+                    <b>Ngày tham gia</b> <a class="float-right">{{ optional($user->created_at)->addHours(7)->format('d/m/Y') }}</a>
                 </li>
             </ul>
 

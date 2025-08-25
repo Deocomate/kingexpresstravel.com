@@ -73,7 +73,7 @@
                                     {{ ucfirst($user->role) }}
                                 </span>
                             </td>
-                            <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                            <td>{{ optional($user->created_at)->addHours(7)->format('d/m/Y H:i') }}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-info btn-sm" href="{{ route('admin.users.show', $user) }}">
                                     <i class="fas fa-eye"></i> Xem

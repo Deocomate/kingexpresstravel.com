@@ -15,7 +15,7 @@
                         <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">{{ $news->title ?? 'Tiêu đề bài viết' }}</h1>
                         <div class="flex items-center gap-x-4 text-sm text-gray-500">
                             <span><i class="fa-regular fa-user mr-1"></i> BY ADMIN</span>
-                            <span><i class="fa-regular fa-calendar-days mr-1"></i> {{ optional($news->created_at)->format('d/m/Y') }}</span>
+                            <span><i class="fa-regular fa-calendar-days mr-1"></i> {{ optional($news->created_at)->addHours(7)->format('d/m/Y') }}</span>
                             <span><i class="fa-regular fa-eye mr-1"></i> {{ $news->view ?? 0 }} Lượt xem</span>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                                                 <img src="{{ $item->thumbnail ?? 'https://placehold.co/100x80' }}" alt="{{ $item->title }}" class="w-24 h-16 object-cover rounded-md flex-shrink-0">
                                                 <div>
                                                     <h4 class="text-sm font-semibold text-gray-800 group-hover:text-[var(--color-primary)] transition-colors leading-tight">{{ \Illuminate\Support\Str::limit($item->title, 55) }}</h4>
-                                                    <p class="text-xs text-gray-500 mt-1">{{ optional($item->created_at)->format('d/m/Y') }}</p>
+                                                    <p class="text-xs text-gray-500 mt-1">{{ optional($item->created_at)->addHours(7)->format('d/m/Y') }}</p>
                                                 </div>
                                             </a>
                                         </li>
