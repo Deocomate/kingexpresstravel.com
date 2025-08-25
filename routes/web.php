@@ -20,6 +20,7 @@ use App\Http\Controllers\Client\ClientNewsController;
 use App\Http\Controllers\Client\ClientProfileController;
 use App\Http\Controllers\Client\ClientTourController;
 use App\Http\Middleware\Auth\AdminAuthMiddleware;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ClientBaseController::class, 'index'])->name('client.home');
@@ -46,7 +47,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/tai-khoan', [ClientProfileController::class, 'update'])->name('client.profile.update');
     Route::get('/tai-khoan/lich-su-dat-tour', [ClientProfileController::class, 'bookingHistory'])->name('client.profile.history');
     Route::delete('/tai-khoan/don-hang/{order}/huy', [ClientProfileController::class, 'cancelOrder'])->name('client.order.cancel');
+
+    Route::post('/email/verification-notification', [ClientProfileController::class, 'sendVerificationEmail'])
+        ->middleware('throttle:1,5')
+        ->name('verification.send');
 });
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect()->route('client.profile')->with('success', 'Xác minh email thành công!');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
 
 Route::get('/admin', function () {
     return to_route('admin.dashboard.index');

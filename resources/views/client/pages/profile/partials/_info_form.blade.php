@@ -37,10 +37,14 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="md:col-span-8">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <div class="relative mt-1">
-                        <input type="email" name="email" id="email" value="{{ $user->email ?? '' }}" disabled class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed">
-                        @if(!$user->email_verified_at)
-                            <button type="button" class="absolute inset-y-0 right-0 flex items-center px-3 text-sm font-semibold text-[var(--color-primary)] hover:underline">Xác minh</button>
+                    <input type="email" id="email" value="{{ $user->email ?? '' }}" disabled class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed">
+                    <div class="mt-2 text-sm">
+                        @if($user->hasVerifiedEmail())
+                            <span class="text-green-600 font-semibold"><i class="fa-solid fa-circle-check"></i> Đã xác minh</span>
+                        @else
+                            <span class="text-yellow-600 font-semibold"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác minh</span>
+                            <button type="button" id="verify-email-button" class="ml-2 font-semibold text-[var(--color-primary)] hover:underline disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed">Gửi link xác minh</button>
+                            <span id="cooldown-timer" class="ml-2 text-gray-500 hidden"></span>
                         @endif
                     </div>
                 </div>

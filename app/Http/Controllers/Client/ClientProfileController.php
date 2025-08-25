@@ -107,4 +107,15 @@ class ClientProfileController extends Controller
 
         return back()->with('success', 'Đã hủy đơn hàng thành công.');
     }
+
+    public function sendVerificationEmail(Request $request): RedirectResponse
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return back()->with('info', 'Email của bạn đã được xác minh từ trước.');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Một liên kết xác minh mới đã được gửi đến địa chỉ email của bạn.');
+    }
 }
