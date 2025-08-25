@@ -11,7 +11,7 @@
                 </aside>
 
                 <div class="lg:col-span-9">
-                    @include('client.pages.profile.partials._info_form', ['user' => $user]) [cite: 1688]
+                    @include('client.pages.profile.partials._info_form', ['user' => $user])
                 </div>
             </div>
         </div>
@@ -21,23 +21,24 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const avatarFileInput = document.getElementById('avatar_file'); [cite: 1689]
+            const avatarFileInput = document.getElementById('avatar_file');
             const avatarPreview = document.getElementById('avatar-preview');
             const avatarPlaceholder = document.getElementById('avatar-placeholder');
+
             if (avatarFileInput) {
-                avatarFileInput.addEventListener('change', function(event) { [cite: 1689]
+                avatarFileInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) { [cite: 1690]
+                        reader.onload = function(e) {
                             if (avatarPreview) {
                                 avatarPreview.src = e.target.result;
                                 avatarPreview.classList.remove('hidden');
                             }
                             if (avatarPlaceholder) {
-                                avatarPlaceholder.classList.add('hidden'); [cite: 1691]
+                                avatarPlaceholder.classList.add('hidden');
                             }
-                        }
+                        };
                         reader.readAsDataURL(file);
                     }
                 });
@@ -52,7 +53,7 @@
                 const updateCooldown = () => {
                     const cooldownEnd = localStorage.getItem(cooldownKey);
                     if (!cooldownEnd) {
-                        verifyButton.disabled = false; [cite: 1692]
+                        verifyButton.disabled = false;
                         cooldownTimer.classList.add('hidden');
                         if(intervalId) clearInterval(intervalId);
                         return;
@@ -77,7 +78,7 @@
                 };
 
                 verifyButton.addEventListener('click', function() {
-                    this.disabled = true; [cite: 1693]
+                    this.disabled = true;
                     this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
 
                     const cooldownEnd = new Date().getTime() + 5 * 60 * 1000;
@@ -88,7 +89,7 @@
                     form.action = '{{ route("verification.send") }}';
 
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    const csrfInput = document.createElement('input'); [cite: 1694]
+                    const csrfInput = document.createElement('input');
                     csrfInput.type = 'hidden';
                     csrfInput.name = '_token';
                     csrfInput.value = csrfToken;
@@ -99,7 +100,7 @@
                 });
 
                 updateCooldown();
-                if (localStorage.getItem(cooldownKey) && new Date().getTime() < localStorage.getItem(cooldownKey)) { [cite: 1695]
+                if (localStorage.getItem(cooldownKey) && new Date().getTime() < localStorage.getItem(cooldownKey)) {
                     intervalId = setInterval(updateCooldown, 1000);
                 }
             }
