@@ -45,10 +45,14 @@ class ClientAuthController extends Controller
                 ->withInput()
                 ->with('registration_error', true);
 
-            $passwordError = $validator->errors()->first('password');
-            if ($passwordError) {
-                return $response->with('error', $passwordError);
+            if ($validator->errors()->has('email')) {
+                return $response->with('error', $validator->errors()->first('email'));
             }
+
+            if ($validator->errors()->has('password')) {
+                return $response->with('error', $validator->errors()->first('password'));
+            }
+
             return $response;
         }
 
