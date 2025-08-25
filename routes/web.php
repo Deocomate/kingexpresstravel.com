@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/tai-khoan/lich-su-dat-tour', [ClientProfileController::class, 'bookingHistory'])->name('client.profile.history');
     Route::delete('/tai-khoan/don-hang/{order}/huy', [ClientProfileController::class, 'cancelOrder'])->name('client.order.cancel');
 
+    Route::get('/tai-khoan/doi-mat-khau', [ClientProfileController::class, 'changePassword'])->name('client.profile.change-password');
+    Route::put('/tai-khoan/doi-mat-khau', [ClientProfileController::class, 'updatePassword'])->name('client.profile.update-password');
+
     Route::post('/email/verification-notification', [ClientProfileController::class, 'sendVerificationEmail'])
         ->middleware('throttle:1,5')
         ->name('verification.send');

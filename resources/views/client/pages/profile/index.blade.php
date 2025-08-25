@@ -11,7 +11,7 @@
                 </aside>
 
                 <div class="lg:col-span-9">
-                    @include('client.pages.profile.partials._info_form', ['user' => $user])
+                    @include('client.pages.profile.partials._info_form', ['user' => $user]) [cite: 1688]
                 </div>
             </div>
         </div>
@@ -21,31 +21,21 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const changePasswordCheckbox = document.getElementById('change_password');
-            const passwordFields = document.getElementById('password_fields');
-
-            if (changePasswordCheckbox) {
-                changePasswordCheckbox.addEventListener('change', function () {
-                    passwordFields.classList.toggle('hidden', !this.checked);
-                });
-            }
-
-            const avatarFileInput = document.getElementById('avatar_file');
+            const avatarFileInput = document.getElementById('avatar_file'); [cite: 1689]
             const avatarPreview = document.getElementById('avatar-preview');
             const avatarPlaceholder = document.getElementById('avatar-placeholder');
-
             if (avatarFileInput) {
-                avatarFileInput.addEventListener('change', function(event) {
+                avatarFileInput.addEventListener('change', function(event) { [cite: 1689]
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
+                        reader.onload = function(e) { [cite: 1690]
                             if (avatarPreview) {
                                 avatarPreview.src = e.target.result;
                                 avatarPreview.classList.remove('hidden');
                             }
                             if (avatarPlaceholder) {
-                                avatarPlaceholder.classList.add('hidden');
+                                avatarPlaceholder.classList.add('hidden'); [cite: 1691]
                             }
                         }
                         reader.readAsDataURL(file);
@@ -62,7 +52,7 @@
                 const updateCooldown = () => {
                     const cooldownEnd = localStorage.getItem(cooldownKey);
                     if (!cooldownEnd) {
-                        verifyButton.disabled = false;
+                        verifyButton.disabled = false; [cite: 1692]
                         cooldownTimer.classList.add('hidden');
                         if(intervalId) clearInterval(intervalId);
                         return;
@@ -87,7 +77,7 @@
                 };
 
                 verifyButton.addEventListener('click', function() {
-                    this.disabled = true;
+                    this.disabled = true; [cite: 1693]
                     this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
 
                     const cooldownEnd = new Date().getTime() + 5 * 60 * 1000;
@@ -98,7 +88,7 @@
                     form.action = '{{ route("verification.send") }}';
 
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    const csrfInput = document.createElement('input');
+                    const csrfInput = document.createElement('input'); [cite: 1694]
                     csrfInput.type = 'hidden';
                     csrfInput.name = '_token';
                     csrfInput.value = csrfToken;
@@ -109,7 +99,7 @@
                 });
 
                 updateCooldown();
-                if (localStorage.getItem(cooldownKey) && new Date().getTime() < localStorage.getItem(cooldownKey)) {
+                if (localStorage.getItem(cooldownKey) && new Date().getTime() < localStorage.getItem(cooldownKey)) { [cite: 1695]
                     intervalId = setInterval(updateCooldown, 1000);
                 }
             }

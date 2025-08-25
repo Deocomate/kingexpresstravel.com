@@ -43,7 +43,7 @@
                             <span class="text-green-600 font-semibold"><i class="fa-solid fa-circle-check"></i> Đã xác minh</span>
                         @else
                             <span class="text-yellow-600 font-semibold"><i class="fa-solid fa-triangle-exclamation"></i> Chưa xác minh</span>
-                            <button type="button" id="verify-email-button" class="ml-2 font-semibold text-[var(--color-primary)] hover:underline disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed">Gửi link xác minh</button>
+                            <button type="button" id="verify-email-button" class="ml-2 font-semibold text-[var(--color-primary)] hover:underline disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed cursor-pointer">Gửi email xác minh</button>
                             <span id="cooldown-timer" class="ml-2 text-gray-500 hidden"></span>
                         @endif
                     </div>

@@ -25,9 +25,9 @@
             <i class="fa-solid fa-receipt w-5 text-center"></i>
             <span>Đơn hàng của tôi</span>
         </a>
-        <a href="#" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
+        <a href="{{ route('client.profile.change-password') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
             <i class="fa-solid fa-users w-5 text-center"></i>
-            <span>Hành khách đi cùng</span>
+            <span>Đổi mật khẩu</span>
         </a>
         <a href="#" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
             <i class="fa-solid fa-star-half-stroke w-5 text-center"></i>

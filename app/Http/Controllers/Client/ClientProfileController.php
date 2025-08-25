@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
@@ -29,7 +30,6 @@ class ClientProfileController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:1000'],
             'avatar_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:1024'],
-            'password' => ['nullable', 'confirmed', Password::min(8)],
         ]);
 
         $userData = [
@@ -40,18 +40,51 @@ class ClientProfileController extends Controller
 
         if ($request->hasFile('avatar_file')) {
             $file = $request->file('avatar_file');
-            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $filename = time() . '_' . ($user->id ?? 'user') . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('userfiles/images/avatar'), $filename);
             $userData['avatar'] = '/userfiles/images/avatar/' . $filename;
-        }
-
-        if ($request->boolean('change_password') && !empty($validated['password'])) {
-            $userData['password'] = Hash::make($validated['password']);
         }
 
         $user->update($userData);
 
         return back()->with('success', 'Cập nhật thông tin thành công!');
+    }
+
+    public function changePassword(): View
+    {
+        $user = Auth::user();
+        return view('client.pages.profile.change-password', compact('user'));
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'old_password' => ['required', 'string'],
+            'password' => ['required', 'confirmed', Password::min(8)],
+        ], [
+            'password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu mới không khớp.',
+            'old_password.required' => 'Vui lòng nhập mật khẩu cũ.',
+            'password.required' => 'Vui lòng nhập mật khẩu mới.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->with('error', $validator->errors()->first());
+        }
+
+        $validated = $validator->validated();
+
+        if (!Hash::check($validated['old_password'], $user->password)) {
+            return back()->with('error', 'Mật khẩu cũ không chính xác.');
+        }
+
+        $user->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return back()->with('success', 'Đổi mật khẩu thành công!');
     }
 
     public function bookingHistory(Request $request): View|JsonResponse
