@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 class ClientAuthController extends Controller
@@ -31,12 +32,27 @@ class ClientAuthController extends Controller
 
     public function handleRegistration(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
+
+        if ($validator->fails()) {
+            $response = back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('registration_error', true);
+
+            $passwordError = $validator->errors()->first('password');
+            if ($passwordError) {
+                return $response->with('error', $passwordError);
+            }
+            return $response;
+        }
+
+        $validated = $validator->validated();
 
         $user = User::create([
             'name' => $validated['name'],

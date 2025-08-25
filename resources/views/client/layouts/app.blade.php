@@ -102,19 +102,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const openModal = (modalId) => {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            const modalPanel = modal.querySelector('.modal-panel');
-            modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-            requestAnimationFrame(() => {
-                modalPanel.classList.remove('opacity-0', '-translate-y-10');
-            });
-        };
-
-        @if ($errors->any())
-        openModal('login-modal');
+        @if (session('registration_error') && $errors->any())
+        window.openModal('register-modal');
+        @elseif ($errors->any())
+        window.openModal('login-modal');
         @endif
 
         @if (session('success'))
