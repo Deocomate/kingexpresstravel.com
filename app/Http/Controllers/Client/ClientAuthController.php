@@ -8,8 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rules\Password as PasswordRule;
+use Illuminate\View\View;
 
 class ClientAuthController extends Controller
 {
@@ -36,7 +38,7 @@ class ClientAuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:20'],
-            'password' => ['required', 'confirmed', Password::min(8)],
+            'password' => ['required', 'confirmed', PasswordRule::min(8)],
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +74,49 @@ class ClientAuthController extends Controller
 
     public function handleForgotPassword(Request $request): RedirectResponse
     {
-        return back()->with('success', 'Yêu cầu lấy lại mật khẩu đã được gửi (chức năng đang phát triển).');
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('success', 'Chúng tôi đã gửi link lấy lại mật khẩu qua email của bạn!');
+        }
+
+        return back()->withErrors(['email' => __($status)])->with('error', 'Không thể gửi link. Vui lòng thử lại.');
+    }
+
+    public function showResetForm(Request $request, $token): View
+    {
+        return view('client.auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email', '')
+        ]);
+    }
+
+    public function handleResetPassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', PasswordRule::min(8)],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('client.home')->with('success', __($status));
+        }
+
+        return back()->withInput($request->only('email'))
+            ->withErrors(['email' => __($status)])
+            ->with('error', 'Token không hợp lệ hoặc đã hết hạn.');
     }
 
     public function logout(): RedirectResponse

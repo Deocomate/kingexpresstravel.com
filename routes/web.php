@@ -35,6 +35,8 @@ Route::post('/lien-he', [ClientContactController::class, 'store'])->name('client
 Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('client.login.submit');
 Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->name('client.register.submit');
 Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');
+Route::get('/reset-password/{token}', [ClientAuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ClientAuthController::class, 'handleResetPassword'])->name('password.update');
 Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
 
 Route::get('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'index'])->name('client.checkout');
