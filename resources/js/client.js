@@ -252,5 +252,122 @@
                 }
             });
         }
+
+        const tourSearchForm = document.getElementById('tour-search-form');
+        if (tourSearchForm) {
+            const destinationInput = document.getElementById('destination-input');
+            const suggestionsContainer = document.getElementById('destination-suggestions');
+            const budgetSelect = document.getElementById('budget-select');
+            const suggestionsUrl = tourSearchForm.dataset.suggestionsUrl;
+            let searchDebounceTimer;
+            let activeSuggestionIndex = -1;
+
+            const fetchDestinationSuggestions = async (query) => {
+                if (query.length < 1) {
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.classList.add('hidden');
+                    return;
+                }
+                try {
+                    const response = await axios.get(suggestionsUrl, { params: { q: query } });
+                    displayDestinationSuggestions(response.data);
+                } catch (error) {
+                    console.error('Error fetching destination suggestions:', error);
+                }
+            };
+
+            const displayDestinationSuggestions = (suggestions) => {
+                activeSuggestionIndex = -1;
+                if (!suggestions || suggestions.length === 0) {
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.classList.add('hidden');
+                    return;
+                }
+                const suggestionsHtml = suggestions.map(item =>
+                    `<div class="suggestion-item p-3 hover:bg-gray-100 cursor-pointer text-sm text-gray-700">${item.name}</div>`
+                ).join('');
+                suggestionsContainer.innerHTML = suggestionsHtml;
+                suggestionsContainer.classList.remove('hidden');
+            };
+
+            const updateActiveSuggestion = () => {
+                const items = suggestionsContainer.querySelectorAll('.suggestion-item');
+                items.forEach((item, index) => {
+                    item.classList.toggle('bg-gray-100', index === activeSuggestionIndex);
+                });
+            };
+
+            destinationInput.addEventListener('input', (e) => {
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(() => {
+                    fetchDestinationSuggestions(e.target.value);
+                }, 300);
+            });
+
+            destinationInput.addEventListener('keydown', (e) => {
+                const items = suggestionsContainer.querySelectorAll('.suggestion-item');
+                const suggestionsVisible = !suggestionsContainer.classList.contains('hidden');
+
+                if (suggestionsVisible && items.length > 0) {
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+                        updateActiveSuggestion();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+                        updateActiveSuggestion();
+                    } else if (e.key === 'Enter') {
+                        if (activeSuggestionIndex > -1) {
+                            e.preventDefault();
+                            destinationInput.value = items[activeSuggestionIndex].textContent;
+                            suggestionsContainer.classList.add('hidden');
+                            activeSuggestionIndex = -1;
+                        }
+                    }
+                }
+            });
+
+            suggestionsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-item')) {
+                    destinationInput.value = e.target.textContent;
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!tourSearchForm.contains(e.target)) {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+
+            budgetSelect.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    tourSearchForm.requestSubmit();
+                }
+            });
+
+            tourSearchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const budgetValue = budgetSelect.value;
+                const destinationValue = destinationInput.value;
+
+                const params = new URLSearchParams();
+
+                if (destinationValue) {
+                    params.append('destination', destinationValue);
+                }
+
+                if (budgetValue) {
+                    const [from, to] = budgetValue.split('-');
+                    params.append('price_from', from);
+                    params.append('price_to', to);
+                }
+
+                window.location.href = `${this.action}?${params.toString()}`;
+            });
+        }
     });
 })();

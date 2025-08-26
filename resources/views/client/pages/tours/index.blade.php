@@ -36,7 +36,7 @@
                                         <select name="destination" id="destination" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="">Tất cả</option>
                                             @foreach($destinations as $destination)
-                                                <option value="{{ $destination->slug }}" @selected($selectedDestinationSlug == $destination->slug)>{{ $destination->name }}</option>
+                                                <option value="{{ $destination->slug }}" @selected($selectedDestination == $destination->slug)>{{ $destination->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

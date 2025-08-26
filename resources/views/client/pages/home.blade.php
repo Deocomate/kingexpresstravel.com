@@ -25,6 +25,8 @@
         </div>
     </section>
 
+    <x-client.tour-search-bar />
+
     <div class="bg-gray-100">
         <div class="container mx-auto px-4 py-8 md:py-12 space-y-12">
             @if(isset($tourCategories) && $tourCategories->isNotEmpty())

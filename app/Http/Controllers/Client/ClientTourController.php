@@ -18,8 +18,16 @@ class ClientTourController extends Controller
             ->whereHas('categories', fn($q) => $q->where('is_active', true));
 
         $selectedCategorySlug = $request->input('category');
-        $selectedDestinationSlug = $request->input('destination');
+        $selectedDestinationInput = $request->input('destination');
         $selectedCategory = null;
+        $selectedDestination = $selectedDestinationInput;
+
+        $destinationModel = Destination::where('name', $selectedDestinationInput)
+            ->orWhere('slug', $selectedDestinationInput)
+            ->first();
+        if ($destinationModel) {
+            $selectedDestination = $destinationModel->slug;
+        }
 
         $request->whenFilled('search', function ($search) use ($query) {
             $query->where('name', 'like', '%' . $search . '%');
@@ -37,9 +45,11 @@ class ClientTourController extends Controller
             }
         }
 
-        if ($selectedDestinationSlug) {
-            $query->whereHas('destinations', fn($q) => $q->where('destinations.slug', $selectedDestinationSlug));
-        }
+        $request->whenFilled('destination', function ($destination) use ($query) {
+            $query->whereHas('destinations', function ($q) use ($destination) {
+                $q->where('slug', $destination)->orWhere('name', 'like', '%' . $destination . '%');
+            });
+        });
 
         $request->whenFilled('price_from', function ($priceFrom) use ($query) {
             if ($priceFrom > 0) {
@@ -75,7 +85,7 @@ class ClientTourController extends Controller
 
         $destinations = Destination::all();
 
-        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestinationSlug', 'selectedCategory'));
+        return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestination', 'selectedCategory'));
     }
 
     public function show(Tour $tour): View
@@ -135,5 +145,20 @@ class ClientTourController extends Controller
         }
 
         return response()->json($results);
+    }
+
+    public function getDestinationSuggestions(Request $request): JsonResponse
+    {
+        $query = $request->input('q');
+
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        $destinations = Destination::where('name', 'like', '%' . $query . '%')
+            ->limit(5)
+            ->get(['name', 'slug']);
+
+        return response()->json($destinations);
     }
 }
