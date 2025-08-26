@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class ClientTourController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|JsonResponse
     {
         $query = Tour::with(['destinations'])
             ->whereHas('categories', fn($q) => $q->where('is_active', true));
@@ -73,6 +73,14 @@ class ClientTourController extends Controller
         });
 
         $tours = $query->orderBy('priority')->paginate(12)->withQueryString();
+
+        if ($request->ajax()) {
+            $html = view('client.pages.tours.partials.tour_list', compact('tours'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $tours->hasMorePages() ? $tours->nextPageUrl() : null,
+            ]);
+        }
 
         $categories = Category::where('type', 'TOUR')
             ->whereNull('parent_id')

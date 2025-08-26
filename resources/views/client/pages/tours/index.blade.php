@@ -78,8 +78,13 @@
                         @include('client.pages.tours.partials.tour_list', ['tours' => $tours])
                     </div>
 
-                    <div id="pagination-container" class="mt-10">
-                        {{ $tours->links() }}
+                    <div id="pagination-container" class="mt-10 text-center">
+                        @if ($tours->hasMorePages())
+                            <a href="{{ $tours->nextPageUrl() }}" id="load-more-button"
+                               class="inline-block bg-[var(--color-primary)] text-white font-bold py-3 px-8 rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors text-base">
+                                Xem thêm
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -115,6 +120,54 @@
                     $('#price_from').val(data.from);
                     $('#price_to').val(data.to);
                 },
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const paginationContainer = document.getElementById('pagination-container');
+            if (!paginationContainer) return;
+
+            paginationContainer.addEventListener('click', function (e) {
+                const loadMoreButton = e.target.closest('#load-more-button');
+                if (loadMoreButton && !loadMoreButton.disabled) {
+                    e.preventDefault();
+                    const url = loadMoreButton.getAttribute('href');
+                    if (!url) return;
+
+                    loadMoreButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+                    loadMoreButton.disabled = true;
+
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.html) {
+                                const tourListContainer = document.getElementById('tour-list-container');
+                                tourListContainer.insertAdjacentHTML('beforeend', data.html);
+                            }
+
+                            const nextUrl = data.next_page_url;
+
+                            if (nextUrl) {
+                                loadMoreButton.setAttribute('href', nextUrl);
+                                loadMoreButton.innerHTML = 'Xem thêm';
+                                loadMoreButton.disabled = false;
+                            } else {
+                                paginationContainer.remove();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi tải thêm tour:', error);
+                            if(loadMoreButton) {
+                                loadMoreButton.innerText = 'Xem thêm';
+                                loadMoreButton.disabled = false;
+                            }
+                        });
+                }
             });
         });
     </script>
