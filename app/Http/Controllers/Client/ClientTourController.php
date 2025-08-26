@@ -93,4 +93,43 @@ class ClientTourController extends Controller
 
         return view('client.pages.tours.show', compact('tour', 'relatedTours'));
     }
+
+    public function getSearchSuggestions(Request $request): JsonResponse
+    {
+        $query = $request->input('q');
+
+        if (empty($query) || strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $tours = Tour::where('name', 'like', '%' . $query . '%')
+            ->limit(5)
+            ->get(['name', 'slug', 'thumbnail']);
+
+        $destinations = Destination::where('name', 'like', '%' . $query . '%')
+            ->limit(3)
+            ->get(['name', 'slug']);
+
+        $results = [];
+
+        foreach ($tours as $tour) {
+            $results[] = [
+                'name' => $tour->name,
+                'url' => route('client.tour.show', $tour->slug),
+                'type' => 'Tour',
+                'thumbnail' => $tour->thumbnail,
+            ];
+        }
+
+        foreach ($destinations as $destination) {
+            $results[] = [
+                'name' => $destination->name,
+                'url' => route('client.tours', ['destination' => $destination->slug]),
+                'type' => 'Điểm đến',
+                'thumbnail' => null,
+            ];
+        }
+
+        return response()->json($results);
+    }
 }

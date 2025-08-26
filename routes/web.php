@@ -32,6 +32,8 @@ Route::get('/gioi-thieu', [ClientAboutController::class, 'index'])->name('client
 Route::get('/lien-he', [ClientContactController::class, 'index'])->name('client.contact');
 Route::post('/lien-he', [ClientContactController::class, 'store'])->name('client.contact.submit');
 
+Route::get('/api/search-suggestions', [ClientTourController::class, 'getSearchSuggestions'])->name('api.search.suggestions');
+
 Route::post('/login', [ClientAuthController::class, 'handleLogin'])->name('client.login.submit');
 Route::post('/register', [ClientAuthController::class, 'handleRegistration'])->name('client.register.submit');
 Route::post('/forgot-password', [ClientAuthController::class, 'handleForgotPassword'])->name('client.forgot-password.submit');

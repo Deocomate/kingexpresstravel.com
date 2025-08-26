@@ -1,5 +1,4 @@
 <header class="sticky top-0 z-30">
-    {{-- Top Bar --}}
     <div class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)]">
         <div class="container mx-auto px-4 flex justify-between items-center h-12">
             <div class="flex items-center gap-x-6">
@@ -11,21 +10,27 @@
             </div>
 
             <div class="hidden md:flex items-center justify-center flex-grow">
-                <form action="{{ route('client.tours') }}" method="GET" class="w-full max-w-lg">
-                    <div class="relative">
+                <div class="w-full max-w-lg">
+                    <form action="{{ route('client.tours') }}" method="GET" class="relative"
+                          id="autocomplete-search-form" data-suggestions-url="{{ route('api.search.suggestions') }}">
                         <input
                             type="search"
                             name="search"
+                            id="autocomplete-search-input"
                             placeholder="Bạn muốn đi du lịch ở đâu?"
                             class="w-full bg-white text-gray-800 placeholder-gray-500 rounded-md py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-accent)]"
+                            autocomplete="off"
                         >
                         <button type="submit"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] cursor-pointer"
                                 aria-label="Tìm kiếm">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                    </div>
-                </form>
+                        <div id="autocomplete-results"
+                             class="hidden absolute top-full left-0 w-full bg-white rounded-b-md shadow-lg mt-1 z-50 overflow-hidden">
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div class="flex items-center gap-x-6">
@@ -35,7 +40,6 @@
                     <span>Phiếu góp ý</span>
                 </a>
 
-                {{-- Authentication Links --}}
                 <div class="relative">
                     @guest
                         <button type="button" id="guest-account-button"
@@ -130,7 +134,6 @@
                                 <div class="mt-2 pointer-events-auto">
                                     <div class="bg-white rounded-lg shadow-2xl overflow-hidden border border-gray-200">
                                         <div class="flex" id="mega-menu-container">
-                                            {{-- Cột Danh mục cha (Cấp 1) --}}
                                             <div class="w-1/4 lg:w-1/5 bg-gray-50 border-r border-gray-200">
                                                 <ul class="py-2">
                                                     @foreach($tourCategoriesForMenu as $parentCategory)
@@ -148,7 +151,6 @@
                                                 </ul>
                                             </div>
 
-                                            {{-- Khu vực hiển thị danh mục con (Cấp 2 và 3) --}}
                                             <div class="w-3/4 lg:w-4/5 p-6">
                                                 @foreach($tourCategoriesForMenu as $parentCategory)
                                                     <div id="children-{{ $parentCategory->id }}"
@@ -205,7 +207,6 @@
                 </ul>
             </nav>
 
-            {{-- Mobile Menu Button --}}
             <div class="lg:hidden">
                 <button id="mobile-menu-button"
                         class="text-gray-700 hover:text-[var(--color-primary)] focus:outline-none" aria-label="Mở menu"
@@ -215,7 +216,6 @@
             </div>
         </div>
 
-        {{-- Mobile Menu --}}
         <div id="mobile-menu"
              class="hidden lg:hidden absolute top-full left-0 w-full bg-white shadow-md z-20 transition-all duration-300 ease-in-out max-h-0 overflow-hidden">
             <nav class="container mx-auto px-4 py-4">

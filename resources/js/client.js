@@ -172,5 +172,85 @@
                 });
             }
         }
+
+        const searchForm = document.getElementById('autocomplete-search-form');
+        const searchInput = document.getElementById('autocomplete-search-input');
+        const resultsContainer = document.getElementById('autocomplete-results');
+        let debounceTimer;
+
+        if (searchInput && resultsContainer && searchForm) {
+            const suggestionsUrl = searchForm.dataset.suggestionsUrl;
+
+            const debounce = (func, delay) => {
+                return function(...args) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => func.apply(this, args), delay);
+                };
+            };
+
+            const fetchSuggestions = async (query) => {
+                if (query.length < 2) {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.classList.add('hidden');
+                    return;
+                }
+
+                resultsContainer.classList.remove('hidden');
+                resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500 text-center">Đang tìm kiếm...</div>`;
+
+                try {
+                    const response = await axios.get(suggestionsUrl, { params: { q: query } });
+                    displaySuggestions(response.data);
+                } catch (error) {
+                    console.error('Error fetching search suggestions:', error);
+                    resultsContainer.innerHTML = `<div class="p-3 text-sm text-red-500 text-center">Có lỗi xảy ra.</div>`;
+                }
+            };
+
+            const displaySuggestions = (suggestions) => {
+                if (!suggestions || suggestions.length === 0) {
+                    resultsContainer.innerHTML = `<div class="p-3 text-sm text-gray-500">Không tìm thấy kết quả nào.</div>`;
+                    return;
+                }
+
+                const suggestionsHtml = suggestions.map(item => {
+                    let imageOrIconHtml = '';
+                    if (item.type === 'Tour' && item.thumbnail) {
+                        imageOrIconHtml = `<img src="${item.thumbnail}" alt="${item.name || ''}" class="w-12 h-10 object-cover rounded-md flex-shrink-0">`;
+                    } else {
+                        const iconClass = item.type === 'Tour' ? 'fa-route text-blue-500' : 'fa-map-marker-alt text-green-500';
+                        imageOrIconHtml = `<div class="w-12 h-10 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${iconClass} text-xl"></i></div>`;
+                    }
+
+                    return `
+                    <a href="${item.url || '#'}" class="flex items-center gap-x-3 p-2 hover:bg-gray-100 transition-colors border-b last:border-b-0">
+                        ${imageOrIconHtml}
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-800 text-sm leading-tight">${item.name || ''}</p>
+                            <p class="text-xs text-gray-500">${item.type || ''}</p>
+                        </div>
+                    </a>
+                `;
+                }).join('');
+
+                resultsContainer.innerHTML = `<div class="max-h-80 overflow-y-auto">${suggestionsHtml}</div>`;
+            };
+
+            searchInput.addEventListener('input', debounce((e) => {
+                fetchSuggestions(e.target.value);
+            }, 300));
+
+            document.addEventListener('click', (e) => {
+                if (!searchForm.contains(e.target)) {
+                    resultsContainer.classList.add('hidden');
+                }
+            });
+
+            searchInput.addEventListener('focus', () => {
+                if (searchInput.value.length >= 2 && resultsContainer.innerHTML.trim() !== '') {
+                    resultsContainer.classList.remove('hidden');
+                }
+            });
+        }
     });
 })();
