@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class ClientTourController extends Controller
 {
-    public function index(Request $request): View|JsonResponse
+    public function index(Request $request): View
     {
         $query = Tour::with(['destinations'])
             ->whereHas('categories', fn($q) => $q->where('is_active', true));
@@ -64,17 +64,6 @@ class ClientTourController extends Controller
 
         $tours = $query->orderBy('priority')->paginate(12)->withQueryString();
 
-        if ($request->ajax()) {
-            $html = view('client.pages.tours.partials.tour_list', compact('tours'))->render();
-            $paginationHtml = $tours->links()->toHtml();
-
-            return response()->json([
-                'html' => $html,
-                'pagination' => $paginationHtml,
-                'next_page_url' => $tours->hasMorePages() ? $tours->nextPageUrl() : null,
-            ]);
-        }
-
         $categories = Category::where('type', 'TOUR')
             ->whereNull('parent_id')
             ->where('is_active', true)
@@ -124,21 +113,25 @@ class ClientTourController extends Controller
         $results = [];
 
         foreach ($tours as $tour) {
-            $results[] = [
-                'name' => $tour->name,
-                'url' => route('client.tour.show', $tour->slug),
-                'type' => 'Tour',
-                'thumbnail' => $tour->thumbnail,
-            ];
+            if ($tour) {
+                $results[] = [
+                    'name' => $tour->name,
+                    'url' => route('client.tour.show', $tour->slug),
+                    'type' => 'Tour',
+                    'thumbnail' => $tour->thumbnail,
+                ];
+            }
         }
 
         foreach ($destinations as $destination) {
-            $results[] = [
-                'name' => $destination->name,
-                'url' => route('client.tours', ['destination' => $destination->slug]),
-                'type' => 'Điểm đến',
-                'thumbnail' => null,
-            ];
+            if ($destination) {
+                $results[] = [
+                    'name' => $destination->name,
+                    'url' => route('client.tours', ['destination' => $destination->slug]),
+                    'type' => 'Điểm đến',
+                    'thumbnail' => null,
+                ];
+            }
         }
 
         return response()->json($results);
