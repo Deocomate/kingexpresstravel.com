@@ -78,6 +78,7 @@ Route::post('/admin/authenticate', [AdminAuthController::class, "authenticate"])
 Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->group(function () {
     Route::get("/dashboard", [AdminBaseController::class, "index"])->name("dashboard.index");
     Route::get('/dashboard/chart-data', [AdminBaseController::class, 'getChartData'])->name('dashboard.chartData');
+    Route::get('/dashboard/visitor-chart-data', [AdminBaseController::class, 'getVisitorChartData'])->name('dashboard.visitorChartData');
 
     Route::post('categories/update-order', [CategoryController::class, 'updateOrder'])->name('categories.updateOrder');
     Route::resource('categories', CategoryController::class);

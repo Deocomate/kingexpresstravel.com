@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: [
             'ckCsrfToken',
         ]);
+
+        // Thêm middleware theo dõi lượt truy cập vào nhóm 'web'
+        $middleware->web(append: [
+            \App\Http\Middleware\TrackVisitorsMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
