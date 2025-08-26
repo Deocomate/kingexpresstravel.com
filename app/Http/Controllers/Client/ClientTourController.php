@@ -66,13 +66,24 @@ class ClientTourController extends Controller
 
         if ($request->ajax()) {
             $html = view('client.pages.tours.partials.tour_list', compact('tours'))->render();
+            $paginationHtml = $tours->links()->toHtml();
+
             return response()->json([
                 'html' => $html,
+                'pagination' => $paginationHtml,
                 'next_page_url' => $tours->hasMorePages() ? $tours->nextPageUrl() : null,
             ]);
         }
 
-        $categories = Category::where('type', 'TOUR')->where('is_active', true)->get();
+        $categories = Category::where('type', 'TOUR')
+            ->whereNull('parent_id')
+            ->where('is_active', true)
+            ->with(['children' => function ($query) {
+                $query->where('is_active', true)->orderBy('priority');
+            }])
+            ->orderBy('priority')
+            ->get();
+
         $destinations = Destination::all();
 
         return view('client.pages.tours.index', compact('tours', 'categories', 'destinations', 'selectedCategorySlug', 'selectedDestinationSlug', 'selectedCategory'));

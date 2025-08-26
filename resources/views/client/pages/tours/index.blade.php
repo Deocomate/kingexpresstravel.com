@@ -13,7 +13,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <aside class="lg:col-span-3">
-                    <div class="sticky top-36 space-y-6">
+                    <div class="sticky top-28 space-y-6">
                         <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
                             <h3 class="text-lg font-bold text-gray-800 mb-4">Bộ lọc tìm kiếm</h3>
                             <form action="{{ route('client.tours') }}" method="GET" id="filter-form">
@@ -24,7 +24,7 @@
                                     </div>
                                     <div>
                                         <label for="category" class="block text-sm font-semibold text-gray-800">Loại hình</label>
-                                        <select name="category" id="category" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                        <select name="category" id="category" class="filter-input mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="">Tất cả</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->slug }}" @selected($selectedCategorySlug == $category->slug)>{{ $category->name }}</option>
@@ -33,7 +33,7 @@
                                     </div>
                                     <div>
                                         <label for="destination" class="block text-sm font-semibold text-gray-800">Điểm đến</label>
-                                        <select name="destination" id="destination" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                        <select name="destination" id="destination" class="filter-input mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="">Tất cả</option>
                                             @foreach($destinations as $destination)
                                                 <option value="{{ $destination->slug }}" @selected($selectedDestinationSlug == $destination->slug)>{{ $destination->name }}</option>
@@ -48,19 +48,16 @@
                                     </div>
                                     <div>
                                         <label for="sort" class="block text-sm font-semibold text-gray-800">Sắp xếp</label>
-                                        <select name="sort" id="sort" class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
+                                        <select name="sort" id="sort" class="filter-input mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
                                             <option value="default" @selected(request('sort') == 'default')>Mặc định</option>
                                             <option value="price_asc" @selected(request('sort') == 'price_asc')>Giá tăng dần</option>
                                             <option value="price_desc" @selected(request('sort') == 'price_desc')>Giá giảm dần</option>
                                             <option value="name_asc" @selected(request('sort') == 'name_asc')>Theo tên A-Z</option>
                                         </select>
                                     </div>
-                                    <div class="pt-2 grid grid-cols-2 gap-2">
-                                        <button type="submit" class="w-full hover:cursor-pointer text-center bg-[var(--color-primary-accent)] text-white font-bold py-2 px-4 rounded-lg hover:bg-[var(--color-primary)] transition-colors flex items-center justify-center">
-                                            <i class="fa-solid fa-magnifying-glass mr-1"></i> Lọc
-                                        </button>
+                                    <div class="pt-2">
                                         <a href="{{ route('client.tours') }}" class="w-full text-center bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center">
-                                            <i class="fa-solid fa-eraser mr-1"></i> Xóa lọc
+                                            <i class="fa-solid fa-eraser mr-2"></i> Xóa bộ lọc
                                         </a>
                                     </div>
                                 </div>
@@ -69,21 +66,21 @@
                     </div>
                 </aside>
 
-                <div class="lg:col-span-9">
+                <div class="lg:col-span-9 relative">
                     <div class="mb-4">
-                        <h2 class="text-2xl font-bold text-gray-800">{{ $selectedCategory->name ?? 'Các tour du lịch' }}</h2>
+                        <h2 id="tour-list-title" class="text-2xl font-bold text-gray-800">{{ $selectedCategory->name ?? 'Tất cả tour' }}</h2>
                     </div>
+
                     <div id="tour-list-container">
                         @include('client.pages.tours.partials.tour_list', ['tours' => $tours])
                     </div>
 
-                    <div id="pagination-container" class="mt-10 text-center">
-                        @if ($tours->hasMorePages())
-                            <a href="{{ $tours->nextPageUrl() }}" id="load-more-button"
-                               class="inline-block bg-[var(--color-primary)] text-white font-bold py-3 px-8 rounded-lg hover:bg-[var(--color-primary-dark)] transition-colors text-base">
-                                Xem thêm
-                            </a>
-                        @endif
+                    <div id="pagination-container" class="mt-10">
+                        {{ $tours->links() }}
+                    </div>
+
+                    <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center hidden z-10 rounded-lg">
+                        <i class="fa-solid fa-spinner fa-spin text-4xl text-[var(--color-primary)]"></i>
                     </div>
                 </div>
             </div>
@@ -104,94 +101,126 @@
     </style>
 
     <script>
-        $(function () {
-            const priceSlider = $("#price_range_slider");
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('filter-form');
+            const tourListContainer = document.getElementById('tour-list-container');
+            const paginationContainer = document.getElementById('pagination-container');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const searchInput = document.getElementById('search');
+            const filterInputs = document.querySelectorAll('.filter-input');
             const priceFromInput = $('#price_from');
             const priceToInput = $('#price_to');
-            const minPrice = 1000000;
-            const maxPrice = 15000000;
+            const tourListTitle = document.getElementById('tour-list-title');
 
-            priceSlider.ionRangeSlider({
+            let debounceTimer;
+            let currentRequestController = null;
+
+            $("#price_range_slider").ionRangeSlider({
                 type: "double",
                 grid: true,
-                min: minPrice,
-                max: maxPrice,
-                from: priceFromInput.val() || minPrice,
-                to: priceToInput.val() || maxPrice,
+                min: 1000000,
+                max: 50000000,
+                from: priceFromInput.val() || 1000000,
+                to: priceToInput.val() || 50000000,
                 prefix: "đ ",
                 step: 500000,
                 prettify_separator: ".",
                 onFinish: function (data) {
                     priceFromInput.val(data.from);
                     priceToInput.val(data.to);
+                    handleFilterChange();
                 },
             });
-        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const filterForm = document.getElementById('filter-form');
-            if (filterForm) {
-                filterForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    const formData = new FormData(filterForm);
-                    const params = new URLSearchParams();
-                    const minPrice = 1000000;
-                    const maxPrice = 15000000;
+            const fetchTours = (url, isPopState = false) => {
+                if (currentRequestController) {
+                    currentRequestController.abort();
+                }
+                currentRequestController = new AbortController();
 
-                    for (const [key, value] of formData.entries()) {
-                        if (value && value.trim() !== '' && value !== 'default') {
-                            if (key === 'price_from' && value == minPrice) continue;
-                            if (key === 'price_to' && value == maxPrice) continue;
-                            params.append(key, value);
+                loadingOverlay.classList.remove('hidden');
+                tourListContainer.style.minHeight = tourListContainer.offsetHeight + 'px';
+
+                const cacheBustUrl = new URL(url, window.location.origin);
+                cacheBustUrl.searchParams.set('_', new Date().getTime());
+
+                axios.get(cacheBustUrl.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
+                    signal: currentRequestController.signal
+                })
+                    .then(response => {
+                        const data = response.data;
+                        if (!isPopState) {
+                            history.pushState({ path: url }, '', url);
                         }
+                        tourListContainer.innerHTML = data.html;
+                        paginationContainer.innerHTML = data.pagination;
+                    })
+                    .catch(error => {
+                        if (!axios.isCancel(error)) {
+                            console.error('Lỗi khi tải tour:', error);
+                        }
+                    })
+                    .finally(() => {
+                        tourListContainer.style.minHeight = '';
+                        loadingOverlay.classList.add('hidden');
+                        currentRequestController = null;
+                    });
+            };
+
+            const handleFilterChange = () => {
+                const formData = new FormData(filterForm);
+                const params = new URLSearchParams();
+                const minPriceDefault = 1000000;
+                const maxPriceDefault = 50000000;
+
+                for (const [key, value] of formData.entries()) {
+                    if (value && value.trim() !== '' && value !== 'default') {
+                        if (key === 'price_from' && value == minPriceDefault) continue;
+                        if (key === 'price_to' && value == maxPriceDefault) continue;
+                        params.append(key, value);
                     }
-                    params.delete('price_range');
-                    const queryString = params.toString();
-                    window.location.href = filterForm.action + (queryString ? '?' + queryString : '');
-                });
-            }
+                }
+                params.delete('price_range');
 
-            const paginationContainer = document.getElementById('pagination-container');
-            if (paginationContainer) {
-                paginationContainer.addEventListener('click', function (e) {
-                    const loadMoreButton = e.target.closest('#load-more-button');
-                    if (loadMoreButton && !loadMoreButton.disabled) {
-                        e.preventDefault();
-                        const url = loadMoreButton.getAttribute('href');
-                        if (!url) return;
+                const selectedCategoryText = document.querySelector('#category option:checked').textContent;
+                tourListTitle.textContent = selectedCategoryText === 'Tất cả' ? 'Tất cả tour' : selectedCategoryText;
 
-                        loadMoreButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
-                        loadMoreButton.disabled = true;
+                const queryString = params.toString();
+                const url = filterForm.action + (queryString ? '?' + queryString : '');
+                fetchTours(url);
+            };
 
-                        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' } })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.html) {
-                                    const grid = document.querySelector('#tour-list-container .grid');
-                                    if (grid) {
-                                        const tempDiv = document.createElement('div');
-                                        tempDiv.innerHTML = data.html;
-                                        grid.insertAdjacentHTML('beforeend', tempDiv.querySelector('.grid').innerHTML);
-                                    }
-                                }
-                                if (data.next_page_url) {
-                                    loadMoreButton.setAttribute('href', data.next_page_url);
-                                    loadMoreButton.innerHTML = 'Xem thêm';
-                                    loadMoreButton.disabled = false;
-                                } else {
-                                    paginationContainer.remove();
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Lỗi khi tải thêm tour:', error);
-                                if(loadMoreButton) {
-                                    loadMoreButton.innerText = 'Xem thêm';
-                                    loadMoreButton.disabled = false;
-                                }
-                            });
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(handleFilterChange, 500);
+            });
+
+            filterInputs.forEach(input => {
+                input.addEventListener('change', handleFilterChange);
+            });
+
+            filterForm.addEventListener('submit', (e) => e.preventDefault());
+
+            paginationContainer.addEventListener('click', (e) => {
+                const pageLink = e.target.closest('.pagination a');
+                if (pageLink) {
+                    e.preventDefault();
+                    const url = pageLink.getAttribute('href');
+                    if (url) {
+                        fetchTours(url);
                     }
-                });
-            }
+                }
+            });
+
+            window.addEventListener('popstate', (e) => {
+                location.reload();
+            });
+
+            history.replaceState({ path: window.location.href }, '');
         });
     </script>
 @endpush
