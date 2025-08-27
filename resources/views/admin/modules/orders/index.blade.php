@@ -68,7 +68,7 @@
                         <th>Tổng tiền</th>
                         <th style="width: 170px;">Ngày đặt</th>
                         <th style="width: 180px;">Trạng thái</th>
-                        <th style="width: 150px;">Hành động</th>
+                        <th style="width: 200px;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,9 +102,11 @@
                                 </form>
                             </td>
                             <td class="text-nowrap">
-                                <a class="btn btn-info btn-sm"
-                                   href="{{ route('admin.orders.show', $order) }}">
+                                <a class="btn btn-info btn-sm" href="{{ route('admin.orders.show', $order) }}">
                                     <i class="fas fa-eye"></i> Xem
+                                </a>
+                                <a class="btn btn-primary btn-sm" href="{{ route('admin.orders.payment.show', $order) }}" title="Thanh toán">
+                                    <i class="fas fa-money-check-alt"></i> TT
                                 </a>
                                 <form action="{{ route('admin.orders.destroy', $order) }}"
                                       method="POST" class="d-inline-block">

@@ -97,6 +97,10 @@ Route::prefix('admin')->name("admin.")->middleware(AdminAuthMiddleware::class)->
     Route::resource('users', UserController::class);
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::resource('orders', OrderController::class)->except(['create', 'store', 'edit', 'update']);
+
+    // Routes for Payment Management
+    Route::get('/orders/{order}/payment', [OrderController::class, 'showPayment'])->name('orders.payment.show');
+    Route::patch('/orders/{order}/payment', [OrderController::class, 'updatePayment'])->name('orders.payment.update');
 });
 
 Route::any('/ckfinder/connector', '\CKSource\CKFinderBridge\Controller\CKFinderController@requestAction')

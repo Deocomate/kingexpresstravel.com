@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Payment;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,5 +69,39 @@ class OrderController extends Controller
     {
         $order->delete();
         return redirect()->route('admin.orders.index')->with('success', 'Xóa đơn hàng thành công.');
+    }
+
+    public function showPayment(Order $order): View
+    {
+        $order->load('payment', 'user', 'tour');
+        return view('admin.modules.orders.payment', compact('order'));
+    }
+
+    public function updatePayment(Request $request, Order $order): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', Rule::in(['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED'])],
+            'note' => ['nullable', 'string', 'max:2000'],
+            'transaction_id' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $payment = $order->payment()->firstOrCreate(
+            ['order_id' => $order->id],
+            ['amount' => $order->total_price, 'method' => 'Chưa xác định']
+        );
+
+        $paymentData = [
+            'status' => $validated['status'],
+            'note' => $validated['note'],
+            'transaction_id' => $validated['transaction_id'],
+        ];
+
+        if ($validated['status'] === 'SUCCESS' && $payment->status !== 'SUCCESS') {
+            $paymentData['paid_at'] = now();
+        }
+
+        $payment->update($paymentData);
+
+        return back()->with('success', 'Cập nhật thông tin thanh toán thành công.');
     }
 }
