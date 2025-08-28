@@ -25,10 +25,12 @@
             <i class="fa-solid fa-receipt w-5 text-center"></i>
             <span>Đơn hàng của tôi</span>
         </a>
-        <a href="{{ route('client.profile.change-password') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
-            <i class="fa-solid fa-users w-5 text-center"></i>
-            <span>Đổi mật khẩu</span>
-        </a>
+        @if($user->account_type === 'LOCAL')
+            <a href="{{ route('client.profile.change-password') }}" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold transition-colors {{ request()->routeIs('client.profile.change-password') ? 'bg-[var(--color-primary-light)] text-[var(--color-primary-dark)]' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800' }}">
+                <i class="fa-solid fa-lock w-5 text-center"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+        @endif
         <a href="#" class="flex items-center gap-x-3 px-4 py-3 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors">
             <i class="fa-solid fa-star-half-stroke w-5 text-center"></i>
             <span>Đánh giá chuyến đi</span>

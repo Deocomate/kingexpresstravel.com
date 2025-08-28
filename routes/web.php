@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AboutUsController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminBaseController;
+use App\Http\Controllers\Client\GoogleAuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CustomerCareController;
@@ -46,6 +47,9 @@ Route::get('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'index'])-
 Route::post('/dat-tour/{tour:slug}', [ClientCheckoutController::class, 'store'])
     ->middleware('throttle:2,1')
     ->name('client.checkout.store');
+
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 Route::middleware('auth')->group(function () {
     Route::get('/tai-khoan', [ClientProfileController::class, 'index'])->name('client.profile');
