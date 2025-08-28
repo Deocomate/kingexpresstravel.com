@@ -80,7 +80,7 @@ class OrderController extends Controller
     public function updatePayment(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', Rule::in(['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED'])],
+            'status' => ['required', Rule::in(['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED', 'REFUNDED'])],
             'note' => ['nullable', 'string', 'max:2000'],
             'transaction_id' => ['nullable', 'string', 'max:2000'],
         ]);

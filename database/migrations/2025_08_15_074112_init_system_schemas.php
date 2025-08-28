@@ -5,9 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
@@ -107,7 +104,7 @@ return new class extends Migration {
             $table->string('method', 2000)->nullable();
             $table->string('transaction_id', 2000)->unique()->nullable();
             $table->integer('amount')->nullable();
-            $table->enum('status', ['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED'])->default('PENDING');
+            $table->enum('status', ['PENDING', 'SUCCESS', 'FAILED', 'CANCELLED', 'REFUNDED'])->default('PENDING');
             $table->dateTime('paid_at')->nullable();
             $table->string('note', 2000)->nullable();
             $table->timestamps();
@@ -154,9 +151,6 @@ return new class extends Migration {
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('customer_cares');

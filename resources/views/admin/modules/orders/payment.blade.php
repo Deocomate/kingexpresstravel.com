@@ -46,11 +46,12 @@
                                 <option value="SUCCESS" @selected(optional($payment)->status == 'SUCCESS')>Đã thanh toán (Thành công)</option>
                                 <option value="FAILED" @selected(optional($payment)->status == 'FAILED')>Thanh toán thất bại</option>
                                 <option value="CANCELLED" @selected(optional($payment)->status == 'CANCELLED')>Đã hủy</option>
+                                <option value="REFUNDED" @selected(optional($payment)->status == 'REFUNDED')>Đã hoàn tiền</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="transaction_id">Mã giao dịch (nếu có)</label>
-                            <input type="text" name="transaction_id" id="transaction_id" class="form-control bg-light" value="{{ old('transaction_id', optional($payment)->transaction_id) }}" readonly>
+                            <input type="text" name="transaction_id" id="transaction_id" class="form-control" value="{{ old('transaction_id', optional($payment)->transaction_id) }}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="note">Ghi chú của Admin</label>
