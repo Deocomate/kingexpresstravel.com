@@ -10,7 +10,7 @@
                     @include('client.pages.profile.partials._sidebar', ['user' => $user])
                 </aside>
 
-                <div class="lg:col-span-9">
+                <div class="lg:col-span-9" id="profile-content-area">
                     <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-200">
                         <h1 class="text-2xl font-bold text-gray-800">Đổi mật khẩu</h1>
                         <p class="mt-1 text-sm text-gray-500">Để đảm bảo an toàn, vui lòng không chia sẻ mật khẩu cho người khác.</p>

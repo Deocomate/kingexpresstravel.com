@@ -1,6 +1,7 @@
 @props(['user'])
 
 <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-200">
+    {{-- Nội dung form giữ nguyên --}}
     <h1 class="text-2xl font-bold text-gray-800">Tài khoản</h1>
 
     <form action="{{ route('client.profile.update') }}" method="POST" class="mt-6" enctype="multipart/form-data">
@@ -48,27 +49,9 @@
                         @endif
                     </div>
                 </div>
-                <div class="md:col-span-4 flex items-end">
-                    <div class="flex items-center">
-                        <input id="change_password" name="change_password" type="checkbox" value="1" class="h-4 w-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary-accent)]">
-                        <label for="change_password" class="ml-2 block text-sm text-gray-900">Đổi mật khẩu</label>
-                    </div>
-                </div>
             </div>
 
-            <div id="password_fields" class="hidden space-y-5">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu mới</label>
-                        <input type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
-                    </div>
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu mới</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]">
-                    </div>
-                </div>
-            </div>
-
+            {{-- Các trường thông tin khác giữ nguyên --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Họ và tên</label>
@@ -94,3 +77,31 @@
         </div>
     </form>
 </div>
+
+{{-- Script được đặt trực tiếp ở đây để được thực thi lại mỗi khi nội dung được tải --}}
+<script>
+    (function() {
+        const avatarFileInput = document.getElementById('avatar_file');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarPlaceholder = document.getElementById('avatar-placeholder');
+
+        if (avatarFileInput) {
+            avatarFileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (avatarPreview) {
+                            avatarPreview.src = e.target.result;
+                            avatarPreview.classList.remove('hidden');
+                        }
+                        if (avatarPlaceholder) {
+                            avatarPlaceholder.classList.add('hidden');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    })();
+</script>

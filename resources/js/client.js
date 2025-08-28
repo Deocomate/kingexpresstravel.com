@@ -369,5 +369,83 @@
                 window.location.href = `${this.action}?${params.toString()}`;
             });
         }
+
+        const executeScriptsInContainer = (containerElement) => {
+            containerElement.querySelectorAll('script').forEach(script => {
+                const newScript = document.createElement('script');
+                for (const attr of script.attributes) {
+                    newScript.setAttribute(attr.name, attr.value);
+                }
+                newScript.textContent = script.textContent;
+                script.parentNode.replaceChild(newScript, script);
+            });
+        };
+
+        const handleProfileNav = async (url, pushState = true) => {
+            const contentArea = document.getElementById('profile-content-area');
+            if (!contentArea) return;
+
+            contentArea.innerHTML = `
+                <div class="flex items-center justify-center min-h-[400px]">
+                    <i class="fa-solid fa-spinner fa-spin text-4xl text-[var(--color-primary)]"></i>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const html = await response.text();
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const newContent = doc.getElementById('profile-content-area');
+                const newTitle = doc.querySelector('title').innerText;
+
+                if (pushState) {
+                    history.pushState({ path: url }, newTitle, url);
+                }
+                document.title = newTitle;
+
+                contentArea.innerHTML = newContent ? newContent.innerHTML : '<p class="text-center">Lỗi khi tải nội dung.</p>';
+                executeScriptsInContainer(contentArea);
+
+                const sidebar = document.getElementById('profile-sidebar-nav');
+                if (sidebar) {
+                    sidebar.querySelectorAll('a.profile-nav-link').forEach(a => {
+                        a.classList.remove('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+                        a.classList.add('text-gray-600', 'hover:bg-gray-100', 'hover:text-gray-800');
+                    });
+                    const activeLink = sidebar.querySelector(`a[href="${url}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('bg-[var(--color-primary-light)]', 'text-[var(--color-primary-dark)]');
+                        activeLink.classList.remove('text-gray-600', 'hover:bg-gray-100', 'hover:text-gray-800');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Lỗi tải trang:', error);
+                window.location.href = url;
+            }
+        };
+
+        document.body.addEventListener('click', e => {
+            const link = e.target.closest('a.profile-nav-link');
+            if (link) {
+                e.preventDefault();
+                handleProfileNav(link.href);
+            }
+        });
+
+        window.addEventListener('popstate', e => {
+            if (e.state && e.state.path) {
+                handleProfileNav(e.state.path, false);
+            }
+        });
+
+        if (window.location.pathname.startsWith('/tai-khoan')) {
+            history.replaceState({ path: window.location.href }, document.title, window.location.href);
+        }
+
     });
 })();
