@@ -25,5 +25,4 @@ Thumbs.db
 .codebase
 # Added by CodebaseTracker
 .codebase/
-public/build
 public/build.zip

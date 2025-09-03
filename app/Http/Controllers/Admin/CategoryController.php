@@ -143,4 +143,81 @@ class CategoryController extends Controller
             }
         }
     }
+
+    /**
+     * Show the form for adding categories to tours.
+     * @return View
+     */
+    public function showAddToTourForm(): View
+    {
+        $tourCategories = DB::table('categories')
+            ->where('type', 'TOUR')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.modules.categories.add-to-tour', compact('tourCategories'));
+    }
+
+    /**
+     * Handle the submission for adding categories to tours.
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function handleAddToTour(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'category_ids'   => 'required|array|min:1',
+            'category_ids.*' => 'exists:categories,id',
+            'tour_name'      => 'required|string|min:1',
+        ], [
+            'category_ids.required' => 'Vui lòng chọn ít nhất một danh mục.',
+            'tour_name.required' => 'Vui lòng nhập từ khóa tên tour.',
+        ]);
+
+        $categoryIds = $validated['category_ids'];
+        $tourNameKeyword = $validated['tour_name'];
+
+        // Find tours using Query Builder as per instructions
+        $toursToUpdate = DB::table('tours')
+                            ->where('name', 'like', '%' . $tourNameKeyword . '%')
+                            ->pluck('id');
+
+        if ($toursToUpdate->isEmpty()) {
+            return back()->withInput()->with('warning', 'Không tìm thấy tour nào có tên chứa "' . $tourNameKeyword . '".');
+        }
+
+        // Prepare data for insertion
+        $dataToInsert = [];
+        $existingRelations = DB::table('tour_categories')
+                                ->whereIn('tour_id', $toursToUpdate)
+                                ->whereIn('category_id', $categoryIds)
+                                ->get(['tour_id', 'category_id'])
+                                ->map(fn($item) => $item->tour_id . '-' . $item->category_id)
+                                ->flip(); // Create a hash map for quick lookups
+
+        foreach ($toursToUpdate as $tourId) {
+            foreach ($categoryIds as $categoryId) {
+                // Check if the relation already exists to avoid duplicates
+                if (!isset($existingRelations[$tourId . '-' . $categoryId])) {
+                    $dataToInsert[] = [
+                        'tour_id' => $tourId,
+                        'category_id' => $categoryId,
+                    ];
+                }
+            }
+        }
+
+        // Insert new relations if any
+        if (!empty($dataToInsert)) {
+            DB::table('tour_categories')->insert($dataToInsert);
+        }
+
+        $countAdded = count($dataToInsert);
+        $countTours = $toursToUpdate->count();
+        $categoryNames = DB::table('categories')->whereIn('id', $categoryIds)->pluck('name')->implode(', ');
+
+        return redirect()->route('admin.categories.add-to-tour.create')
+                         ->with('success', "Đã thêm danh mục ({$categoryNames}) cho {$countTours} tour. Có {$countAdded} liên kết mới được tạo.");
+    }
 }

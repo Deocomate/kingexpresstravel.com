@@ -6,69 +6,154 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name', 'Laravel'))</title>
-    <meta name="description" content="@yield('description', 'King Express Travel - Khám phá niềm vui của bạn ở bất cứ đâu.')">
+    <meta name="description"
+          content="@yield('description', 'King Express Travel - Khám phá niềm vui của bạn ở bất cứ đâu.')">
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;800&display=swap"
+        rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        :root {
+            /* Các biến màu custom của bạn nên được định nghĩa trong resources/css/app.css */
+        }
+
+        /* Prevent horizontal scroll */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         .custom-toast.swal2-popup {
             font-size: 0.875rem;
             padding: 0.75rem 1.25rem;
         }
+
         .custom-toast .swal2-title {
             font-size: 1em;
         }
+
         .custom-toast .swal2-icon {
             width: 1.25em;
             height: 1.25em;
             margin: 0 0.5em 0 0;
         }
+
         .custom-toast .swal2-icon .swal2-icon-content {
             font-size: 1em;
         }
-        .slider-container .swiper-button-next,
-        .slider-container .swiper-button-prev {
+
+        /* General slider arrow style */
+        .slider-nav-btn,
+        .main-carousel-nav-btn {
             color: var(--color-primary);
-            background-color: white;
+            background: #fff;
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            transition: opacity 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: opacity .3s, transform .25s;
         }
-        .slider-container .swiper-button-next:after,
-        .slider-container .swiper-button-prev:after {
+
+        .slider-nav-btn:after,
+        .main-carousel-nav-btn:after {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
         }
-        .slider-container .swiper-button-prev {
-            left: -22px;
+
+        .slider-nav-btn:hover,
+        .main-carousel-nav-btn:hover {
+            transform: scale(1.05);
         }
-        .slider-container .swiper-button-next {
-            right: -22px;
-        }
+
         .swiper-button-disabled {
             opacity: 0;
-            cursor: auto;
             pointer-events: none;
         }
-        .main-carousel .swiper-button-prev {
-            left: 20px;
+
+        /* [FIXED] Header Navigation Styles */
+        .main-nav-link {
+            position: relative;
+            transition: color 0.3s ease;
         }
-        .main-carousel .swiper-button-next {
-            right: 20px;
+
+        .main-nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: 0; /* Moved from -4px to 0 to be closer to text */
+            left: 0;
+            background-color: var(--color-primary);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
         }
-        @media (max-width: 768px) {
-            .slider-container .swiper-button-prev,
-            .slider-container .swiper-button-next {
-                display: none;
+
+        .main-nav-link:hover::after,
+        .main-nav-link.active::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* [FIXED] Mega Menu Animation */
+        .mega-menu-wrapper {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(0) scale(0.98);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.15s;
+            pointer-events: none;
+        }
+
+        .group:hover .mega-menu-wrapper {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
+            pointer-events: auto;
+        }
+
+        /* [FIXED] Mega Menu Content Styling */
+        .mega-menu-parent-item.active {
+            background-color: #fff;
+            color: var(--color-primary-dark);
+            font-weight: 700;
+            border-right: 3px solid var(--color-primary);
+        }
+
+        .mega-menu-parent-item:not(.active) {
+            border-right: 3px solid transparent;
+        }
+
+        .mega-menu-children-panel {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
     </style>
@@ -85,23 +170,30 @@
     @include('client.layouts.partials.footer')
 </div>
 
-<x-client.modal id="login-modal" title="Đăng nhập" subtitle="Đăng nhập tài khoản Du Lịch Việt và khám phá niềm vui của bạn ở bất cứ đâu">
+<!-- Auth Modals -->
+<x-client.modal id="login-modal" title="Đăng nhập"
+                subtitle="Đăng nhập tài khoản Du Lịch Việt và khám phá niềm vui của bạn ở bất cứ đâu">
     @include('client.auth.partials.login-form')
 </x-client.modal>
-
-<x-client.modal id="register-modal" title="Đăng ký" subtitle="Nhận tài khoản Du Lịch Việt và khám phá niềm vui của bạn ở bất cứ đâu">
+<x-client.modal id="register-modal" title="Đăng ký"
+                subtitle="Nhận tài khoản Du Lịch Việt và khám phá niềm vui của bạn ở bất cứ đâu">
     @include('client.auth.partials.register-form')
 </x-client.modal>
-
-<x-client.modal id="forgot-password-modal" title="Quên mật khẩu" subtitle="Nhập email của bạn để nhận mật khẩu mới từ hệ thống Du Lịch Việt">
+<x-client.modal id="forgot-password-modal" title="Quên mật khẩu"
+                subtitle="Nhập email của bạn để nhận mật khẩu mới từ hệ thống Du Lịch Việt">
     @include('client.auth.partials.forgot-password-form')
 </x-client.modal>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
 @stack('scripts')
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
+        AOS.init({duration: 800, once: true});
+
         @if (session('registration_error') && $errors->any())
         window.openModal('register-modal');
         @elseif ($errors->any())
@@ -109,11 +201,11 @@
         @endif
 
         @if (session('success'))
-        window.showSuccessToast("{{ session('success') }}");
+        window.showSuccessToast(@json(session('success')));
         @endif
 
         @if (session('error'))
-        window.showErrorToast("{{ session('error') }}");
+        window.showErrorToast(@json(session('error')));
         @endif
     });
 </script>
