@@ -3,14 +3,19 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
                 <h3 class="text-lg font-bold text-gray-800 uppercase">
-                    Công ty Cổ phần Truyền thông King Express Travel
+                    {{ optional($contactInfo)->company_name ?? 'Công ty Du lịch King Express' }}
                 </h3>
                 <div class="mt-4 space-y-2 text-sm text-gray-600">
-                    <p><strong>Địa chỉ:</strong> 239A Hoàng Văn Thụ, P.Phú Nhuận, TP. Hồ Chí Minh.</p>
-                    <p><strong>Văn phòng:</strong> 217 Bis Nguyễn Thị Minh Khai, Phường Cầu Ông Lãnh, TP. Hồ Chí Minh.</p>
-                    <p><strong>Chi nhánh Hà Nội:</strong> 44 Tràng Tiền, Quận Hoàn Kiếm, Hà Nội.</p>
-                    <p><strong>Điện thoại:</strong> 028 73056789 | <strong>Hotline:</strong> 1900 1177</p>
-                    <p><strong>Website:</strong> kingexpresstravel.com.vn | <strong>Email:</strong> info@kingexpresstravel.com.vn</p>
+                    @if(optional($contactInfo)->branches->isNotEmpty())
+                        @php
+                            $mainBranch = $contactInfo->branches->firstWhere('is_main', true) ?? $contactInfo->branches->first();
+                        @endphp
+                        @if($mainBranch)
+                            <p><strong>Địa chỉ:</strong> {{ $mainBranch->address }}</p>
+                        @endif
+                    @endif
+                    <p><strong>Điện thoại:</strong> {{ optional($contactInfo)->phone ?? '1900 1177' }} | <strong>Hotline:</strong> {{ optional($contactInfo)->phone ?? '1900 1177' }}</p>
+                    <p><strong>Website:</strong> {{ request()->getHost() }} | <strong>Email:</strong> {{ optional($contactInfo)->email ?? 'info@kingexpresstravel.com.vn' }}</p>
                 </div>
             </div>
 
@@ -20,19 +25,16 @@
                     <li><a href="#" class="text-gray-600 hover:text-[var(--color-primary)] transition-colors">Chính sách đặt tour</a></li>
                     <li><a href="#" class="text-gray-600 hover:text-[var(--color-primary)] transition-colors">Chính sách bảo mật</a></li>
                     <li><a href="#" class="text-gray-600 hover:text-[var(--color-primary)] transition-colors">Ý kiến khách hàng</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[var(--color-primary)] transition-colors">Phiếu góp ý</a></li>
+                    <li><a href="{{ route('client.contact') }}" class="text-gray-600 hover:text-[var(--color-primary)] transition-colors">Phiếu góp ý</a></li>
                 </ul>
 
                 <h3 class="text-base font-bold text-gray-800 uppercase mt-6">Kết nối với chúng tôi</h3>
                 <div class="flex items-center gap-x-3 mt-4">
-                    <a href="#" class="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-md text-gray-600 hover:bg-[var(--color-primary)] hover:text-white transition-colors" aria-label="Facebook">
+                    <a href="{{ optional($contactInfo)->facebook ?? '#' }}" target="_blank" class="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-md text-gray-600 hover:bg-[var(--color-primary)] hover:text-white transition-colors" aria-label="Facebook">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
                     <a href="#" class="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-md text-gray-600 hover:bg-[var(--color-primary)] hover:text-white transition-colors" aria-label="YouTube">
                         <i class="fa-brands fa-youtube"></i>
-                    </a>
-                    <a href="#" class="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-md text-gray-600 hover:bg-[var(--color-primary)] hover:text-white transition-colors" aria-label="Địa chỉ">
-                        <i class="fa-solid fa-location-dot"></i>
                     </a>
                 </div>
             </div>
@@ -79,7 +81,7 @@
                 <p>Do TCDL cấp ngày 30/11/2009 - Cấp thay đổi ngày 06/06/2022</p>
             </div>
             <p class="mt-4 text-xs text-gray-500">
-                Copyright © {{ date('Y') }} King Express Travel. Ghi rõ nguồn "kingexpresstravel.com.vn" khi sử dụng thông tin từ website này.
+                Copyright © {{ date('Y') }} {{ optional($contactInfo)->company_name ?? 'King Express Travel' }}. Ghi rõ nguồn "{{ request()->getHost() }}" khi sử dụng thông tin từ website này.
             </p>
         </div>
     </div>

@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Http\View\Composers\HeaderComposer; // Dòng này phải ở đây
+use App\Http\View\Composers\HeaderComposer;
+use App\Models\Contact;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\View; // Dòng này phải ở đây
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,7 +25,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFour();
 
-        // Đảm bảo bạn đã thêm dòng này vào đúng phương thức boot()
         View::composer('client.layouts.partials.header', HeaderComposer::class);
+
+        View::composer(['client.layouts.partials.header', 'client.layouts.partials.footer'], function ($view) {
+            $contactInfo = Contact::with(['branches' => function ($query) {
+                $query->orderBy('is_main', 'desc');
+            }])->first();
+            $view->with('contactInfo', $contactInfo);
+        });
     }
 }

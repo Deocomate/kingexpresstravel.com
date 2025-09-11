@@ -1,12 +1,11 @@
 <header class="sticky top-0 z-30">
-    {{-- Top Bar --}}
     <div class="bg-[var(--color-primary)] text-[var(--color-text-on-primary)]">
         <div class="container mx-auto px-4 flex justify-between items-center h-12">
             <div class="flex items-center gap-x-6">
-                <a href="tel:19001177"
+                <a href="tel:{{ optional($contactInfo)->phone ?? '1900 1177' }}"
                    class="flex items-center gap-x-2 text-sm font-semibold hover:text-[var(--color-primary-subtle-hover)] transition-colors cursor-pointer">
                     <i class="fa-solid fa-phone-volume"></i>
-                    <span>Hotline: 1900 1177</span>
+                    <span>Hotline: {{ optional($contactInfo)->phone ?? '1900 1177' }}</span>
                 </a>
             </div>
             <div class="hidden md:flex items-center justify-center flex-grow">
@@ -96,8 +95,6 @@
             </div>
         </div>
     </div>
-
-    {{-- Main Navigation Bar --}}
     <div class="bg-white shadow-md relative">
         <div class="container mx-auto px-4 flex justify-between items-center h-16">
             <a href="{{ route('client.home') }}" title="Trang chủ {{ config('app.name', 'KingExpressTravel') }}"
@@ -107,8 +104,6 @@
                     King Express
                 </span>
             </a>
-
-            {{-- Desktop Menu --}}
             <nav class="hidden lg:flex items-center static">
                 <ul class="flex items-center gap-x-1">
                     <li><a href="{{ route('client.home') }}"
@@ -121,14 +116,12 @@
   {{ request()->routeIs('client.tours*') ? 'text-[var(--color-primary)] active' : 'text-[#555]' }}">
                             Du lịch
                         </a>
-
                         @if(isset($tourCategoriesForMenu) && $tourCategoriesForMenu->isNotEmpty())
                             <div
                                 class="mega-menu-wrapper absolute top-full left-1/2 transform -translate-x-1/2 z-30 w-[calc(100vw-2rem)] max-w-6xl">
                                 <div
                                     class="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200/80 max-h-[calc(100vh-120px)] overflow-y-auto">
                                     <div class="flex" id="mega-menu-container">
-                                        {{-- Left Panel: Parent Categories --}}
                                         <div class="w-1/4 lg:w-1/5 bg-gray-50/70 sticky top-0">
                                             <ul class="py-2">
                                                 @foreach($tourCategoriesForMenu as $parentCategory)
@@ -145,8 +138,6 @@
                                                 @endforeach
                                             </ul>
                                         </div>
-
-                                        {{-- Right Panel: Child Categories --}}
                                         <div class="w-3/4 lg:w-4/5 p-4">
                                             @foreach($tourCategoriesForMenu as $parentCategory)
                                                 <div id="children-{{ $parentCategory->id }}"
@@ -190,7 +181,6 @@
                             </div>
                         @endif
                     </li>
-
                     <li><a href="{{ route('client.news') }}"
                            class="main-nav-link block text-base leading-6 font-bold uppercase py-6 px-3 rounded-md hover:text-[var(--color-primary)] transition-colors cursor-pointer {{ request()->routeIs('client.news*') ? 'text-[var(--color-primary)] active' : 'text-[#555]' }}">Tin
                             tức</a></li>
@@ -202,8 +192,6 @@
                             hệ</a></li>
                 </ul>
             </nav>
-
-            {{-- Mobile Menu Button --}}
             <div class="lg:hidden">
                 <button id="mobile-menu-button"
                         class="text-gray-700 hover:text-[var(--color-primary)] focus:outline-none" aria-label="Mở menu"
@@ -212,8 +200,6 @@
                 </button>
             </div>
         </div>
-
-        {{-- Mobile Menu --}}
         <div id="mobile-menu"
              class="hidden lg:hidden absolute top-full left-0 w-full bg-white shadow-md z-20 transition-all duration-300 ease-in-out max-h-0 overflow-hidden">
             <nav class="container mx-auto px-4 py-4">
@@ -238,64 +224,3 @@
         </div>
     </div>
 </header>
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Giảm khoảng cách giữa các mục menu chính
-            const mainNavLinks = document.querySelectorAll('.main-nav-link');
-            mainNavLinks.forEach(link => {
-                // Đã giảm padding từ px-4 xuống px-3 và py-8 xuống py-6 trong HTML
-            });
-
-            const megaMenuContainer = document.getElementById('mega-menu-container');
-            if (megaMenuContainer) {
-                const parentItems = megaMenuContainer.querySelectorAll('.mega-menu-parent-item');
-                const childrenPanels = megaMenuContainer.querySelectorAll('.mega-menu-children-panel');
-                const placeholder = document.getElementById('mega-menu-placeholder');
-
-                const setDefaultState = () => {
-                    if (parentItems.length > 0) {
-                        const firstItem = parentItems[0];
-                        const firstTargetId = firstItem.dataset.categoryTarget;
-                        const firstPanel = document.getElementById(firstTargetId);
-
-                        parentItems.forEach(item => item.classList.remove('active'));
-                        childrenPanels.forEach(panel => panel.classList.add('hidden'));
-
-                        firstItem.classList.add('active');
-                        if (firstPanel) {
-                            firstPanel.classList.remove('hidden');
-                            if (placeholder) placeholder.classList.add('hidden');
-                        } else {
-                            if (placeholder) placeholder.classList.remove('hidden');
-                        }
-                    }
-                };
-
-                parentItems.forEach(item => {
-                    item.addEventListener('mouseenter', () => {
-                        const targetId = item.dataset.categoryTarget;
-                        const targetPanel = document.getElementById(targetId);
-
-                        parentItems.forEach(i => i.classList.remove('active'));
-                        childrenPanels.forEach(p => p.classList.add('hidden'));
-
-                        item.classList.add('active');
-
-                        if (targetPanel) {
-                            targetPanel.classList.remove('hidden');
-                            if (placeholder) placeholder.classList.add('hidden');
-                        } else {
-                            if (placeholder) placeholder.classList.remove('hidden');
-                        }
-                    });
-                });
-
-                // Set a default active state when the menu is first opened
-                const tourMenu = document.querySelector('.group.relative');
-                tourMenu.addEventListener('mouseenter', setDefaultState);
-            }
-        });
-    </script>
-@endpush
