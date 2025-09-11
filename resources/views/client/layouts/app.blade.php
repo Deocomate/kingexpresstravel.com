@@ -19,7 +19,7 @@
     <!-- Icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <!-- Swiper -->
@@ -88,7 +88,7 @@
             pointer-events: none;
         }
 
-        /* [FIXED] Header Navigation Styles */
+        /* [IMPROVED] Header Navigation Styles */
         .main-nav-link {
             position: relative;
             transition: color 0.3s ease;
@@ -100,7 +100,7 @@
             width: 100%;
             transform: scaleX(0);
             height: 2px;
-            bottom: 0; /* Moved from -4px to 0 to be closer to text */
+            bottom: 0;
             left: 0;
             background-color: var(--color-primary);
             transform-origin: bottom right;
@@ -113,26 +113,25 @@
             transform-origin: bottom left;
         }
 
-        /* [FIXED] Mega Menu Animation */
+        /* [IMPROVED] Mega Menu Animation & Style */
         .mega-menu-wrapper {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(0) scale(0.98);
-            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0.15s;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0.2s;
             pointer-events: none;
         }
 
         .group:hover .mega-menu-wrapper {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0) scale(1);
-            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0s linear 0s;
+            transform: translateY(0);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0s;
             pointer-events: auto;
         }
 
-        /* [FIXED] Mega Menu Content Styling */
         .mega-menu-parent-item.active {
-            background-color: #fff;
+            background-color: #ffffff;
             color: var(--color-primary-dark);
             font-weight: 700;
             border-right: 3px solid var(--color-primary);
