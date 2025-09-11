@@ -17,10 +17,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             DestinationSeeder::class,
             NewsSeeder::class,
-            TourSeeder::class,
-            OrderSeeder::class,
             AboutUsSeeder::class,
-            CustomerCareSeeder::class,
             ContactSeeder::class,
         ]);
     }

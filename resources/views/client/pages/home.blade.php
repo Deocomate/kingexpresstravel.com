@@ -4,7 +4,6 @@
 @section('description', 'Khám phá các tour du lịch hấp dẫn trong và ngoài nước với giá tốt nhất. King Express Travel, đồng hành cùng bạn trên mọi nẻo đường.')
 
 @section('content')
-    <!-- HERO BANNER -->
     <section class="relative">
         <div class="swiper main-carousel h-[48vh] md:h-[70vh]">
             <div class="swiper-wrapper">
@@ -26,16 +25,13 @@
             <div class="swiper-pagination"></div>
         </div>
 
-        <!-- Search overlay (DESKTOP / TABLET >= md) -->
         <x-client.tour-search-bar variant="overlay"/>
     </section>
 
-    <!-- Search tách riêng (MOBILE < md) -->
     <section class="md:hidden px-4 pt-4 pb-2 bg-gray-50">
         <x-client.tour-search-bar variant="mobile"/>
     </section>
 
-    <!-- Nội dung sau banner -->
     <div class="after-banner bg-gray-100 pt-6 md:pt-20 md:-mt-14">
         <div class="container mx-auto px-4 py-8 md:py-12 space-y-12">
             @if(!empty($tourCategories) && $tourCategories->isNotEmpty())
@@ -141,35 +137,35 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    new Swiper('.main-carousel', {
-        loop: true,
-        autoplay: { delay: 5000, disableOnInteraction: false },
-        pagination: { el: '.main-carousel .swiper-pagination', clickable: true },
-        navigation: {
-            nextEl: '.main-carousel .main-carousel-next',
-            prevEl: '.main-carousel .main-carousel-prev',
-        }
-    });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new Swiper('.main-carousel', {
+                loop: true,
+                autoplay: { delay: 5000, disableOnInteraction: false },
+                pagination: { el: '.main-carousel .swiper-pagination', clickable: true },
+                navigation: {
+                    nextEl: '.main-carousel .main-carousel-next',
+                    prevEl: '.main-carousel .main-carousel-prev',
+                }
+            });
 
-    document.querySelectorAll('.slider-container').forEach(container => {
-        const s = container.querySelector('.swiper');
-        new Swiper(s, {
-            slidesPerView: 1.15,
-            spaceBetween: 12,
-            navigation: {
-                nextEl: container.querySelector('.swiper-button-next'),
-                prevEl: container.querySelector('.swiper-button-prev')
-            },
-            watchOverflow: true,
-            breakpoints: {
-                640: { slidesPerView: 2.2, spaceBetween: 16 },
-                768: { slidesPerView: 3.2, spaceBetween: 16 },
-                1024:{ slidesPerView: 4, spaceBetween: 16 },
-            }
+            document.querySelectorAll('.slider-container').forEach(container => {
+                const s = container.querySelector('.swiper');
+                new Swiper(s, {
+                    slidesPerView: 1.15,
+                    spaceBetween: 12,
+                    navigation: {
+                        nextEl: container.querySelector('.swiper-button-next'),
+                        prevEl: container.querySelector('.swiper-button-prev')
+                    },
+                    watchOverflow: true,
+                    breakpoints: {
+                        640: { slidesPerView: 2.2, spaceBetween: 16 },
+                        768: { slidesPerView: 3.2, spaceBetween: 16 },
+                        1024:{ slidesPerView: 4, spaceBetween: 16 },
+                    }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 @endpush

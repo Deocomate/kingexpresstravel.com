@@ -56,7 +56,7 @@
                                     </span>
                                 </button>
                                 <div class="schedule-content overflow-hidden transition-all duration-300 ease-in-out">
-                                    <div class="prose-styles pt-4 bg-gray-50 p-4 mt-2 rounded-lg border border-gray-200">
+                                    <div class="prose-styles pt-4 bg-white p-4 mt-2 rounded-lg border border-gray-200">
                                         {!! $schedule['content'] ?? '<p>Nội dung đang được cập nhật.</p>' !!}
                                     </div>
                                 </div>
