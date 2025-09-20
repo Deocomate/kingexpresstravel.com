@@ -2,7 +2,6 @@ services:
     mariadb:
         image: mariadb:12-ubi
         container_name: mariadb
-        restart: always
         environment:
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
         ports:
@@ -13,7 +12,6 @@ services:
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
         container_name: phpmyadmin
-        restart: always
         environment:
             PMA_HOST: mariadb
             PMA_USER: root
