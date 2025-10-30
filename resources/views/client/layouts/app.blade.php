@@ -28,17 +28,50 @@
     <!-- AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Mulish', 'ui-sans-serif', 'system-ui', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji',
+                            'Segoe UI Symbol', 'Noto Color Emoji'],
+                    },
+                    colors: {
+                        primary: '#f59e0b',
+                        'primary-dark': '#d97706',
+                        'primary-accent': '#fbbf24',
+                        'primary-light': '#fffbeb',
+                        'primary-subtle-hover': '#fef3c7',
+                        'text-on-primary': '#ffffff',
+                    },
+                },
+            },
+        };
+    </script>
 
     <style>
         :root {
-            /* Các biến màu custom của bạn nên được định nghĩa trong resources/css/app.css */
+            --font-sans: 'Mulish', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
+
+            --color-primary: #f59e0b;
+            --color-primary-dark: #d97706;
+            --color-primary-accent: #fbbf24;
+            --color-primary-light: #fffbeb;
+            --color-primary-subtle-hover: #fef3c7;
+            --color-text-on-primary: #ffffff;
         }
 
         /* Prevent horizontal scroll */
         html, body {
             overflow-x: hidden;
             width: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
         }
 
         .custom-toast.swal2-popup {
@@ -184,8 +217,11 @@
 </x-client.modal>
 
 <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+<script src="{{ asset('js/client-app.js') }}" defer></script>
 
 @stack('scripts')
 
